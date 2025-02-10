@@ -63,6 +63,24 @@ app.get("/api/pubsub/callback", async (req, res) => {
   }
 });
 
+// PubSubHubbub POST handler
+app.post("/api/pubsub/callback", async (req, res) => {
+  console.log("Received PubSub notification");
+  res.sendStatus(200); // Ack first
+
+  try {
+    const entry = req.body.feed?.entry?.[0];
+    if (entry) {
+      const videoId = entry["yt:videoId"]?.[0];
+      const channelId = entry["yt:channelId"]?.[0];
+      console.log(`New video: ${videoId}, Channel: ${channelId}`);
+      // Add your custom logic here (e.g., call YouTube API)
+    }
+  } catch (error) {
+    console.error("Error processing notification:", error);
+  }
+});
+
 app.listen(3000, () => console.log("Server ready on port 3000."));
 
 export default app;
