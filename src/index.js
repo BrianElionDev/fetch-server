@@ -1,6 +1,8 @@
 import axios from "axios";
 import express from "express";
+import xmlBodyParser from "express-xml-bodyparser";
 const app = express();
+app.use(xmlBodyParser());
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
