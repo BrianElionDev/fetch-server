@@ -68,16 +68,18 @@ app.get("/api/pubsub/callback", async (req, res) => {
 // PubSubHubbub POST handler
 app.post("/api/pubsub/callback", async (req, res) => {
   console.log("Received PubSub notification");
-  res.sendStatus(200); // Ack first
-
+  res.sendStatus(200);
   try {
     const entry = req.body.feed?.entry?.[0];
     if (entry) {
-      const videoId = entry["yt:videoId"]?.[0];
-      const channelId = entry["yt:channelId"]?.[0];
-      console.log(`New video: ${videoId}, Channel: ${channelId}`);
-      console.log(entry);
-      // Add your custom logic here (e.g., call YouTube API)
+      const videoId = entry["yt:videoid"]?.[0];
+      const channelId = entry["yt:channelid"]?.[0];
+      const title = entry["title"]?.[0];
+      const id = entry["id"]?.[0];
+
+      console.log(
+        `New video: ${videoId}  , Channel: ${channelId}, Title: ${title}, ID: ${id}`
+      );
     }
   } catch (error) {
     console.error("Error processing notification:", error);
