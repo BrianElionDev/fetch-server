@@ -43,14 +43,15 @@ app.get("/api/youtube", async (req, res) => {
 });
 
 app.get("/api/pubsub/callback", async (req, res) => {
+  const channelId = "UChIs72whgZI9w6d6FhwGGHA";
   if (!req.query["hub.challenge"])
     return res.status(400).send("No challenge provided");
 
   if (!req.query["hub.mode"] || req.query["hub.mode"] !== "subscribe")
     return res.status(400).send("Invalid mode");
 
-  if (!req.query["hub.topic"] || !req.query["hub.topic"].includes(channelId))
-    return res.status(400).send("Invalid topic");
+  /* if (!req.query["hub.topic"] || !req.query["hub.topic"].includes(channelId))
+    return res.status(400).send("Invalid topic"); */
 
   console.log(`Verification Challenge Received from Hub`);
 
