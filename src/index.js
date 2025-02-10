@@ -76,6 +76,7 @@ app.post("/api/pubsub/callback", async (req, res) => {
       const videoId = entry["yt:videoId"]?.[0];
       const channelId = entry["yt:channelId"]?.[0];
       console.log(`New video: ${videoId}, Channel: ${channelId}`);
+      console.log(entry);
       // Add your custom logic here (e.g., call YouTube API)
     }
   } catch (error) {
