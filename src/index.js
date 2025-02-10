@@ -23,6 +23,7 @@ app.get("/api/youtube", async (req, res) => {
           pageToken: pageToken,
           publishedAfter: publishedAfter,
           publishedBefore: publishedBefore,
+          order: "date",
         },
       });
 
