@@ -77,12 +77,13 @@ app.post("/api/pubsub/callback", async (req, res) => {
       const videoId = entry["yt:videoid"]?.[0];
       const channelId = entry["yt:channelid"]?.[0];
       const title = entry["title"]?.[0];
-      const publishedAt = entry["id"]?.[0];
+      const published = entry["published"]?.[0];
 
       const response = await axios.post(MAKE_WEBHOOK, {
         videoId: videoId,
         channelId: channelId,
         title: title,
+        published: published,
       });
 
       console.log(entry);
