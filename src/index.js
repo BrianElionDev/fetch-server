@@ -4,6 +4,8 @@ import xmlBodyParser from "express-xml-bodyparser";
 const app = express();
 app.use(xmlBodyParser());
 
+const MAKE_WEBHOOK =
+  "https://hook.us2.make.com/ytj4vvlhjc1v46c2owkkyw55n2kahd8b";
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 app.get("/api/youtube", async (req, res) => {
@@ -86,7 +88,7 @@ app.post("/api/pubsub/callback", async (req, res) => {
       console.log(entry);
 
       console.log(
-        `New video: ${videoId}  , Channel: ${channelId}, Title: ${title}, ID: ${id}`
+        `New video: ${videoId}  , Channel: ${channelId}, Title: ${title}, ID: ${response}`
       );
     }
   } catch (error) {
