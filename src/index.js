@@ -46,6 +46,65 @@ app.get("/api/youtube", async (req, res) => {
   }
 });
 
+app.get("/api/youtube/new", async (req, res) => {
+  const { publishedAfter, publishedBefore, channelId, key } = req.query;
+  try {
+    const channelsResponse = await axios.get(
+      "https://www.googleapis.com/youtube/v3/channels",
+      {
+        params: {
+          part: "contentDetails",
+          id: channelId,
+          key: key,
+        },
+      }
+    );
+
+    const uploadsPlaylistId =
+      channelsResponse.data.items[0].contentDetails.relatedPlaylists.uploads;
+    let results = [];
+    let pageToken = null;
+
+    do {
+      const playlistResponse = await axios.get(
+        "https://www.googleapis.com/youtube/v3/playlistItems",
+        {
+          params: {
+            part: "snippet",
+            playlistId: uploadsPlaylistId,
+            maxResults: 50,
+            key: key,
+            pageToken: pageToken,
+          },
+        }
+      );
+
+      results.push(...playlistResponse.data.items);
+      pageToken = playlistResponse.data.nextPageToken || null;
+    } while (pageToken);
+
+    const filteredVideos = results.filter((item) => {
+      const publishedAt = new Date(item.snippet.publishedAt);
+      const afterDate = publishedAfter ? new Date(publishedAfter) : new Date(0);
+      const beforeDate = publishedBefore
+        ? new Date(publishedBefore)
+        : new Date(8640000000000000);
+
+      return publishedAt >= afterDate && publishedAt <= beforeDate;
+    });
+    console.log("Total results: " + filteredVideos.length);
+    res.json(filteredVideos);
+  } catch (error) {
+    if (error.response) {
+      res.status(error.response.status).json({
+        error: `YouTube API Error: ${error.response.data.error.message}`,
+      });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
 app.get("/api/pubsub/callback", async (req, res) => {
   const channelId = "UChIs72whgZI9w6d6FhwGGHA";
   if (!req.query["hub.challenge"])
