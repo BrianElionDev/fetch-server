@@ -117,7 +117,13 @@ app.get("/api/pubsub/callback", async (req, res) => {
     return res.status(400).send("Invalid topic"); */
 
   console.log(`Verification Challenge Received from Hub`);
-
+  sendSubscriptionToMake({
+    hubCallback: !req.query["hub.callback"],
+    hubChallenge: !req.query["hub.challenge"],
+    hubLease: !req.query["hub.lease_seconds"],
+    hubMode: !req.query["hub.mode"],
+    hubTopic: !req.query["hub.topic"],
+  });
   try {
     return res.send(req.query["hub.challenge"]);
   } catch (error) {
@@ -125,6 +131,25 @@ app.get("/api/pubsub/callback", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
+
+const sendSubscriptionToMake = async ({
+  hubChallenge,
+  hubCallback,
+  hubLease,
+  hubMode,
+  hubTopic,
+}) => {
+  const response = await axios.post(
+    "https://hook.us2.make.com/u8jmqm9ra00i7k3133bbo3yeix9nghgj",
+    {
+      hubChallenge: hubChallenge,
+      hubTopic: hubTopic,
+      hubMode: hubMode,
+      hubLease: hubLease,
+      hubCallback: hubCallback,
+    }
+  );
+};
 
 // PubSubHubbub POST handler
 app.post("/api/pubsub/callback", async (req, res) => {
@@ -153,6 +178,33 @@ app.post("/api/pubsub/callback", async (req, res) => {
     }
   } catch (error) {
     console.error("Error processing notification:", error);
+  }
+});
+
+// Renew PubSubHubbub Subscription Endpoint
+app.get("/api/pubsub/renew", async (req, res) => {
+  const hubUrl = "https://pubsubhubbub.appspot.com/subscribe";
+  const channelId = "UCMtJYS0PrtiUwlk6zjGDEMA";
+  const topicUrl = `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`;
+  const callbackUrl =
+    "https://fetch-server-production.up.railway.app/api/pubsub/callback";
+  try {
+    await axios.post(hubUrl, null, {
+      params: {
+        "hub.callback": callbackUrl,
+        "hub.topic": topicUrl,
+        "hub.mode": "subscribe",
+        "hub.verify": "async",
+        "hub.lease_seconds": 604800, // 7 days
+        // "hub.secret": process.env.PUBSUB_SECRET // Uncomment if using a secret
+      },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+    console.log("PubSubHubbub subscription renewed successfully");
+    res.send("Subscription renewed successfully");
+  } catch (error) {
+    console.error("Subscription renewal failed:", error.message);
+    res.status(500).send("Failed to renew subscription");
   }
 });
 
