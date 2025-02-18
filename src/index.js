@@ -1,11 +1,14 @@
 import axios from "axios";
-import express from "express";
+import express, { response } from "express";
 import xmlBodyParser from "express-xml-bodyparser";
 const app = express();
 app.use(xmlBodyParser());
 
-const MAKE_WEBHOOK =
+const MAKE_WEBHOOK_SEND_NEW_VIDEO =
   "https://hook.us2.make.com/ytj4vvlhjc1v46c2owkkyw55n2kahd8b";
+const MAKE_WEBHOOK_SEND_SUBSCRIPTION =
+  "https://hook.us2.make.com/9f3n2wwmuy37d7qezcgymil5d6int37b";
+
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 app.get("/api/youtube", async (req, res) => {
@@ -139,16 +142,14 @@ const sendSubscriptionToMake = async ({
   hubMode,
   hubTopic,
 }) => {
-  const response = await axios.post(
-    "https://hook.us2.make.com/u8jmqm9ra00i7k3133bbo3yeix9nghgj",
-    {
-      hubChallenge: hubChallenge,
-      hubTopic: hubTopic,
-      hubMode: hubMode,
-      hubLease: hubLease,
-      hubCallback: hubCallback,
-    }
-  );
+  const response = await axios.post(MAKE_WEBHOOK_SEND_SUBSCRIPTION, {
+    hubChallenge: hubChallenge,
+    hubTopic: hubTopic,
+    hubMode: hubMode,
+    hubLease: hubLease,
+    hubCallback: hubCallback,
+  });
+  console.log("Sending Subscription Response: " + response.data);
 };
 
 // PubSubHubbub POST handler
@@ -163,7 +164,7 @@ app.post("/api/pubsub/callback", async (req, res) => {
       const title = entry["title"]?.[0];
       const published = entry["published"]?.[0];
 
-      const response = await axios.post(MAKE_WEBHOOK, {
+      const response = await axios.post(MAKE_WEBHOOK_SEND_NEW_VIDEO, {
         videoId: videoId,
         channelId: channelId,
         title: title,
