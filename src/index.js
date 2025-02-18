@@ -8,6 +8,9 @@ const MAKE_WEBHOOK_SEND_NEW_VIDEO =
   "https://hook.us2.make.com/ytj4vvlhjc1v46c2owkkyw55n2kahd8b";
 const MAKE_WEBHOOK_SEND_SUBSCRIPTION =
   "https://hook.us2.make.com/9f3n2wwmuy37d7qezcgymil5d6int37b";
+const PUBSUB_CALLBACK =
+  "https://fetch-server-production.up.railway.app/api/pubsub/callback";
+const PUBSUB_SUBSCRIBE_ENDPOINT = "http://pubsubhubbub.appspot.com/subscribe";
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
@@ -148,7 +151,6 @@ const sendSubscriptionToMake = async ({
     hubLease: hubLease,
     hubCallback: hubCallback,
   });
-  console.log("Sending Subscription Response: " + response.data);
 };
 
 // PubSubHubbub POST handler
@@ -183,9 +185,8 @@ app.post("/api/pubsub/callback", async (req, res) => {
 
 // Renew PubSubHubbub Subscription Endpoint
 app.get("/api/pubsub/renew", async (req, res) => {
+  const { topicUrl } = req.query;
   const hubUrl = "https://pubsubhubbub.appspot.com/subscribe";
-  const channelId = "UCMtJYS0PrtiUwlk6zjGDEMA";
-  const topicUrl = `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`;
   const callbackUrl =
     "https://fetch-server-production.up.railway.app/api/pubsub/callback";
   try {
@@ -200,11 +201,41 @@ app.get("/api/pubsub/renew", async (req, res) => {
       },
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
-    console.log("PubSubHubbub subscription renewed successfully");
     res.send("Subscription renewed successfully");
   } catch (error) {
-    console.error("Subscription renewal failed:", error.message);
     res.status(500).send("Failed to renew subscription");
+  }
+});
+
+app.get("/api/pubsub/subscribe", async (req, res) => {
+  const { channelId } = req.query;
+  const details = {
+    "hub.mode": "subscribe",
+    "hub.topic": `https://www.youtube.com/xml/feeds/videos.xml?channel_id=${channelId}`,
+    "hub.callback": PUBSUB_CALLBACK,
+  };
+
+  const formBodyArray = [];
+  Object.keys(details).forEach((key) => {
+    const encodedKey = encodeURIComponent(key);
+    const encodedValue = encodeURIComponent(details[key]);
+    formBodyArray.push(`${encodedKey}=${encodedValue}`);
+  });
+
+  const formBodyStringified = formBodyArray.join("&");
+
+  try {
+    const response = await fetch(PUBSUB_SUBSCRIBE_ENDPOINT, {
+      method: "POST",
+      body: formBodyStringified,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+    });
+    res.send(response);
+    console.log(`Subscription Response Status Code: ${response.status}`);
+  } catch (error) {
+    console.error("Error subscribing:", error);
   }
 });
 
