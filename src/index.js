@@ -109,7 +109,6 @@ app.get("/api/youtube/new", async (req, res) => {
 });
 
 app.get("/api/pubsub/callback", async (req, res) => {
-  const channelId = "UChIs72whgZI9w6d6FhwGGHA";
   if (!req.query["hub.challenge"])
     return res.status(400).send("No challenge provided");
 
@@ -121,11 +120,11 @@ app.get("/api/pubsub/callback", async (req, res) => {
 
   console.log(`Verification Challenge Received from Hub`);
   sendSubscriptionToMake({
-    hubCallback: !req.query["hub.callback"],
-    hubChallenge: !req.query["hub.challenge"],
-    hubLease: !req.query["hub.lease_seconds"],
-    hubMode: !req.query["hub.mode"],
-    hubTopic: !req.query["hub.topic"],
+    hubCallback: req.query["hub.callback"],
+    hubChallenge: req.query["hub.challenge"],
+    hubLease: req.query["hub.lease_seconds"],
+    hubMode: req.query["hub.mode"],
+    hubTopic: req.query["hub.topic"],
   });
   try {
     return res.send(req.query["hub.challenge"]);
