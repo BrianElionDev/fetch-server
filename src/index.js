@@ -111,7 +111,7 @@ app.get("/api/youtube/new", async (req, res) => {
   }
 });
 app.get("/api/youtube/single", async (req, res) => {
-  const { videoId } = req.query;
+  const { videoId, key } = req.query;
 
   if (!videoId) {
     return res.status(400).json({
