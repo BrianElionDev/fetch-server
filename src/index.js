@@ -110,7 +110,65 @@ app.get("/api/youtube/new", async (req, res) => {
     }
   }
 });
+app.get("/api/youtube/single", async (req, res) => {
+  const { videoId } = req.query;
 
+  if (!videoId) {
+    return res.status(400).json({
+      error: "Video ID is required",
+    });
+  }
+
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/videos",
+      {
+        params: {
+          part: "id,snippet,statistics,contentDetails,status",
+          id: videoId,
+          key: key,
+        },
+      }
+    );
+
+    if (!response.data.items || response.data.items.length === 0) {
+      return res.status(404).json({
+        error: "Video not found",
+      });
+    }
+
+    const video = response.data.items[0];
+
+    const videoDetails = {
+      id: video.id,
+      title: video.snippet.title,
+      description: video.snippet.description,
+      publishedAt: video.snippet.publishedAt,
+      thumbnails: video.snippet.thumbnails,
+      duration: video.contentDetails.duration,
+      viewCount: video.statistics.viewCount || null,
+      likeCount: video.statistics.likeCount || null,
+      commentCount: video.statistics.commentCount || null,
+      status: {
+        privacyStatus: video.status.privacyStatus,
+        license: video.status.license,
+        embeddable: video.status.embeddable,
+      },
+    };
+
+    res.json(videoDetails);
+  } catch (error) {
+    if (error.response) {
+      res.status(error.response.status).json({
+        error: `YouTube API Error: ${error.response.data.error.message}`,
+      });
+    } else {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+});
 app.get("/api/pubsub/callback", async (req, res) => {
   if (!req.query["hub.challenge"])
     return res.status(400).send("No challenge provided");
