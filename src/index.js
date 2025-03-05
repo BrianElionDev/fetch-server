@@ -51,7 +51,21 @@ app.get("/api/youtube", async (req, res) => {
     throw error;
   }
 });
-
+const sendSubscriptionToMake = async ({
+  hubChallenge,
+  hubCallback,
+  hubLease,
+  hubMode,
+  hubTopic,
+}) => {
+  const response = await axios.post(MAKE_WEBHOOK_SEND_SUBSCRIPTION, {
+    hubChallenge: hubChallenge,
+    hubTopic: hubTopic,
+    hubMode: hubMode,
+    hubLease: hubLease,
+    hubCallback: hubCallback,
+  });
+};
 app.get("/api/youtube/new", async (req, res) => {
   const { publishedAfter, publishedBefore, channelId, key } = req.query;
   try {
@@ -194,47 +208,6 @@ app.get("/api/pubsub/callback", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
-app.get("/api/pubsub/callback/new", async (req, res) => {
-  if (!req.query["hub.challenge"])
-    return res.status(400).send("No challenge provided");
-
-  if (!req.query["hub.mode"] || req.query["hub.mode"] !== "subscribe")
-    return res.status(400).send("Invalid mode");
-
-  /* if (!req.query["hub.topic"] || !req.query["hub.topic"].includes(channelId))
-    return res.status(400).send("Invalid topic"); */
-
-  console.log(`Verification Challenge Received from Hub`);
-  sendSubscriptionToMake({
-    hubCallback: req.query["hub.callback"],
-    hubChallenge: req.query["hub.challenge"],
-    hubLease: req.query["hub.lease_seconds"],
-    hubMode: req.query["hub.mode"],
-    hubTopic: req.query["hub.topic"],
-  });
-  try {
-    return res.send(req.query["hub.challenge"]);
-  } catch (error) {
-    console.error("Error verifying:", error);
-    return res.status(500).send("Internal Server Error");
-  }
-});
-
-const sendSubscriptionToMake = async ({
-  hubChallenge,
-  hubCallback,
-  hubLease,
-  hubMode,
-  hubTopic,
-}) => {
-  const response = await axios.post(MAKE_WEBHOOK_SEND_SUBSCRIPTION, {
-    hubChallenge: hubChallenge,
-    hubTopic: hubTopic,
-    hubMode: hubMode,
-    hubLease: hubLease,
-    hubCallback: hubCallback,
-  });
-};
 
 // PubSubHubbub POST handler
 app.post("/api/pubsub/callback", async (req, res) => {
@@ -264,9 +237,6 @@ app.post("/api/pubsub/callback", async (req, res) => {
   } catch (error) {
     console.error("Error processing notification:", error);
   }
-});
-app.post("/api/pubsub/callback/new", async () => {
-  console.log("Received PubSub notification");
 });
 
 // Renew PubSubHubbub Subscription Endpoint
@@ -325,6 +295,6 @@ app.get("/api/pubsub/subscribe", async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log("Server running on 3001."));
+app.listen(3000, () => console.log("Server running on 3000."));
 
 export default app;
