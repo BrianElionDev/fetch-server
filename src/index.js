@@ -9,7 +9,7 @@ const MAKE_WEBHOOK_SEND_NEW_VIDEO =
 const MAKE_WEBHOOK_SEND_SUBSCRIPTION =
   "https://hook.us2.make.com/9f3n2wwmuy37d7qezcgymil5d6int37b";
 const PUBSUB_CALLBACK =
-  "https://fetch-server-production.up.railway.app/api/pubsub/callback";
+  "https://fetch-server-production.up.railway.app/api/pubsub/callback/new";
 const PUBSUB_SUBSCRIBE_ENDPOINT = "http://pubsubhubbub.appspot.com/subscribe";
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
@@ -194,6 +194,31 @@ app.get("/api/pubsub/callback", async (req, res) => {
     return res.status(500).send("Internal Server Error");
   }
 });
+app.get("/api/pubsub/callback/new", async (req, res) => {
+  if (!req.query["hub.challenge"])
+    return res.status(400).send("No challenge provided");
+
+  if (!req.query["hub.mode"] || req.query["hub.mode"] !== "subscribe")
+    return res.status(400).send("Invalid mode");
+
+  /* if (!req.query["hub.topic"] || !req.query["hub.topic"].includes(channelId))
+    return res.status(400).send("Invalid topic"); */
+
+  console.log(`Verification Challenge Received from Hub`);
+  sendSubscriptionToMake({
+    hubCallback: req.query["hub.callback"],
+    hubChallenge: req.query["hub.challenge"],
+    hubLease: req.query["hub.lease_seconds"],
+    hubMode: req.query["hub.mode"],
+    hubTopic: req.query["hub.topic"],
+  });
+  try {
+    return res.send(req.query["hub.challenge"]);
+  } catch (error) {
+    console.error("Error verifying:", error);
+    return res.status(500).send("Internal Server Error");
+  }
+});
 
 const sendSubscriptionToMake = async ({
   hubChallenge,
@@ -239,6 +264,9 @@ app.post("/api/pubsub/callback", async (req, res) => {
   } catch (error) {
     console.error("Error processing notification:", error);
   }
+});
+app.post("/api/pubsub/callback/new", async () => {
+  console.log("Received PubSub notification");
 });
 
 // Renew PubSubHubbub Subscription Endpoint
