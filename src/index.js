@@ -1,6 +1,7 @@
 import axios from "axios";
 import express, { response } from "express";
 import xmlBodyParser from "express-xml-bodyparser";
+import { makeAnalysis } from "./ToolAnalysis.js";
 const app = express();
 app.use(xmlBodyParser());
 
@@ -293,6 +294,11 @@ app.get("/api/pubsub/subscribe", async (req, res) => {
   } catch (error) {
     console.error("Error subscribing:", error);
   }
+});
+
+app.get("/api/analysis", async (req, res) => {
+  console.log("Received analysis request");
+  const analysis = makeAnalysis("https://www.youtube.com/watch?v=Fg5MdhaWLww");
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
