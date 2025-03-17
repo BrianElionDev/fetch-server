@@ -182,6 +182,7 @@ app.get("/api/analysis", async (req, res) => {
   console.log("Request: " + req.body);
   console.log("Received analysis request");
   //const analysis = makeAnalysis("https://www.youtube.com/watch?v=6rdsSTZkG_k");
+  res.send("Success");
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
