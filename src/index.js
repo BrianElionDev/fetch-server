@@ -178,7 +178,7 @@ app.get("/api/youtube/single", async (req, res) => {
   }
 });
 
-app.get("/api/analysis", async (req, res) => {
+app.post("/api/analysis", async (req, res) => {
   console.log("Request: " + req.body);
   console.log("Received analysis request");
   //const analysis = makeAnalysis("https://www.youtube.com/watch?v=6rdsSTZkG_k");
