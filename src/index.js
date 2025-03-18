@@ -3,6 +3,8 @@ import express from "express";
 import { makeAnalysis } from "./ToolAnalysis.js";
 const app = express();
 
+app.use(express.json());
+
 const MAKE_WEBHOOK_SEND_SUBSCRIPTION =
   "https://hook.us2.make.com/9f3n2wwmuy37d7qezcgymil5d6int37b";
 
@@ -179,7 +181,7 @@ app.get("/api/youtube/single", async (req, res) => {
 });
 
 app.post("/api/analysis", async (req, res) => {
-  console.log("Request: " + req.body);
+  console.log("Request: " + req.json());
   console.log("Received analysis request");
   //const analysis = makeAnalysis("https://www.youtube.com/watch?v=6rdsSTZkG_k");
   res.send("Success");
