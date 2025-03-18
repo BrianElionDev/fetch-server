@@ -3,6 +3,7 @@ import express from "express";
 import { makeAnalysis } from "./ToolAnalysis.js";
 import { makeLlmPrompt } from "./Llm.js";
 import { fetchTranscriptFromAPI } from "./FetchTranscript.js";
+import { CreateNewRecord } from "./SendData.js";
 const app = express();
 
 app.use(express.json());
@@ -185,10 +186,14 @@ app.get("/api/youtube/single", async (req, res) => {
 app.post("/api/analysis", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
-
     const analysis = await makeAnalysis(Video_url);
+    /* await CreateNewRecord({
+      Video_url: Video_url,
+      Channel_name: Channel_name,
+      Publish_at: Publish_at,
+      Video_title: Video_title,
+    }); */
     console.log("Analysis: " + analysis);
-
     res.send("Success");
   } catch (error) {
     console.error("Error processing request:", error);
