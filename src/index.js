@@ -186,10 +186,8 @@ app.post("/api/analysis", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
 
-    const transcript = await fetchTranscriptFromAPI(Video_url);
-    const results = await makeLlmPrompt({ transcript: transcript.content });
-    console.log("Transcript: " + transcript);
-    console.log("Analysis: " + results);
+    const analysis = await makeAnalysis(Video_url);
+    console.log("Analysis: " + analysis);
 
     res.send("Success");
   } catch (error) {
