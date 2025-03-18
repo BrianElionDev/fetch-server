@@ -182,8 +182,11 @@ app.get("/api/youtube/single", async (req, res) => {
 
 app.post("/api/analysis", async (req, res) => {
   try {
-    console.log("Request body:", JSON.stringify(req.body));
-    console.log("Received analysis request");
+    const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
+    console.log(
+      `Request body: ${Channel_name}-${Video_title}-${Video_url}-${Publish_at} `
+    );
+
     res.send("Success");
   } catch (error) {
     console.error("Error processing request:", error);
