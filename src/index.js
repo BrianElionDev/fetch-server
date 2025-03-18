@@ -1,6 +1,8 @@
 import axios from "axios";
 import express from "express";
 import { makeAnalysis } from "./ToolAnalysis.js";
+import { makeLlmPrompt } from "./Llm.js";
+import { fetchTranscriptFromAPI } from "./FetchTranscript.js";
 const app = express();
 
 app.use(express.json());
@@ -183,9 +185,10 @@ app.get("/api/youtube/single", async (req, res) => {
 app.post("/api/analysis", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
-    console.log(
-      `Request body: ${Channel_name}-${Video_title}-${Video_url}-${Publish_at} `
-    );
+
+    const transcript = await fetchTranscriptFromAPI(Video_url);
+    const results = await makeLlmPrompt({ transcript: transcript });
+    console.log("Analysis: " + results);
 
     res.send("Success");
   } catch (error) {
