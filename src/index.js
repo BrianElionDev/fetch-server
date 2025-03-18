@@ -181,10 +181,14 @@ app.get("/api/youtube/single", async (req, res) => {
 });
 
 app.post("/api/analysis", async (req, res) => {
-  console.log("Request: " + req.json());
-  console.log("Received analysis request");
-  //const analysis = makeAnalysis("https://www.youtube.com/watch?v=6rdsSTZkG_k");
-  res.send("Success");
+  try {
+    console.log("Request body:", JSON.stringify(req.body));
+    console.log("Received analysis request");
+    res.send("Success");
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
