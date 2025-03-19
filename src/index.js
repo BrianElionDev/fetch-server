@@ -1,8 +1,6 @@
 import axios from "axios";
 import express from "express";
 import { makeAnalysis } from "./ToolAnalysis.js";
-import { makeLlmPrompt } from "./Llm.js";
-import { fetchTranscriptFromAPI } from "./FetchTranscript.js";
 import { CreateNewRecord } from "./SendData.js";
 const app = express();
 

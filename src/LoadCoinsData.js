@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 
 let jsonData;
 
-async function loadData() {
+export async function loadData() {
   if (!jsonData) {
     try {
       const data = await readFile(
@@ -16,4 +16,3 @@ async function loadData() {
   }
   return jsonData;
 }
-export { loadData };
