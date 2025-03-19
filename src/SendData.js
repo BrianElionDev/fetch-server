@@ -24,19 +24,7 @@ export const CreateNewRecord = async ({
     channel_name: Channel_name || "",
     date: Publish_at || new Date().toISOString(),
     link: Video_url || "",
-    llm_answer: answers.map((answer) => ({
-      projects: Array.isArray(answer.projects)
-        ? answer.projects.map((project) => ({
-            coin_or_project: project.coin_or_project || "",
-            Marketcap: project.Marketcap ?? null,
-            Rpoints: Number(project.Rpoints) || 0,
-            "Total count": Number(project["Total count"]) || 0,
-            category: Array.isArray(project.category) ? project.category : [],
-          }))
-        : [],
-      total_count: Number(answer.total_count) || 0,
-      total_rpoints: Number(answer.total_rpoints) || 0,
-    })),
+    llm_answer: Llm_answer,
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
     answer: "Missing summary",
