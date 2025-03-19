@@ -12,7 +12,7 @@ export const CreateNewRecord = async ({
       "Expected an array in retrieve_data.results, but got something else."
     );
   } */
-  const answers = Array.isArray(data.llm_answer) ? data.llm_answer : [];
+  const answers = Array.isArray(Llm_answer) ? Llm_answer : [];
   const noTranscript = !Video_transcipt;
   const noProjects = answers.every(
     (answer) => !Array.isArray(answer?.projects) || answer.projects.length === 0
