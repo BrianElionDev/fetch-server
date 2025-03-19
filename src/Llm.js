@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { loadData } from "./LoadCoinsData";
 dotenv.config();
 const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
@@ -17,35 +18,85 @@ const API_CONFIG = {
   },
 };
 
-function formatAnalysisPrompt({ transcript, coinEmbeddings }) {
-  return `# ROLE  
-You are an expert in cryptocurrency analysis and market trends.
+async function formatAnalysisPrompt({ transcript }) {
+  const coinEmbeddings = await loadData();
+  return `#ROLE  
+You are an expert in all cryptocurrency coins, cryptocurrency trends etc.
 
-# OBJECTIVE  
-Analyze social media transcripts to identify cryptocurrencies and provide structured investment insights.
+#OBJECTIVE  
+Your task is to read transcripts from any social media source (e.g., YouTube, X, webpages), identify all cryptocurrency coins mentioned, and provide accurate investment recommendations.
 
-# CONTEXT  
-Transcript: ${transcript}
+#CONTEXT  
+This task is crucial for making profitable investment decisions in cryptocurrency coins.
 
-# INSTRUCTIONS
-1. Identify all mentioned cryptocurrencies using ${coinEmbeddings}
-2. Validate against known coins/projects
-3. Exclude companies, categories, and non-tradable assets
-4. Analyze sentiment, market cap, and categories
-5. Output structured JSON format
+#INSTRUCTIONS
 
-# OUTPUT FORMAT
-[{
-  "projects": [{
-    "coin_or_project": "Chainlink",
-    "Marketcap": "large",
-    "Rpoints": 10,
-    "Total count": 1,
-    "category": ["Gaming", "Layer 2"]
-  }],
-  "total_count": 1,
-  "total_Rpoints": 10
-}]`;
+1. Read the provided Transcript [${transcript}]
+
+2. Identify and list each and every cryptocurrency coin name or symbol mentioned  (both existing, mentioned and proposed) and
+
+     Don't leave out the major coins mentioned.
+
+    "Only take cryptocurrency coins and exclude:
+
+   * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
+
+   * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
+
+   * Non-tradable assets or project names (e.g., Tbot)  
+
+3. Data validation
+
+   * If a coin is referenced with a name, with a ticker or symbol (e.g., BTC, MOG, ETH) , in short form (e.g., eth) or If an unofficial or misspelled coin name appears,
+
+     * First, verify it matches for misspelled or exists in [${jsonData}]
+
+     * If it does, replace it with the full official name.
+
+     * If it does not exist, discard it.
+
+   * Always use the full coin names from knowledge.crypto_coins for each coin for uniformity
+
+   * Only take tradable cryptocurrency coins and exclude:
+
+     * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
+
+     * Untradable or unknown coins (e.g. Bar chain,Zerro etc.)
+
+     * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
+
+     * Non-tradable assets or project names (e.g., Tbot)  
+       If an entry is not found in [${jsonData}], ignore it."
+
+   * Match and filter all the coins against knowledge.crypto_coins to ensure validity of the coin name and get the coins full name.
+
+4. Count the mentions of each coin.
+
+5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
+
+6. Categorize the coin based on CoinMarketCap categories (e.g., DeFi, Layer 1, Gaming).
+
+7. Classify the coin by market capitalization (large, medium, small, micro).
+
+8. Calculate the total_count of all coins/projects mentioned.
+
+9. Ensure the JSON output exactly matches the required format. Only include coins validated through knowledge.crypto_coins Exclude all unrecognized names, companies, and categories."
+
+Note:coin_or_project is the coin full name
+
+#OUTPUT FORMAT
+
+[ { "projects": [ { "coin_or_project": "Chainlink", "Marketcap": "large", "Rpoints": 10, "Total count": 1, "category": ["Gaming", "Meme coins", "Layer 2"] }, { "coin_or_project": "Bitcoin", "Marketcap": "large", "Rpoints": 9, "Total count": 3, "category": ["DeFi", "Layer 1"] } ], "total_count": 16, "total_Rpoints": 57 } ]  
+
+**Notes**
+
+* Accuracy is critical—filter out any invalid or unverified coins/projects.
+
+* Only include the coins that exist in [${jsonData}]
+
+* Ensure the JSON output strictly matches the format provided.
+
+Be precise, follow the structure, and focus on delivering actionable insights.`;
 }
 
 async function fetchCoinAnalysis(params) {
@@ -57,7 +108,7 @@ async function fetchCoinAnalysis(params) {
         model: API_CONFIG.MODEL,
         messages: [
           { role: "system", content: API_CONFIG.DEFAULT_SYSTEM_PROMPT },
-          { role: "user", content: formatAnalysisPrompt(params) },
+          { role: "user", content: await formatAnalysisPrompt(params) },
         ],
         ...API_CONFIG.REQUEST_PARAMS,
       }),
