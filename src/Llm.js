@@ -11,7 +11,7 @@ const API_CONFIG = {
     Authorization: `Bearer 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`, // Store key in .env
   },
   REQUEST_PARAMS: {
-    temperature: 0.2,
+    temperature: 0.1,
     top_p: 0.9,
     search_recency_filter: "week",
     frequency_penalty: 1,

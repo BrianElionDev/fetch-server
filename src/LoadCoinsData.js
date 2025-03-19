@@ -6,7 +6,7 @@ export async function loadData() {
   if (!jsonData) {
     try {
       const data = await readFile(
-        new URL("../CoinEmbedding.json", import.meta.url),
+        new URL("./CoinEmbedding.json", import.meta.url),
         "utf-8"
       );
       jsonData = JSON.parse(data);
