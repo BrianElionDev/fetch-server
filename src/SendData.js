@@ -14,8 +14,6 @@ export const CreateNewRecord = async ({
       "Expected an array in retrieve_data.results, but got something else."
     );
   }
-  const results = Llm_answer;
-  // Ensure llm_answer is always an array
   const answers = Array.isArray(data.llm_answer) ? data.llm_answer : [];
   const noTranscript = !Video_transcipt;
   const noProjects = answers.every(
@@ -23,7 +21,6 @@ export const CreateNewRecord = async ({
   );
   if (noTranscript && noProjects) console.log("Not transcript or projects");
 
-  // Transform data
   acc = {
     channel_name: Channel_name || "",
     date: Publish_at || new Date().toISOString(),

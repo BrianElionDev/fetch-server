@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { loadData } from "./LoadCoinsData";
+import { loadData } from "../src/LoadCoinsData";
 dotenv.config();
 const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
