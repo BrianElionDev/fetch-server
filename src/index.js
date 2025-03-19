@@ -191,6 +191,7 @@ app.post("/api/analysis", async (req, res) => {
       Publish_at: Publish_at,
       Video_title: Video_title,
       Video_transcipt: transcript,
+      Llm_answer: analysis,
     });
     console.log("Analysis: " + analysis);
     res.send("Success");

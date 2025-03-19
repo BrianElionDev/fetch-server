@@ -7,6 +7,7 @@ export const CreateNewRecord = async ({
   Llm_answer,
 }) => {
   let acc = {};
+
   /* if (!Llm_answer || !Array.isArray(Llm_answer)) {
     throw new Error(
       "Expected an array in retrieve_data.results, but got something else."
