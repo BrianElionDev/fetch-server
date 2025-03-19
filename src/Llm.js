@@ -5,7 +5,7 @@ const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
   MODEL: "sonar",
   DEFAULT_SYSTEM_PROMPT:
-    "You are an AI specializing in analyzing crypto coins.Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json",
+    "You are an AI specializing in analyzing crypto coins.Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json IMPORTANT, RETURN A VALID JSON ONLY, NO NOTES!IF EMPTY RETURN AN EMPTY JSON",
   HEADERS: {
     "Content-Type": "application/json",
     Authorization: `Bearer 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`, // Store key in .env
