@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient";
+import { supabase } from "../supabaseClient.js";
 export const CreateNewRecord = async ({
   Video_url,
   Video_title,
