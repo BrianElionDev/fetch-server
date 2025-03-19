@@ -58,7 +58,7 @@ export const CreateNewRecord = async ({
     console.log(`Server response: ${result}`);
     return { success: true, error: nyll };
   } catch (error) {
-    console.error(`❌ Sending Data failed!`);
+    console.error(`❌ Sending Data failed!: ${error}`);
     return { success: false, error: error.message };
   }
 };
