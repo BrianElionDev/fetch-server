@@ -7,7 +7,6 @@ export const CreateNewRecord = async ({
   Channel_name,
   Publish_at,
   Llm_answer,
-  Video_transcipt,
 }) => {
   let acc = {};
   if (!Llm_answer || !Array.isArray(Llm_answer)) {
