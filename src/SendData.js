@@ -30,6 +30,7 @@ export const CreateNewRecord = async ({
     answer: "Missing summary",
   };
 
+  console.log(`Final Output Object: ${acc}`);
   try {
     const response = await fetch(
       "https://crypto-lens-psi.vercel.app/api/knowledge",
