@@ -22,7 +22,7 @@ export const CreateNewRecord = async ({
   const { error: insertError } = await supabase
     .from("knowledge")
     .insert(dbData);
-  if (insertError) console.log(`Error: ${JSON.stringify(error)}`);
+  if (insertError) console.log(`Error: ${JSON.stringify(insertError)}`);
 };
 /* 
 if (!Llm_answer || !Array.isArray(Llm_answer)) {
