@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { loadData } from "../src/LoadCoinsData";
+import { loadData } from "./LoadCoinsData.js";
 dotenv.config();
 const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
@@ -49,7 +49,7 @@ This task is crucial for making profitable investment decisions in cryptocurrenc
 
    * If a coin is referenced with a name, with a ticker or symbol (e.g., BTC, MOG, ETH) , in short form (e.g., eth) or If an unofficial or misspelled coin name appears,
 
-     * First, verify it matches for misspelled or exists in [${jsonData}]
+     * First, verify it matches for misspelled or exists in [${coinEmbeddings}]
 
      * If it does, replace it with the full official name.
 
@@ -66,7 +66,7 @@ This task is crucial for making profitable investment decisions in cryptocurrenc
      * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
 
      * Non-tradable assets or project names (e.g., Tbot)  
-       If an entry is not found in [${jsonData}], ignore it."
+       If an entry is not found in [${coinEmbeddings}], ignore it."
 
    * Match and filter all the coins against knowledge.crypto_coins to ensure validity of the coin name and get the coins full name.
 
@@ -92,7 +92,7 @@ Note:coin_or_project is the coin full name
 
 * Accuracy is critical—filter out any invalid or unverified coins/projects.
 
-* Only include the coins that exist in [${jsonData}]
+* Only include the coins that exist in [${coinEmbeddings}]
 
 * Ensure the JSON output strictly matches the format provided.
 

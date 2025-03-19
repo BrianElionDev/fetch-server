@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const CreateNewRecord = async ({
   Video_url,
   Video_title,
