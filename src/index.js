@@ -186,13 +186,14 @@ app.get("/api/youtube/single", async (req, res) => {
 app.post("/api/analysis", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
-    const analysis = await makeAnalysis(Video_url);
-    /* await CreateNewRecord({
+    const { transcript, analysis } = await makeAnalysis(Video_url);
+    await CreateNewRecord({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
       Video_title: Video_title,
-    }); */
+      Video_transcipt: transcript,
+    });
     console.log("Analysis: " + analysis);
     res.send("Success");
   } catch (error) {

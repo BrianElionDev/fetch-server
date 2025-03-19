@@ -5,5 +5,5 @@ export const makeAnalysis = async (url) => {
   const transcript = await fetchTranscriptFromAPI(url);
   const llmResults = await makeLlmPrompt({ transcript: transcript?.content });
   console.log("LLM Results: " + llmResults);
-  return llmResults;
+  return { transcript: transcript, analysis: llmResults };
 };
