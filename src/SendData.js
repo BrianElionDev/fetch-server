@@ -63,7 +63,7 @@ try {
   }
   const result = await response.json();
   console.log(`Server response: ${result}`);
-  return { success: true, error: nyll };
+  return { success: true, error: null };
 } catch (error) {
   console.error(`❌ Sending Data failed!: ${error}`);
   return { success: false, error: error.message };
