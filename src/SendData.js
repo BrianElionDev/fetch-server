@@ -24,12 +24,12 @@ export const CreateNewRecord = async ({
     .insert(dbData);
   if (insertError) console.log(`Error: ${insertError}`);
 };
-
-/* if (!Llm_answer || !Array.isArray(Llm_answer)) {
+/* 
+if (!Llm_answer || !Array.isArray(Llm_answer)) {
     throw new Error(
       "Expected an array in retrieve_data.results, but got something else."
     );
-  } */
+  } 
 const answers = Array.isArray(Llm_answer) ? Llm_answer : [];
 const noTranscript = !Video_transcipt;
 const noProjects = answers.every(
@@ -68,3 +68,4 @@ try {
   console.error(`❌ Sending Data failed!: ${error}`);
   return { success: false, error: error.message };
 }
+ */
