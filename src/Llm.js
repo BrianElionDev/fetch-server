@@ -120,12 +120,11 @@ async function fetchCoinAnalysis(formattedPrompt) {
   "model": "sonar",
   "messages": [
     {
-      "role": "system",
-      "content": "You are an expert in doing analysis of crypo coins and giving suggestions on them. You are provide a transcript to do analysis on. If there are coins mentioned you should return a json specified in the prompt. If there are no coins mensioned return an empty json object. Do not give any summary. THE ONLY OUPUT SHOULD BE A JSON. NO EXPLANATION. IT SHOULD NOT HAVE ANY \`\`\`json code identifiers."
+      "content": "You are an intelligent AI"
     },
     {
       "role": "user",
-      "content": "${formattedPrompt}"
+      "content": "What is the capital of kenya?"
     }
   ],
   "temperature": 0,
