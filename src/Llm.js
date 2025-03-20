@@ -109,6 +109,7 @@ Be precise, follow the structure, and focus on delivering actionable insights.`;
 
 async function fetchCoinAnalysis(formattedPrompt) {
   try {
+    console.log("Formatted prompt: " + formattedPrompt);
     const options = {
       method: "POST",
       headers: {
