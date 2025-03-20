@@ -15,7 +15,7 @@ export const CreateNewRecord = async ({
     "channel name": Channel_name,
     link: Video_url,
     summary: "summary",
-    llm_answer: Llm_answer,
+    llm_answer: Llm_answer[0],
     created_at: Publish_at,
   };
 
