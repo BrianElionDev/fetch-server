@@ -5,21 +5,28 @@ const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
   MODEL: "sonar",
   DEFAULT_SYSTEM_PROMPT:
-    "You are an AI specializing in analyzing crypto coins.Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json IMPORTANT, RETURN A VALID JSON ONLY, NO NOTES!IF EMPTY RETURN AN EMPTY JSON, RETURN A SINGLE RESPONSE.",
+    "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json",
   HEADERS: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`, // Store key in .env
   },
   REQUEST_PARAMS: {
-    temperature: 0.1,
+    temperature: 0,
     top_p: 0.9,
+    search_domain_filter: null,
+    return_images: false,
+    return_related_questions: false,
     search_recency_filter: "week",
+    top_k: 0,
+    stream: false,
+    presence_penalty: 0,
     frequency_penalty: 1,
+    response_format: null,
   },
 };
 
 async function formatAnalysisPrompt({ transcript }) {
-  const coinEmbeddings = await loadData();
+  const coinEmbeddings = "Use coins from coinmarketcap";
   const unformatted = `#ROLE  
 You are an expert in all cryptocurrency coins, cryptocurrency trends etc.
 
