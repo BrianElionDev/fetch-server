@@ -19,7 +19,7 @@ export const CreateNewRecord = async ({
   );
   if (noTranscript && noProjects) console.log("Not transcript or projects");
 
-  acc = {
+  let acc = {
     channel_name: Channel_name || "",
     date: Publish_at || new Date().toISOString(),
     link: Video_url || "",
