@@ -401,5 +401,21 @@ Note:coin_or_project is the coin full name
 * Ensure the JSON output strictly matches the format provided.
 
 Be precise, follow the structure, and focus on delivering actionable insights.`;
-let formatted = JSON.stringify();
+
+function escapeForJsonString(str) {
+  return str
+    .replace(/\\/g, "\\\\") // Escape backslashes
+    .replace(/"/g, '\\"') // Escape double quotes
+    .replace(/\n/g, "\\n") // Escape newlines
+    .replace(/\r/g, "\\r") // Escape carriage returns
+    .replace(/\t/g, "\\t") // Escape tabs
+    .replace(/\f/g, "\\f"); // Escape form feeds
+}
+
+// Example usage:
+function formatStringForJsonBody(inputString) {
+  return '"' + escapeForJsonString(inputString) + '"';
+}
+
+let formatted = JSON.stringify("You are an expert in all cryptocurrency coins, cryptocurrency trends etc.nYour task is to read transcripts from any social media source (e.g., YouTube, X, webpages), identify all cryptocurrency coins mentioned, and provide accurate investment recommendations.\n\n#CONTEXT  \nThis task is crucial for making profitable investment decisions in cryptocurrency coins.\n\n#INSTRUCTIONS\n\n1. Read the provided Transcript [crypto has endured one of the most painful one of the most brutal collapses that I've seen certainly ever in a bull ");
 console.log("Formatted " + formatted);

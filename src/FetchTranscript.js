@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const supadata = new Supadata({
-  apiKey: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEifQ.eyJpc3MiOiJuYWRsZXMiLCJpYXQiOiIxNzQxNzAzMDUyIiwicHVycG9zZSI6ImFwaV9hdXRoZW50aWNhdGlvbiIsInN1YiI6ImU3YWFlNzJmNWExODRkYTJhNGUwZWJmMTA1N2IxODZkIn0.pwAz9o5VB_drX2iEAf8NskvkdJblkwGNdfdMt1Rg_98",
+  apiKey: process.env.SUPADATA_API_KEY,
 });
 
 export const fetchTranscript = async (url) => {
