@@ -20,7 +20,7 @@ const API_CONFIG = {
 
 async function formatAnalysisPrompt({ transcript }) {
   const coinEmbeddings = await loadData();
-  return `#ROLE  
+  const unformatted = `#ROLE  
 You are an expert in all cryptocurrency coins, cryptocurrency trends etc.
 
 #OBJECTIVE  
@@ -97,6 +97,7 @@ Note:coin_or_project is the coin full name
 * Ensure the JSON output strictly matches the format provided.
 
 Be precise, follow the structure, and focus on delivering actionable insights.`;
+  return JSON.stringify(unformatted);
 }
 
 async function fetchCoinAnalysis(params) {
