@@ -51,3 +51,30 @@ export const CreateNewRecord = async ({
     return { success: false, error: error.message };
   }
 };
+
+export const PlanB = async () => {
+  const llm_answer = {
+    projects:
+      Array.isArray(item.llm_answer) && item.llm_answer[0]?.projects
+        ? item.llm_answer[0].projects.map((project: RawProject) => ({
+            coin_or_project: project.coin_or_project,
+            marketcap: (
+              project.Marketcap ||
+              project.marketcap ||
+              ""
+            ).toLowerCase(),
+            rpoints: Number(project.Rpoints || project.rpoints || 0),
+            total_count: Number(
+              project["Total count"] || project.total_count || 0
+            ),
+            category: Array.isArray(project.category) ? project.category : [],
+          }))
+        : [],
+    total_count: Number(item.llm_answer?.[0]?.total_count || 0),
+    total_rpoints: Number(
+      item.llm_answer?.[0]?.total_Rpoints ||
+        item.llm_answer?.[0]?.total_rpoints ||
+        0
+    ),
+  };
+};
