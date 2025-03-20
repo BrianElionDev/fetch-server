@@ -52,7 +52,7 @@ export const CreateNewRecord = async ({
   }
 };
 
-export const PlanB = async () => {
+/* export const PlanB = async () => {
   const llm_answer = {
     projects:
       Array.isArray(item.llm_answer) && item.llm_answer[0]?.projects
@@ -77,4 +77,4 @@ export const PlanB = async () => {
         0
     ),
   };
-};
+}; */
