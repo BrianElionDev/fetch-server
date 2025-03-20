@@ -4,6 +4,6 @@ import { makeLlmPrompt } from "./Llm.js";
 export const makeAnalysis = async (url) => {
   const transcript = await fetchTranscriptFromAPI(url);
   const llmResults = await makeLlmPrompt({ transcript: transcript?.content });
-  console.log("LLM Results: " + llmResults);
+  console.log("LLM Results: " + JSON.stringify(llmResults));
   return { transcript: transcript, analysis: llmResults };
 };

@@ -121,7 +121,7 @@ async function fetchCoinAnalysis(formattedPrompt) {
   "messages": [
     {
       "role": "system",
-      "content": "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json"
+      "content": "You are an expert in doing analysis of crypo coins and giving suggestions on them. You are provide a transcript to do analysis on. If there are coins mentioned you should return a json specified in the prompt. If there are no coins mensioned return an empty json object. Do not give any summary. THE ONLY OUPUT SHOULD BE A JSON. NO EXPLANATION"
     },
     {
       "role": "user",
