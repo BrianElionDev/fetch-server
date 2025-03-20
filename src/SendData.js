@@ -32,7 +32,7 @@ export const CreateNewRecord = async ({
   console.log(`Final Output Object: ${JSON.stringify(acc)}`);
   try {
     const response = await fetch(
-      "https://crypto-lens-psi.vercel.app/api/knowledge",
+      "https://3705-2c0f-fe38-2195-e0d9-90e4-14c-5398-4b6c.ngrok-free.app/api/knowledge",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
