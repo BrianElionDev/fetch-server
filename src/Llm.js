@@ -1,14 +1,14 @@
-import dotenv from "dotenv";
+import { configDotenv } from "dotenv";
 import { loadData } from "./LoadCoinsData.js";
-dotenv.config();
+configDotenv();
 const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
   MODEL: "sonar",
   DEFAULT_SYSTEM_PROMPT:
-    "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json",
+    "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json There should be no ***note section.RETURN A JSON OUPUT. IT SHOULD BE VALID JSON",
   HEADERS: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`, // Store key in .env
+    Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
   },
   REQUEST_PARAMS: {
     temperature: 0,
@@ -108,71 +108,73 @@ Be precise, follow the structure, and focus on delivering actionable insights.`;
 }
 
 async function fetchCoinAnalysis(formattedPrompt) {
-  try {
-    console.log("Formatted prompt: " + formattedPrompt);
-    const options = {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-        "Content-Type": "application/json",
+  const body = JSON.stringify({
+    model: "sonar",
+    messages: [
+      {
+        role: "system",
+        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT,
       },
-      body: `{
-  "model": "sonar",
-  "messages": [
-    {
-      "content": "You are an intelligent AI"
-    },
-    {
-      "role": "user",
-      "content": "What is the capital of kenya?"
-    }
-  ],
-  "temperature": 0,
-  "top_p": 0.9,
-  "search_domain_filter": null,
-  "return_images": false,
-  "return_related_questions": false,
-  "search_recency_filter": "week",
-  "top_k": 0,
-  "stream": false,
-  "presence_penalty": 0,
-  "frequency_penalty": 1,
-  "response_format": null
-}`,
-    };
+      { role: "user", content: formattedPrompt },
+    ],
+    temperature: 0.1,
+    top_p: 0.9,
+  });
 
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: body,
+  };
+
+  try {
     const response = await fetch(
       "https://api.perplexity.ai/chat/completions",
       options
     );
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API Error: ${response.status} - ${errorText}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error("Analysis Error:", error.message);
-    throw new Error("Failed to process cryptocurrency analysis");
+    console.error("Error:", error);
+    throw error;
   }
 }
 
 export const makeLlmPrompt = async ({ transcript }) => {
   try {
+    let results;
     if (!transcript) {
       throw new Error("Transcript is required for analysis");
     }
 
-    const response = await fetchCoinAnalysis(
+    await fetchCoinAnalysis(
       await formatAnalysisPrompt({ transcript: transcript })
-    );
-    const result = response.choices?.[0]?.message?.content;
+    )
+      .then((result) => {
+        results = result;
+        return results;
+      })
+      .catch((error) => {
+        console.error("Final Error:", error);
+        results = null;
+        return results;
+      });
 
-    if (!result) {
-      throw new Error("Invalid API response structure");
+    try {
+      return JSON.parse(results?.choices[0]?.message.content);
+    } catch (error) {
+      console.error("Unable to parse results!");
+      return null;
     }
-
-    return result;
   } catch (error) {
     console.error("Analysis Failed:", error.message);
     return {

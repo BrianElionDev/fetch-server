@@ -25,7 +25,6 @@ export const fetchTranscriptFromAPI = async (youtubeUrl) => {
       videoId: videoId,
       text: true,
     });
-    console.log("Transcript: " + transcript.content);
     return transcript;
   } catch (e) {
     if (e instanceof SupadataError) {
