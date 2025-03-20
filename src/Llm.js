@@ -107,20 +107,44 @@ Be precise, follow the structure, and focus on delivering actionable insights.`;
   return JSON.stringify(unformatted);
 }
 
-async function fetchCoinAnalysis(params) {
+async function fetchCoinAnalysis(formattedPrompt) {
   try {
-    const response = await fetch(API_CONFIG.ENDPOINT, {
+    const options = {
       method: "POST",
-      headers: API_CONFIG.HEADERS,
-      body: JSON.stringify({
-        model: API_CONFIG.MODEL,
-        messages: [
-          { role: "system", content: API_CONFIG.DEFAULT_SYSTEM_PROMPT },
-          { role: "user", content: await formatAnalysisPrompt(params) },
-        ],
-        ...API_CONFIG.REQUEST_PARAMS,
-      }),
-    });
+      headers: {
+        Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: `{
+  "model": "sonar",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json"
+    },
+    {
+      "role": "user",
+      "content": "${formattedPrompt}"
+    }
+  ],
+  "temperature": 0,
+  "top_p": 0.9,
+  "search_domain_filter": null,
+  "return_images": false,
+  "return_related_questions": false,
+  "search_recency_filter": "week",
+  "top_k": 0,
+  "stream": false,
+  "presence_penalty": 0,
+  "frequency_penalty": 1,
+  "response_format": null
+}`,
+    };
+
+    const response = await fetch(
+      "https://api.perplexity.ai/chat/completions",
+      options
+    );
 
     if (!response.ok) {
       throw new Error(`API request failed: ${response.status}`);
@@ -133,16 +157,15 @@ async function fetchCoinAnalysis(params) {
   }
 }
 
-export const makeLlmPrompt = async ({
-  transcript,
-  coinEmbeddings = "Use coins from coinmarket cap or coingecko",
-}) => {
+export const makeLlmPrompt = async ({ transcript }) => {
   try {
     if (!transcript) {
       throw new Error("Transcript is required for analysis");
     }
 
-    const response = await fetchCoinAnalysis({ transcript, coinEmbeddings });
+    const response = await fetchCoinAnalysis(
+      await formatAnalysisPrompt({ transcript: transcript })
+    );
     const result = response.choices?.[0]?.message?.content;
 
     if (!result) {
