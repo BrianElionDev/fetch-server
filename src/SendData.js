@@ -6,6 +6,7 @@ export const CreateNewRecord = async ({
   Channel_name,
   Publish_at,
   Llm_answer,
+  Llm_summary
 }) => {
   if (!Llm_answer || !Array.isArray(Llm_answer)) {
     throw new Error(
@@ -26,7 +27,7 @@ export const CreateNewRecord = async ({
     llm_answer: Llm_answer,
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
-    answer: "Missing summary",
+    answer:Llm_summary || "" ,
   };
 
   console.log(`Final Output Object: ${JSON.stringify(acc)}`);

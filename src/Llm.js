@@ -4,8 +4,10 @@ configDotenv();
 const API_CONFIG = {
   ENDPOINT: "https://api.perplexity.ai/chat/completions",
   MODEL: "sonar",
-  DEFAULT_SYSTEM_PROMPT:
+  DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
     "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json There should be no ***note section.RETURN A JSON OUPUT. IT SHOULD BE VALID JSON",
+  DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY:
+    "You are an intelligent ai to do anlaysis of youtube video transcrript and give a summary.",
   HEADERS: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
@@ -106,19 +108,58 @@ Note:coin_or_project is the coin full name
 Be precise, follow the structure, and focus on delivering actionable insights.`;
   return JSON.stringify(unformatted);
 }
+async function formatSummaryPrompt({ transcript }) {
+  const formatted = `You are **Cipher**, an AI assistant specializing in analyzing cryptocurrency content and providing clear, concise, and structured summaries of investment-related discussions.
 
+#### **Task:**
+
+You will be given a **YouTube video transcript** ${transcript} related to cryptocurrency markets. Your job is to **extract key insights** and generate a structured summary that is **informative, easy to scan, and user-friendly**.
+
+#### **Guidelines:**
+
+✅ **Identify and extract:**
+
+* All cryptocurrency coins mentioned
+
+* Investment recommendations
+
+* Price predictions or targets
+
+* Risk warnings or disclaimers
+
+✅ **Generate a structured summary (300-500 words) with:**
+
+* **Crypto Market Overview:** Briefly state the market sentiment and trends.
+
+* **Key Investment Insights:** Highlight major investment takeaways (e.g., Bitcoin outlook, altcoin trends, stocks, or DeFi opportunities).
+
+* **Notable Predictions & Risks:** Clearly separate facts from speculative forecasts.
+
+* **Actionable Advice (if applicable):** Summarize key recommendations from the discussion.
+
+#### **Rules to Follow:**
+
+* Keep the tone **neutral and objective**.
+
+* Use **bullet points** or short paragraphs for easy readability.
+
+* Clearly **separate facts from opinions/predictions**.
+
+* Avoid unnecessary repetition or overly technical details.`;
+
+  return JSON.stringify(formatted);
+}
 async function fetchCoinAnalysis(formattedPrompt) {
   const body = JSON.stringify({
     model: "sonar",
     messages: [
       {
         role: "system",
-        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT,
+        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS,
       },
       { role: "user", content: formattedPrompt },
     ],
-    temperature: 0.1,
-    top_p: 0.9,
+    ...API_CONFIG.REQUEST_PARAMS,
   });
 
   const options = {
@@ -131,10 +172,7 @@ async function fetchCoinAnalysis(formattedPrompt) {
   };
 
   try {
-    const response = await fetch(
-      "https://api.perplexity.ai/chat/completions",
-      options
-    );
+    const response = await fetch(API_CONFIG.ENDPOINT, options);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -142,45 +180,94 @@ async function fetchCoinAnalysis(formattedPrompt) {
     }
 
     const data = await response.json();
-    return data;
+    return { data: data, error: null };
   } catch (error) {
     console.error("Error:", error);
+    return { data: null, error: error };
+
     throw error;
+  }
+}
+
+async function fetchCoinTranscriptSummary(formattedPrompt) {
+  const body = JSON.stringify({
+    model: "sonar",
+    messages: [
+      {
+        role: "system",
+        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY,
+      },
+      { role: "user", content: formattedPrompt },
+    ],
+    ...API_CONFIG.REQUEST_PARAMS,
+  });
+
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: body,
+  };
+
+  try {
+    const response = await fetch(API_CONFIG.ENDPOINT, options);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API Error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    return { data: data, error: null };
+  } catch (error) {
+    console.error("Error:", error);
+    return { data: null, error: error };
   }
 }
 
 export const makeLlmPrompt = async ({ transcript }) => {
   try {
-    let results;
     if (!transcript) {
       throw new Error("Transcript is required for analysis");
     }
 
-    await fetchCoinAnalysis(
-      await formatAnalysisPrompt({ transcript: transcript })
-    )
-      .then((result) => {
-        results = result;
-        return results;
-      })
-      .catch((error) => {
-        console.error("Final Error:", error);
-        results = null;
-        return results;
-      });
+    const { data: coinAnalysis, error: analysisError } =
+      await fetchCoinAnalysis(
+        await formatAnalysisPrompt({ transcript: transcript })
+      );
+    const { data: coinSummary, error: summaryError } =
+      await fetchCoinTranscriptSummary(
+        await formatSummaryPrompt({ transcript: transcript })
+      );
+
+    if (analysisError || summaryError) {
+      console.error(
+        "Llm error: " +
+          "Analysis error: " +
+          analysisError +
+          " Summary error: " +
+          summaryError
+      );
+      return { analysis: null, summary: null };
+    }
 
     try {
-      return JSON.parse(results?.choices[0]?.message.content);
+      const analysis = await JSON.parse(
+        coinAnalysis?.choices[0]?.message.content
+      );
+      const summary = coinSummary?.choices[0]?.message.content.replace(
+        /\n/g,
+        ""
+      );
+      return { analysis: analysis, summary: summary };
     } catch (error) {
       console.error("Unable to parse results!");
-      return null;
+      return { analysis: null, summary: null };
     }
   } catch (error) {
     console.error("Analysis Failed:", error.message);
-    return {
-      success: false,
-      error: error.message,
-      default: { projects: [], total_count: 0, total_Rpoints: 0 },
-    };
+    return { analysis: null, summary: null };
   }
 };
