@@ -4,5 +4,7 @@ speaker is bullish on both Bitcoin and Ethereum, suggesting that current prices 
 and see significant gains.\n  \n- **Altcoins:** Altcoins, particularly those related to AI, RWA, and gaming, are highlighted as potential high-growth areas. However, these investments are considered riskier and require a longer-term perspective.\n\n- **Stock Market Influence:** The stock market's performance, influenced by factors like tariffs and economic policies, is seen as impacting the crypto market.`;
 
 // If you just want to remove all newlines
-const strWithoutNewlines = str.replace(/\n/g, "");
-console.log("String without newlines: " + strWithoutNewlines);
+console.log("String without newlines: " + JSON.stringify(str));
+// Remove newlines while preserving spaces between words
+const cleanedStr = str.replace(/\n/g, " ").replace(/\s+/g, " ");
+console.log("Cleaned string: " + JSON.stringify(cleanedStr));

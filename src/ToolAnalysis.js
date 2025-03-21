@@ -2,9 +2,7 @@ import { fetchTranscript, fetchTranscriptFromAPI } from "./FetchTranscript.js";
 import { makeLlmPrompt } from "./Llm.js";
 
 export const makeAnalysis = async (url) => {
-  const transcript = await fetchTranscriptFromAPI(
-    "https://www.youtube.com/watch?v=0qitQoWgTaQ"
-  );
+  const transcript = await fetchTranscriptFromAPI(url);
   const { analysis, summary } = await makeLlmPrompt({
     transcript: transcript?.content,
   });
