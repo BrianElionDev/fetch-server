@@ -26,7 +26,18 @@ const API_CONFIG = {
     response_format: null,
   },
 };
-
+async function formatSummaryResponse(response) {
+  let cleanedPrompt = response
+    .replace(/\[\d+\]/g, "")
+    .replace(/\[Transcript\]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  cleanedPrompt = cleanedPrompt.replace(/#{1,6}\s*(.*)/g, (match, heading) => {
+    return `## ${heading.trim()}`;
+  });
+  cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
+  return cleanedPrompt;
+}
 async function formatAnalysisPrompt({ transcript }) {
   const coinEmbeddings = "Use coins from coinmarketcap";
   const unformatted = `#ROLE  
@@ -145,7 +156,45 @@ You will be given a **YouTube video transcript** ${transcript} related to crypto
 
 * Clearly **separate facts from opinions/predictions**.
 
-* Avoid unnecessary repetition or overly technical details.`;
+* Avoid unnecessary repetition or overly technical details.
+###A sample summary:## Crypto Market Overview
+
+The current cryptocurrency market sentiment is mixed, with some investors feeling pessimistic due to recent declines, while others are optimistic about future prospects. Regulatory changes in the U.S. are seen as a positive development, potentially leading to increased mainstream adoption and investment opportunities. The recent decision by the Office of the Comptroller of the Currency (OCC) to allow U.S. banks to engage in crypto activities without prior approval is a significant step forward[1][2][3].
+
+## Key Investment Insights
+
+- **Regulatory Shifts:** The OCC's decision to permit banks to engage in crypto activities marks a significant shift in regulatory stance, potentially increasing institutional involvement and mainstream acceptance[1][2].
+- **SEC and CFTC Developments:** The SEC is moving towards clearer regulations, with a focus on fostering innovation rather than enforcement. The CFTC is also expanding its role in crypto regulation, potentially leading to more commodities being classified as such[5].
+- **FDIC's New Stance:** The FDIC is adopting a more crypto-friendly approach, aiming to facilitate innovation while maintaining banking security[5].
+- **Bitcoin and Stablecoins:** The U.S. government is focusing on building a Bitcoin reserve without using taxpayer funds, which could impact market dynamics[4].
+
+## Notable Predictions & Risks
+
+- **Market Volatility:** The market remains volatile, with recent price fluctuations in response to regulatory announcements[1][4].
+- **Regulatory Risks:** Despite positive changes, regulatory battles are not over, and further clarity is needed from other agencies like the Federal Reserve[2].
+- **Innovation Opportunities:** Clearer regulations could lead to an explosion of innovation in DeFi and tokenized assets[5].
+
+## Actionable Advice
+
+- **Stay Informed:** Investors should remain vigilant about regulatory changes and their potential impact on the market.
+- **Diversification:** Consider diversifying investments across different cryptocurrencies and assets to manage risk.
+- **Long-Term Outlook:** The long-term outlook for crypto remains bullish, driven by regulatory clarity and increased institutional participation[5].
+
+## Cryptocurrency Coins Mentioned
+
+- **Bitcoin (BTC)**
+- **Ethereum (ETH)**
+- **XRP**
+- **Dogecoin (DOGE)**
+- **Cardano (ADA)**
+
+## Risk Warnings or Disclaimers
+
+- Regulatory changes can significantly impact market volatility and investment outcomes.
+- Too much or too little regulation can hinder innovation or lead to abuse.
+- Investors should conduct thorough research before making investment decisions.
+
+`;
 
   return JSON.stringify(formatted);
 }
@@ -257,9 +306,8 @@ export const makeLlmPrompt = async ({ transcript }) => {
       const analysis = await JSON.parse(
         coinAnalysis?.choices[0]?.message.content
       );
-      const summary = coinSummary?.choices[0]?.message.content.replace(
-        /\n/g,
-        ""
+      const summary = await formatSummaryResponse(
+        coinSummary?.choices[0]?.message.content
       );
       return { analysis: analysis, summary: summary };
     } catch (error) {
