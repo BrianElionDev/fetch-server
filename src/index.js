@@ -203,7 +203,8 @@ app.post("/api/analysis/single", async (req, res) => {
 });
 app.post("/api/analysis/batch", async (req, res) => {
   const videos = req.body;
-  const batchId = Date.now().toString();
+  console.log(JSON.stringify(videos));
+  /* const batchId = Date.now().toString();
   const initialResponse = {
     success: true,
     message: "Processing started in background",
@@ -275,7 +276,7 @@ app.post("/api/analysis/batch", async (req, res) => {
     } catch (error) {
       console.error(`Batch ${batchId} processing failed:`, error);
     }
-  })();
+  })(); */
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
