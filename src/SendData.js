@@ -43,11 +43,12 @@ export const CreateNewRecord = async ({
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const result = await response.json();
-    console.log(`Server response: ${result}`);
+    console.log("Item: " + Video_title + " " + Video_url + " " + Channel_name);
     return { success: true, error: null };
   } catch (error) {
+    console.log("Item: " + Video_title + " " + Video_url + " " + Channel_name);
     console.error(`❌ Sending Data failed!: ${error}`);
+
     return { success: false, error: error.message };
   }
 };
