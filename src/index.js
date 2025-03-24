@@ -202,9 +202,13 @@ app.post("/api/analysis/single", async (req, res) => {
   }
 });
 app.post("/api/analysis/batch", async (req, res) => {
-  const videos = req.body;
-  console.log(JSON.stringify(videos));
-  /* const batchId = Date.now().toString();
+  const videos = req.body.map((item) => ({
+    Video_url: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
+    Channel_name: item.snippet.channelTitle,
+    Publish_at: item.snippet.publishedAt,
+    Video_title: item.snippet.title,
+  }));
+  const batchId = Date.now().toString();
   const initialResponse = {
     success: true,
     message: "Processing started in background",
@@ -276,7 +280,7 @@ app.post("/api/analysis/batch", async (req, res) => {
     } catch (error) {
       console.error(`Batch ${batchId} processing failed:`, error);
     }
-  })(); */
+  })();
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
