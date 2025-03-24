@@ -6,7 +6,7 @@ export const CreateNewRecord = async ({
   Channel_name,
   Publish_at,
   Llm_answer,
-  Llm_summary
+  Llm_summary,
 }) => {
   if (!Llm_answer || !Array.isArray(Llm_answer)) {
     throw new Error(
@@ -27,10 +27,9 @@ export const CreateNewRecord = async ({
     llm_answer: Llm_answer,
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
-    answer:Llm_summary || "" ,
+    answer: Llm_summary || "",
   };
 
-  console.log(`Final Output Object: ${JSON.stringify(acc)}`);
   try {
     const response = await fetch(
       "https://crypto-lens-psi.vercel.app/api/knowledge",

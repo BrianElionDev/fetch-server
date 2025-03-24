@@ -202,14 +202,80 @@ app.post("/api/analysis/single", async (req, res) => {
   }
 });
 app.post("/api/analysis/batch", async (req, res) => {
-  try {
-    const reqArray = req.body;
-    console.log("Request: " + JSON.stringify(reqArray));
-    res.send("Success");
-  } catch (error) {
-    console.error("Error processing request:", error);
-    res.status(500).send("Internal Server Error");
-  }
+  const videos = req.body;
+  const batchId = Date.now().toString();
+  const initialResponse = {
+    success: true,
+    message: "Processing started in background",
+    batchId: batchId,
+    totalVideos: videos.length,
+    startedAt: new Date().toISOString(),
+  };
+  console.log("Notification: " + JSON.stringify(initialResponse));
+  res.json(initialResponse);
+  (async () => {
+    const results = [];
+    const errors = [];
+
+    try {
+      console.log(`Processing batch ${batchId} with ${videos.length} videos`);
+
+      for (const video of videos) {
+        try {
+          const { Video_url, Channel_name, Publish_at, Video_title } = video;
+          console.log(`Processing video: ${Video_title}`);
+
+          const { transcript, analysis, summary } = await makeAnalysis(
+            Video_url
+          );
+          await CreateNewRecord({
+            Video_url,
+            Channel_name,
+            Publish_at,
+            Video_title,
+            Video_transcipt: transcript?.content,
+            Llm_answer: analysis,
+            Llm_summary: summary,
+          });
+
+          results.push({
+            url: Video_url,
+            title: Video_title,
+            status: "success",
+            timestamp: new Date().toISOString(),
+          });
+        } catch (error) {
+          console.error(`Error processing video ${video.Video_url}:`, error);
+          errors.push({
+            url: video.Video_url,
+            title: video.Video_title,
+            error: error.message,
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      const finalResponse = {
+        batchId: batchId,
+        success: true,
+        totalVideos: videos.length,
+        processed: results.length,
+        failed: errors.length,
+        results,
+        errors,
+        completedAt: new Date().toISOString(),
+      };
+
+      console.log(
+        `Batch ${batchId} processing completed:`,
+        JSON.stringify(finalResponse)
+      );
+    } catch (error) {
+      console.error(`Batch ${batchId} processing failed:`, error);
+    }
+  })();
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
