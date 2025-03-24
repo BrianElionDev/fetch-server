@@ -181,7 +181,7 @@ app.get("/api/youtube/single", async (req, res) => {
   }
 });
 
-app.post("/api/analysis", async (req, res) => {
+app.post("/api/analysis/single", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
     const { transcript, analysis, summary } = await makeAnalysis(Video_url);
@@ -195,6 +195,16 @@ app.post("/api/analysis", async (req, res) => {
       Llm_summary: summary,
     });
 
+    res.send("Success");
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+app.post("/api/analysis/batch", async (req, res) => {
+  try {
+    const reqArray = req.body;
+    console.log("Request: " + JSON.stringify(reqArray));
     res.send("Success");
   } catch (error) {
     console.error("Error processing request:", error);
