@@ -183,8 +183,12 @@ app.get("/api/youtube/single", async (req, res) => {
 
 app.post("/api/analysis/single", async (req, res) => {
   try {
-    const { Video_url, Channel_name, Publish_at, Video_title } = req.body;
-    const { transcript, analysis, summary } = await makeAnalysis(Video_url);
+    const { Video_url, Channel_name, Publish_at, Video_title, Model } =
+      req.body;
+    const { transcript, analysis, summary } = await makeAnalysis({
+      url: Video_url,
+      model: Model || "perplexity",
+    });
     await CreateNewRecord({
       Video_url: Video_url,
       Channel_name: Channel_name,
