@@ -185,6 +185,7 @@ app.post("/api/analysis/single", async (req, res) => {
   try {
     const { Video_url, Channel_name, Publish_at, Video_title, Model } =
       req.body;
+    console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     const { transcript, analysis, summary } = await makeAnalysis({
       url: Video_url,
       model: Model || "perplexity",
