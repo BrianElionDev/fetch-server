@@ -2,8 +2,8 @@ import { configDotenv } from "dotenv";
 
 configDotenv();
 
-export async function checkIfShort(url) {
-  const videoId = getVideoId(url);
+export async function checkIfShort(videoUrl) {
+  const videoId = getVideoId(videoUrl);
   const url = `https://www.googleapis.com/youtube/v3/videos?key=${process.env.YOUTUBE_API_KEY_CHECK_FOR_SHORTS}&part=snippet,contentDetails&id=${videoId}`;
 
   try {
