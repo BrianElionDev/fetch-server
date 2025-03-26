@@ -1,3 +1,4 @@
+import { LLMFactory } from "./llm/factory.js";
 import { configDotenv } from "dotenv";
 import { loadData } from "./LoadCoinsData.js";
 configDotenv();
@@ -198,122 +199,56 @@ The current cryptocurrency market sentiment is mixed, with some investors feelin
 
   return JSON.stringify(formatted);
 }
-async function fetchCoinAnalysis(formattedPrompt) {
-  const body = JSON.stringify({
-    model: "sonar",
-    messages: [
-      {
-        role: "system",
-        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS,
-      },
-      { role: "user", content: formattedPrompt },
-    ],
-    ...API_CONFIG.REQUEST_PARAMS,
-  });
 
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: body,
-  };
+// Create LLM provider instance
 
-  try {
-    const response = await fetch(API_CONFIG.ENDPOINT, options);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API Error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    return { data: data, error: null };
-  } catch (error) {
-    console.error("Error:", error);
-    return { data: null, error: error };
-
-    throw error;
-  }
-}
-
-async function fetchCoinTranscriptSummary(formattedPrompt) {
-  const body = JSON.stringify({
-    model: "sonar",
-    messages: [
-      {
-        role: "system",
-        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY,
-      },
-      { role: "user", content: formattedPrompt },
-    ],
-    ...API_CONFIG.REQUEST_PARAMS,
-  });
-
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: body,
-  };
-
-  try {
-    const response = await fetch(API_CONFIG.ENDPOINT, options);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API Error: ${response.status} - ${errorText}`);
-    }
-
-    const data = await response.json();
-    return { data: data, error: null };
-  } catch (error) {
-    console.error("Error:", error);
-    return { data: null, error: error };
-  }
-}
-
-export const makeLlmPrompt = async ({ transcript }) => {
+export const makeLlmPrompt = async ({ transcript, model }) => {
+  const llmProvider = LLMFactory.createProvider(model);
   try {
     if (!transcript) {
       throw new Error("Transcript is required for analysis");
     }
 
-    const { data: coinAnalysis, error: analysisError } =
-      await fetchCoinAnalysis(
-        await formatAnalysisPrompt({ transcript: transcript })
-      );
-    const { data: coinSummary, error: summaryError } =
-      await fetchCoinTranscriptSummary(
-        await formatSummaryPrompt({ transcript: transcript })
-      );
+    // Analysis request
+    const analysisMessages = [
+      {
+        role: "system",
+        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS,
+      },
+      {
+        role: "user",
+        content: await formatAnalysisPrompt({ transcript }),
+      },
+    ];
 
-    if (analysisError || summaryError) {
-      console.error(
-        "Llm error: " +
-          "Analysis error: " +
-          analysisError +
-          " Summary error: " +
-          summaryError
-      );
-      return { analysis: null, summary: null };
-    }
+    // Summary request
+    const summaryMessages = [
+      {
+        role: "system",
+        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY,
+      },
+      {
+        role: "user",
+        content: await formatSummaryPrompt({ transcript }),
+      },
+    ];
 
-    try {
-      const analysis = await JSON.parse(
-        coinAnalysis?.choices[0]?.message.content
-      );
-      const summary = await formatSummaryResponse(
-        coinSummary?.choices[0]?.message.content
-      );
-      return { analysis: analysis, summary: summary };
-    } catch (error) {
-      console.error("Unable to parse results!");
-      return { analysis: null, summary: null };
-    }
+    const [analysisResponse, summaryResponse] = await Promise.all([
+      llmProvider.makeRequest(analysisMessages),
+      llmProvider.makeRequest(summaryMessages),
+    ]);
+
+    const { content: analysisContent } = await llmProvider.processResponse(
+      analysisResponse
+    );
+    const { content: summaryContent } = await llmProvider.processResponse(
+      summaryResponse
+    );
+
+    const analysis = await JSON.parse(analysisContent);
+    const summary = await formatSummaryResponse(summaryContent);
+
+    return { analysis, summary };
   } catch (error) {
     console.error("Analysis Failed:", error.message);
     return { analysis: null, summary: null };
