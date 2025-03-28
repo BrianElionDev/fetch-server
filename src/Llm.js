@@ -2,43 +2,13 @@ import { LLMFactory } from "./llm/factory.js";
 import { configDotenv } from "dotenv";
 import { loadData } from "./LoadCoinsData.js";
 configDotenv();
-const API_CONFIG = {
-  ENDPOINT: "https://api.perplexity.ai/chat/completions",
-  MODEL: "sonar",
+const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
-    "Important for coin names provide offical coin name in coinmarketcap. If a coin cannot be found in coinmarketcap then leave it out. Return a json output only of same type as the sample response, Without ``json code indicator.Output should be a valid json There should be no ***note section.RETURN A JSON OUPUT. IT SHOULD BE VALID JSON",
+    "STRICTLY FOLLOW THESE REQUIREMENTS:EXCLUDE JSON CODE INDICATORS (``` ```). Return a VALID JSON output matching the exact structure of the sample response, without any additional text, code block indicators, or explanatory notes. Ensure: 1) Direct JSON parsing 2) Proper data types 3) No trailing commas 4) No undefined values 5) Correct array/object nesting 6) Consistent formatting",
   DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY:
     "You are an intelligent ai to do anlaysis of youtube video transcrript and give a summary.",
-  HEADERS: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-  },
-  REQUEST_PARAMS: {
-    temperature: 0,
-    top_p: 0.9,
-    search_domain_filter: null,
-    return_images: false,
-    return_related_questions: false,
-    search_recency_filter: "week",
-    top_k: 0,
-    stream: false,
-    presence_penalty: 0,
-    frequency_penalty: 1,
-    response_format: null,
-  },
 };
-async function formatSummaryResponse(response) {
-  let cleanedPrompt = response
-    .replace(/\[\d+\]/g, "")
-    .replace(/\[Transcript\]/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-  cleanedPrompt = cleanedPrompt.replace(/#{1,6}\s*(.*)/g, (match, heading) => {
-    return `## ${heading.trim()}`;
-  });
-  cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
-  return cleanedPrompt;
-}
+//Format promt
 async function formatAnalysisPrompt({ transcript }) {
   const coinEmbeddings = "Use coins from coinmarketcap";
   const unformatted = `#ROLE  
@@ -199,8 +169,19 @@ The current cryptocurrency market sentiment is mixed, with some investors feelin
 
   return JSON.stringify(formatted);
 }
-
-// Create LLM provider instance
+//Format response
+async function formatSummaryResponse(response) {
+  let cleanedPrompt = response
+    .replace(/\[\d+\]/g, "")
+    .replace(/\[Transcript\]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  cleanedPrompt = cleanedPrompt.replace(/#{1,6}\s*(.*)/g, (match, heading) => {
+    return `## ${heading.trim()}`;
+  });
+  cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
+  return cleanedPrompt;
+}
 
 export const makeLlmPrompt = async ({ transcript, model }) => {
   const llmProvider = LLMFactory.createProvider(model);
@@ -213,7 +194,7 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
     const analysisMessages = [
       {
         role: "system",
-        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS,
+        content: PROMPT_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS,
       },
       {
         role: "user",
@@ -225,7 +206,7 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
     const summaryMessages = [
       {
         role: "system",
-        content: API_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY,
+        content: PROMPT_CONFIG.DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY,
       },
       {
         role: "user",
@@ -244,6 +225,8 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
     const { content: summaryContent } = await llmProvider.processResponse(
       summaryResponse
     );
+
+    console.log("Analysis", analysisContent);
 
     const analysis = await JSON.parse(analysisContent);
     const summary = await formatSummaryResponse(summaryContent);
