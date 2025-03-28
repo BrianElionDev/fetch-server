@@ -7,6 +7,7 @@ export const LLM_PROVIDERS = {
     model: "sonar",
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
     },
     defaultParams: {

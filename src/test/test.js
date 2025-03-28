@@ -1,4 +1,6 @@
 import { configDotenv } from "dotenv";
+import fs from "fs/promises";
+import path from "path";
 import { supabase } from "../../supabaseClient.js";
 configDotenv();
 
@@ -25,7 +27,29 @@ async function checkIfShort(videoId) {
     return { isShort: isShort, error: error };
   }
 }
+async function writeResultsToFile(results, filename) {
+  try {
+    // Create logs directory if it doesn't exist
+    const logsDir = path.join(process.cwd(), "logs");
+    await fs.mkdir(logsDir, { recursive: true });
 
+    // Create filename with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const fullPath = path.join(logsDir, `${filename}_${timestamp}.json`);
+
+    // Format the data for better readability
+    const formattedData = JSON.stringify(results, null, 2);
+
+    // Write to file
+    await fs.writeFile(fullPath, formattedData, "utf8");
+    console.log(`Results written to ${fullPath}`);
+
+    return fullPath;
+  } catch (error) {
+    console.error("Error writing results to file:", error);
+    throw error;
+  }
+}
 function isVideoShort(contentDetails, snippet) {
   const durationSeconds = parseISO8601Duration(contentDetails.duration);
   const isShortDuration = durationSeconds <= 60;
@@ -44,9 +68,8 @@ async function fetchKnowledge() {
   try {
     const { data, error } = await supabase
       .from("knowledge")
-      .select("new_id, link")
+      .select("*")
       .order("updated_at", { ascending: false })
-      .eq("temporary_column_for_update", false)
       .limit(40);
 
     if (error) {
@@ -56,27 +79,17 @@ async function fetchKnowledge() {
 
     const results = await Promise.all(
       data.map(async (item) => {
-        const videoId = getVideoId(item.link);
-        const { isShort, error } = await checkIfShort(videoId);
         return {
           new_id: item.new_id,
           link: item.link,
-          isShort: isShort,
-          error: error,
         };
       })
     );
 
-    results.forEach((result) => {
-      console.log(
-        `Video ID: ${result.new_id}, Link: ${result.link}, Is Short: ${result.isShort}`
-      );
-      if (result.error) {
-        console.log("Found an error: " + JSON.stringify(result.error));
-        return;
-      }
-      updateVideo(result.new_id, result.isShort);
-    });
+    await writeResultsToFile(data, "data_file");
+    console.log(data);
+
+    results.forEach((result) => {});
 
     return results;
   } catch (error) {

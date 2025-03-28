@@ -1,7 +1,11 @@
 import axios from "axios";
 import express from "express";
-import { makeAnalysis } from "./ToolAnalysis.js";
-import { CreateNewRecord } from "./SendData.js";
+import { makeAnalysis, makeAnalysisBatch } from "./ToolAnalysis.js";
+import {
+  CreateNewRecord,
+  CreateNewRecordBatch,
+  CreatOrUpdateRecord,
+} from "./SendData.js";
 const app = express();
 
 app.use(express.json());
@@ -187,7 +191,7 @@ app.post("/api/analysis/single", async (req, res) => {
       req.body;
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     const { transcript, analysis, summary } = await makeAnalysis({
-      url: Video_url,
+      url: "https://www.youtube.com/watch?v=0qitQoWgTaQ",
       model: Model || "perplexity",
     });
     await CreateNewRecord({
@@ -207,7 +211,7 @@ app.post("/api/analysis/single", async (req, res) => {
   }
 });
 app.post("/api/analysis/batch", async (req, res) => {
-  const videos = req.body.map((item) => ({
+  /*  const videos = req.body.map((item) => ({
     Video_url: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
     Channel_name: item.snippet.channelTitle,
     Publish_at: item.snippet.publishedAt,
@@ -285,9 +289,22 @@ app.post("/api/analysis/batch", async (req, res) => {
     } catch (error) {
       console.error(`Batch ${batchId} processing failed:`, error);
     }
-  })();
+  })(); */
+  const { model } = req.body;
+  const results = await makeAnalysisBatch({
+    model: model?.toLowerCase() || "perplexity",
+  });
+  await CreatOrUpdateRecord({ data: results, model: model || "perplexity" });
+  res.json(results);
+});
+app.post("/api/analysis/test/batch", async (req, res) => {
+  const { model } = req.body;
+  const results = await makeAnalysisBatch({
+    model: model?.toLowerCase() || "perplexity",
+  });
+  await CreatOrUpdateRecord({ data: results, model: model || "perplexity" });
+  res.json(results);
 });
 
 app.listen(3000, () => console.log("Server running on 3000."));
-
 export default app;
