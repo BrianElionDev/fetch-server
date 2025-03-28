@@ -21,4 +21,3 @@ export async function loadData(filePath) {
     console.error("Error reading JSON file:", error);
   }
 }
-return jsonData;
