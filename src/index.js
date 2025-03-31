@@ -191,7 +191,7 @@ app.post("/api/analysis/single", async (req, res) => {
       req.body;
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     const { transcript, analysis, summary } = await makeAnalysis({
-      url: "https://www.youtube.com/watch?v=0qitQoWgTaQ",
+      url: Video_url,
       model: Model || "perplexity",
     });
     await CreateNewRecord({
