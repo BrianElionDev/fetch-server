@@ -191,7 +191,7 @@ app.post("/api/analysis/single", async (req, res) => {
       req.body;
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     const { transcript, analysis, summary } = await makeAnalysis({
-      url: "https://www.youtube.com/watch?v=0qitQoWgTaQ",
+      url: Video_url,
       model: Model || "perplexity",
     });
     await CreateNewRecord({
@@ -299,6 +299,7 @@ app.post("/api/analysis/batch", async (req, res) => {
 });
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
+
   const results = await makeAnalysisBatch({
     model: model?.toLowerCase() || "perplexity",
   });
