@@ -3,7 +3,7 @@ import { readFile } from "fs/promises";
 import { makeLlmPrompt } from "./Llm.js";
 let jsonData;
 export const makeAnalysis = async ({ url, model }) => {
-  const transcript = await fetchTranscriptFromAPI(url);
+  const transcript = await fetchTranscript(url);
   const { analysis, summary } = await makeLlmPrompt({
     transcript: transcript?.content,
     model: model,

@@ -2,31 +2,11 @@ import { configDotenv } from "dotenv";
 import fs from "fs/promises";
 import path from "path";
 import { supabase } from "../../supabaseClient.js";
+import { fetchTranscript } from "../FetchTranscript.js";
+import { makeAnalysis } from "../ToolAnalysis.js";
+import { link } from "fs";
 configDotenv();
 
-async function checkIfShort(videoId) {
-  const url = `https://www.googleapis.com/youtube/v3/videos?key=${process.env.YOUTUBE_API_KEY}&part=snippet,contentDetails&id=${videoId}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (!data.items || data.items.length === 0) {
-      console.log("Video not found");
-      return { isShort: false, error: "No video" };
-    }
-
-    const video = data.items[0];
-    const snippet = video.snippet;
-    const contentDetails = video.contentDetails;
-
-    const isShort = isVideoShort(contentDetails, snippet);
-    return { isShort: isShort, error: null };
-  } catch (error) {
-    console.error("Error:", error);
-    return { isShort: isShort, error: error };
-  }
-}
 async function writeResultsToFile(results, filename) {
   try {
     // Create logs directory if it doesn't exist
@@ -50,83 +30,117 @@ async function writeResultsToFile(results, filename) {
     throw error;
   }
 }
-function isVideoShort(contentDetails, snippet) {
-  const durationSeconds = parseISO8601Duration(contentDetails.duration);
-  const isShortDuration = durationSeconds <= 60;
-  return isShortDuration;
-}
-
-function parseISO8601Duration(duration) {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  const hours = parseInt(match[1]) || 0;
-  const minutes = parseInt(match[2]) || 0;
-  const seconds = parseInt(match[3]) || 0;
-  return hours * 3600 + minutes * 60 + seconds;
-}
 
 async function fetchKnowledge() {
+  const links = [
+    //Across the rubicon
+    "https://www.youtube.com/watch?v=CUzz4_a1PPI",
+    "https://www.youtube.com/watch?v=tLcTJ__QD54",
+    //AlexBecker
+    "https://www.youtube.com/watch?v=ZjY7r4HEZfY",
+    "https://www.youtube.com/watch?v=xmuJ8n39Kwk",
+    "https://www.youtube.com/watch?v=4fQhNVcg6jc",
+    //Coin Bureau
+    "https://www.youtube.com/watch?v=Qw6NBIgAgQQ",
+    "https://www.youtube.com/watch?v=_G1VQLQtlro",
+    //Ellio Trades
+    "https://www.youtube.com/watch?v=m0XEeejOOkU",
+    "https://www.youtube.com/watch?v=openhM5Gurs",
+    "https://www.youtube.com/watch?v=mRK8OOal5V4",
+  ];
   try {
+    if (!Array.isArray(links) || links.length === 0) {
+      throw new Error("Please provide an array of links");
+    }
+
     const { data, error } = await supabase
       .from("knowledge")
       .select("*")
-      .order("updated_at", { ascending: false })
-      .limit(40);
+      .in("link", links)
+      .order("updated_at", { ascending: false });
 
     if (error) {
       console.log("Error: " + JSON.stringify(error));
       return;
     }
 
-    const results = await Promise.all(
-      data.map(async (item) => {
-        return {
-          new_id: item.new_id,
-          link: item.link,
-        };
-      })
-    );
+    const results = data.map((item) => ({
+      new_id: item.new_id,
+      link: item.link,
+    }));
 
     await writeResultsToFile(data, "data_file");
     console.log(data);
 
-    results.forEach((result) => {});
-
     return results;
   } catch (error) {
     console.error("Error in fetchKnowledge:", error);
+    throw error;
   }
 }
 
-function getVideoId(videoUrl) {
-  try {
-    return videoUrl.split("v=")[1];
-  } catch (error) {
-    console.error("Error extracting video ID:", error);
-    return null;
+async function fetchWrongData() {
+  const { data, error } = await supabase
+    .from("knowledge")
+    .select(`date, video_title, "channel name"`)
+    .neq("channel name", "XU7FUTBOL")
+    .gte("date", "2025-03-27T00:00:09+00:00");
+  if (error) {
+    console.error("Error: " + JSON.stringify(error));
   }
+  console.table(data);
 }
 
-async function updateVideo(new_id, isShort) {
-  try {
-    const { data, error } = await supabase
-      .from("knowledge")
-      .update({
-        video_type: isShort ? "short" : "video",
-        temporary_column_for_update: true,
-      })
-      .eq("new_id", new_id);
-    if (error) {
-      console.error("Error updating video:", error);
-      return null;
-    }
-    return data;
-  } catch (error) {
-    console.error("Error updating video:", error);
-    return null;
+async function make(videoUrl = "") {
+  console.log("Started analysis....");
+  const { transcript, analysis, summary } = await makeAnalysis({
+    url: "https://www.youtube.com/watch?v=0qitQoWgTaQ",
+    model: "perplexity",
+  });
+  const cleanLlmAnswer = await cleanJsonResponse(analysis);
+
+  console.log("Cleaned: " + JSON.stringify(cleanLlmAnswer));
+  return;
+  const { data, error } = await supabase
+    .from("knowledge")
+    .update({ summary: summary, analysis: analysis })
+    .eq("link", videoUrl);
+  if (error) {
+    console.log("Error: " + error);
   }
 }
+const transcript = await fetchTranscript(
+  "https://www.youtube.com/watch?v=xmuJ8n39Kwk"
+);
 
-fetchKnowledge()
+console.log("Transcript: " + JSON.stringify(transcript));
+
+async function cleanJsonResponse(response) {
+  const llm_answer = {
+    projects:
+      Array.isArray(response) && response[0]?.projects
+        ? response[0].projects.map((project) => ({
+            coin_or_project: project.coin_or_project,
+            marketcap: (
+              project.Marketcap ||
+              project.marketcap ||
+              ""
+            ).toLowerCase(),
+            rpoints: Number(project.Rpoints || project.rpoints || 0),
+            total_count: Number(
+              project["Total count"] || project.total_count || 0
+            ),
+            category: Array.isArray(project.category) ? project.category : [],
+          }))
+        : [],
+    total_count: Number(response[0]?.total_count || 0),
+    total_rpoints: Number(
+      response[0]?.total_Rpoints || response[0]?.total_rpoints || 0
+    ),
+  };
+  return await JSON.parse(JSON.stringify(llm_answer));
+}
+/* fetchKnowledge()
   .then((results) => {
     if (results) {
       console.log("All videos processed successfully");
@@ -135,3 +149,7 @@ fetchKnowledge()
   .catch((error) => {
     console.error("Error in main execution:", error);
   });
+ */
+
+//fetchWrongData();
+//make();

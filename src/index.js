@@ -299,6 +299,7 @@ app.post("/api/analysis/batch", async (req, res) => {
 });
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
+
   const results = await makeAnalysisBatch({
     model: model?.toLowerCase() || "perplexity",
   });
