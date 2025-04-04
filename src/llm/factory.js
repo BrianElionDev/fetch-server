@@ -1,6 +1,7 @@
 import { LLM_PROVIDERS } from "./config.js";
 import { PerplexityProvider } from "./providers/perplexity.js";
 import { OpenAIProvider } from "./providers/openai.js";
+import { GeminiProvider } from "./providers/gemini.js";
 
 export class LLMFactory {
   static createProvider(providerName) {
@@ -14,6 +15,8 @@ export class LLMFactory {
         return new PerplexityProvider(config);
       case "openai":
         return new OpenAIProvider(config);
+      case "gemini":
+        return new GeminiProvider(config);
       default:
         throw new Error(`No implementation for provider: ${providerName}`);
     }

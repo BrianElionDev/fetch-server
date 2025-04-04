@@ -5,6 +5,7 @@ import { supabase } from "../../supabaseClient.js";
 import { fetchTranscript } from "../FetchTranscript.js";
 import { makeAnalysis } from "../ToolAnalysis.js";
 import { link } from "fs";
+import { LLMFactory } from "../llm/factory.js";
 configDotenv();
 
 async function writeResultsToFile(results, filename) {
@@ -113,8 +114,6 @@ const transcript = await fetchTranscript(
   "https://www.youtube.com/watch?v=xmuJ8n39Kwk"
 );
 
-console.log("Transcript: " + JSON.stringify(transcript));
-
 async function cleanJsonResponse(response) {
   const llm_answer = {
     projects:
@@ -153,3 +152,14 @@ async function cleanJsonResponse(response) {
 
 //fetchWrongData();
 //make();
+
+/* const gemini = LLMFactory.createProvider("gemini");
+const results = await gemini.makeRequest("What is the color of the moon?");
+const content = await gemini.processResponse(results);
+console.log("Results: " + content.content);
+ */
+
+const transcriptP = await fetchTranscript(
+  "https://www.youtube.com/watch?v=gAUfddboeOo"
+);
+console.log("Transcript: " + transcriptP);

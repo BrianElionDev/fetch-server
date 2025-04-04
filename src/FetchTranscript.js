@@ -34,12 +34,11 @@ async function formatTranscript(rawTranscript) {
 export const fetchTranscript = async (url) => {
   try {
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
-
     const rawTranscript = await formatTranscript(transcriptItems);
-    return rawTranscript;
+    return { content: rawTranscript };
   } catch (error) {
     console.error("Error fetching transcript:", error);
-    return null;
+    return { content: null };
   }
 };
 

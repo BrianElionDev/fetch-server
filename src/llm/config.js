@@ -40,4 +40,11 @@ export const LLM_PROVIDERS = {
       presence_penalty: 0,
     },
   },
+  GEMINI: {
+    name: "gemini",
+    endpoint: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  },
 };

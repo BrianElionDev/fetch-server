@@ -203,8 +203,7 @@ app.post("/api/analysis/single", async (req, res) => {
       Llm_answer: analysis,
       Llm_summary: summary,
     });
-
-    res.send("Success");
+    res.json({ analysis: analysis });
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).send("Internal Server Error");
