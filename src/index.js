@@ -194,6 +194,8 @@ app.post("/api/analysis/single", async (req, res) => {
       url: Video_url,
       model: Model || "perplexity",
     });
+
+    console.log("Analysis: " + JSON.stringify(analysis));
     await CreateNewRecord({
       Video_url: Video_url,
       Channel_name: Channel_name,

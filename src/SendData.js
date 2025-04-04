@@ -49,7 +49,6 @@ export const CreateNewRecord = async ({
     answer: Llm_summary || "",
     video_type: await checkIfShort(Video_url),
   };
-
   try {
     const response = await fetch(
       "https://crypto-lens-psi.vercel.app/api/knowledge",

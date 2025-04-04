@@ -40,6 +40,19 @@ export const LLM_PROVIDERS = {
       presence_penalty: 0,
     },
   },
+  GROK: {
+    name: "grok",
+    endpoint: "https://api.x.ai/v1/chat/completions",
+    model: "grok-2-latest",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.GROK_API_KEY}`,
+    },
+    defaultParams: {
+      temperature: 0,
+      stream: false,
+    },
+  },
   GEMINI: {
     name: "gemini",
     endpoint: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,

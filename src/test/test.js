@@ -152,14 +152,22 @@ async function cleanJsonResponse(response) {
 
 //fetchWrongData();
 //make();
+/* const analysisMessages = [
+  {
+    role: "system",
+    content: "You are an intelligent assistant",
+  },
+  {
+    role: "user",
+    content: "What colour is the moon?",
+  },
+];
+const grok = LLMFactory.createProvider("grok");
+const results = await grok.makeRequest(analysisMessages);
+const content = await grok.processResponse(results);
+console.log("Results: " + content.content); */
 
-/* const gemini = LLMFactory.createProvider("gemini");
-const results = await gemini.makeRequest("What is the color of the moon?");
-const content = await gemini.processResponse(results);
-console.log("Results: " + content.content);
- */
-
-const transcriptP = await fetchTranscript(
+/* const transcriptP = await fetchTranscript(
   "https://www.youtube.com/watch?v=gAUfddboeOo"
 );
-console.log("Transcript: " + transcriptP);
+console.log("Transcript: " + transcriptP); */
