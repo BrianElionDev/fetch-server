@@ -226,8 +226,6 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
       summaryResponse
     );
 
-    console.log("Analysis", analysisContent);
-
     const analysis = await JSON.parse(analysisContent);
     const summary = await formatSummaryResponse(summaryContent);
 

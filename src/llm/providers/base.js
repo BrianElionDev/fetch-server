@@ -3,7 +3,7 @@ export class BaseLLMProvider {
     this.config = config;
   }
 
-  async makeRequest(messages) {
+   async  makeRequest(messages) {
     const options = {
       method: "POST",
       headers: this.config.headers,
