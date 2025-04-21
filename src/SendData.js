@@ -97,32 +97,54 @@ export const CreateNewRecordTest = async ({
     (answer) => !Array.isArray(answer?.projects) || answer.projects.length === 0
   );
   if (noTranscript && noProjects) console.log("Not transcript or projects");
+  const llm_answer = {
+    projects:
+      Array.isArray(Llm_answer) && Llm_answer[0]?.projects
+        ? Llm_answer[0].projects.map((project) => ({
+            coin_or_project: project.coin_or_project,
+            marketcap: (
+              project.Marketcap ||
+              project.marketcap ||
+              ""
+            ).toLowerCase(),
+            rpoints: Number(project.Rpoints || project.rpoints || 0),
+            total_count: Number(
+              project["Total count"] || project.total_count || 0
+            ),
+            category: Array.isArray(project.category)
+              ? project.category
+              : [],
+          }))
+        : [],
+    total_count: Number(Llm_answer[0]?.total_count || 0),
+    total_rpoints: Number(
+      Llm_answer[0]?.total_Rpoints ||
+        Llm_answer[0]?.total_rpoints ||
+        0
+    ),
+  };
 
-  let acc = {
-    channel_name: Channel_name || "",
+  const cleanedData = {
     date: Publish_at || new Date().toISOString(),
-    link: Video_url || "",
-    llm_answer: Llm_answer,
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
-    answer: Llm_summary || "",
+    link: Video_url || "",
+    summary: Llm_summary,
+    llm_answer: JSON.parse(JSON.stringify(llm_answer)),
     video_type: await checkIfShort(Video_url),
-    model: Model || "perplexity",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
 
   try {
-    const response = await fetch(
-      "https://crypto-lens-psi.vercel.app/api/knowledge",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(acc),
-      }
-    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+
+console.log("Cleaned data: "+ JSON.stringify(cleanedData));
+  const {error} = await supabase.from("knowledge").insert({...cleanedData});
+   
+   if(error){
+    console.log('Error: '+ JSON.stringify(error));
+   }
     console.log(
       "Success: Item: " + Video_title + " " + Video_url + " " + Channel_name
     );

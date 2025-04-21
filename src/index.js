@@ -4,6 +4,7 @@ import { makeAnalysis, makeAnalysisBatch } from "./ToolAnalysis.js";
 import {
   CreateNewRecord,
   CreateNewRecordBatch,
+  CreateNewRecordTest,
   CreatOrUpdateRecord,
 } from "./SendData.js";
 const app = express();
@@ -192,11 +193,11 @@ app.post("/api/analysis/single", async (req, res) => {
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     const { transcript, analysis, summary } = await makeAnalysis({
       url: Video_url,
-      model: Model || "perplexity",
+      model: Model || "grok",
     });
 
     console.log("Analysis: " + JSON.stringify(analysis));
-    await CreateNewRecord({
+    await CreateNewRecordTest({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
@@ -293,18 +294,21 @@ app.post("/api/analysis/batch", async (req, res) => {
   })(); */
   const { model } = req.body;
   const results = await makeAnalysisBatch({
-    model: model?.toLowerCase() || "perplexity",
+    model: model?.toLowerCase() || "grok",
   });
-  await CreatOrUpdateRecord({ data: results, model: model || "perplexity" });
+  await CreatOrUpdateRecord({ data: results, model: model || "grok" });
   res.json(results);
 });
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
 
   const results = await makeAnalysisBatch({
-    model: model?.toLowerCase() || "perplexity",
+    model: model?.toLowerCase() || "grok",
   });
-  await CreatOrUpdateRecord({ data: results, model: model || "perplexity" });
+  await CreatOrUpdateRecord({
+    data: results,
+    model: model?.toLowerCase() || "grok",
+  });
   res.json(results);
 });
 

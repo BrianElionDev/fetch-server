@@ -1,8 +1,8 @@
 import { LLM_PROVIDERS } from "./config.js";
 import { PerplexityProvider } from "./providers/perplexity.js";
 import { OpenAIProvider } from "./providers/openai.js";
-import { GrokProvider } from "./providers/grok.js";
 import { GeminiProvider } from "./providers/gemini.js";
+import { GrokProvider } from "./providers/grok.js";
 
 export class LLMFactory {
   static createProvider(providerName) {
