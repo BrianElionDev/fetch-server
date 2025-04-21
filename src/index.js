@@ -202,7 +202,7 @@ app.post("/api/analysis/single", async (req, res) => {
       Channel_name: Channel_name,
       Publish_at: Publish_at,
       Video_title: Video_title,
-      Video_transcipt: transcript?.content,
+      Video_transcipt: transcript,
       Llm_answer: analysis,
       Llm_summary: summary,
     });

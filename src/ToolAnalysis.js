@@ -4,18 +4,30 @@ import { makeLlmPrompt } from "./Llm.js";
 let jsonData;
 export const makeAnalysis = async ({ url, model }) => {
   const transcript = await fetchTranscript(url);
-  const { analysis, summary } = await makeLlmPrompt({
+  const {
+    analysis,
+    summary,
+    transcript: correctedTranscript,
+  } = await makeLlmPrompt({
     transcript: transcript?.content,
     model: model,
   });
-  return { transcript: transcript, analysis: analysis, summary: summary };
+  return {
+    transcript: correctedTranscript,
+    analysis: analysis,
+    summary: summary,
+  };
 };
 export const makeAnalysisBatch = async ({ model }) => {
   const data = await loadData();
   const results = [];
   console.log("Starting Analysis");
   for (const item of data) {
-    const { analysis, summary } = await makeLlmPrompt({
+    const {
+      analysis,
+      summary,
+      transcript: correctedTranscript,
+    } = await makeLlmPrompt({
       transcript: item.transcript,
       model: model,
     });

@@ -279,6 +279,7 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
     return {
       analysis,
       summary,
+      transcript: correctedTranscript,
       usage: analysisUsage + summaryUsage + transcriptCorrectionUsage,
     };
   } catch (error) {
