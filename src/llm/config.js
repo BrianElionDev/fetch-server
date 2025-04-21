@@ -27,7 +27,7 @@ export const LLM_PROVIDERS = {
   OPENAI: {
     name: "openai",
     endpoint: "https://api.openai.com/v1/chat/completions",
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -38,6 +38,23 @@ export const LLM_PROVIDERS = {
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
+    },
+  },
+  GROK: {
+    name: "grok-3",
+    endpoint: "https://api.x.ai/v1/chat/completions",
+    model: "grok-3-mini-beta",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.GROK_API_KEY}`,
+    },
+    defaultParams: {
+      temperature: 0,
+      stream: false,
+    },
+    promptCost: {
+      promptTokenCost: 0.0000003,
+      completionCost: 0.0000005,
     },
   },
   GEMINI: {

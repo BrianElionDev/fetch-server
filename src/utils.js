@@ -1,4 +1,5 @@
 import { readFile } from "fs/promises";
+import { LLM_PROVIDERS } from "./llm/config.js";
 
 export function cleanCodeBlockIndicators(content) {
   if (!content) return content;
@@ -21,3 +22,14 @@ export async function loadData(filePath) {
     console.error("Error reading JSON file:", error);
   }
 }
+export const calculatePromptCost = ({
+  inputTokens,
+  outputTokens,
+  llmProvider,
+}) => {
+  const config = LLM_PROVIDERS[llmProvider.toUpperCase()];
+
+  const inputCost = inputTokens * config.promptCost.promptTokenCost;
+  const outputCost = outputTokens * config.promptCost.completionCost;
+  return inputCost + outputCost;
+};

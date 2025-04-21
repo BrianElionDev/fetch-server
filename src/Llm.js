@@ -4,9 +4,9 @@ import { loadData } from "./LoadCoinsData.js";
 configDotenv();
 const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
-    "STRICTLY FOLLOW THESE REQUIREMENTS:EXCLUDE JSON CODE INDICATORS (``` ```). Return a VALID JSON output matching the exact structure of the sample response, without any additional text, code block indicators, or explanatory notes. Ensure: 1) Direct JSON parsing 2) Proper data types 3) No trailing commas 4) No undefined values 5) Correct array/object nesting 6) Consistent formatting",
+    "STRICTLY FOLLOW THESE REQUIREMENTS:EXCLUDE JSON CODE INDICATORS (``` ```). Return a VALID JSON output matching the exact structure of the sample response, without any additional text, code block indicators, or explanatory notes. RETURN A DOUBLE QUOTED JSON.  Ensure: 1) Direct JSON parsing 2) Proper data types 3) No trailing commas 4) No undefined values 5) Correct array/object nesting 6) Consistent formatting",
   DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY:
-    "You are an intelligent ai to do anlaysis of youtube video transcrript and give a summary.",
+    "You are an intelligent ai to do anlaysis of youtube video transcrript and give a summary. Return summary of the same format as specified. DO NOT ADD ANY NOTES OR OVERVIEW. RETURN THE SPECIFIED SUMMARY FORMAT ",
 };
 //Format promt
 async function formatAnalysisPrompt({ transcript }) {
@@ -128,8 +128,8 @@ You will be given a **YouTube video transcript** ${transcript} related to crypto
 * Clearly **separate facts from opinions/predictions**.
 
 * Avoid unnecessary repetition or overly technical details.
-###A sample summary:## Crypto Market Overview
-
+#OUTPUT FORMAT
+## Crypto Market Overview
 The current cryptocurrency market sentiment is mixed, with some investors feeling pessimistic due to recent declines, while others are optimistic about future prospects. Regulatory changes in the U.S. are seen as a positive development, potentially leading to increased mainstream adoption and investment opportunities. The recent decision by the Office of the Comptroller of the Currency (OCC) to allow U.S. banks to engage in crypto activities without prior approval is a significant step forward[1][2][3].
 
 ## Key Investment Insights
@@ -164,7 +164,7 @@ The current cryptocurrency market sentiment is mixed, with some investors feelin
 - Regulatory changes can significantly impact market volatility and investment outcomes.
 - Too much or too little regulation can hinder innovation or lead to abuse.
 - Investors should conduct thorough research before making investment decisions.
-
+Please follow the summary output format!
 `;
 
   return JSON.stringify(formatted);
@@ -182,6 +182,47 @@ async function formatSummaryResponse(response) {
   cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
   return cleanedPrompt;
 }
+const correctTranscriptErrors = async ({ transcript }) => {
+  if (!transcript) return;
+  try {
+    const llmProvider = LLMFactory.createProvider("grok");
+    const analysisMessages = [
+      {
+        role: "system",
+        content: `Do Analysis of the transcript, and correct the errors in the transcript.
+          #CONTEXT
+          The transcript is from a youtube video. The transcript may contain errors, such as wrong names, wrong words, etc.
+          The transcript is about cryptocurrency coins, often their names are misspelled or wrong. Your purpose is to correct this errors and return the corrected transcript. Try to infer which coin they were mentioning, if they are multiple with the same name.
+          #INSTRUCTIONS
+          -Correct the errors in the transcript.
+          -Do not change the meaning of the transcript.
+          -Do not add any extra information to the transcript.
+          -Do not remove any information from the transcript.
+          -Do not change the format of the transcript.
+          -Do not change the order of the transcript.
+          #Important
+          -Return the corrected transcript .
+          -DO NOT RETURN NOTES OR COMMENTS, I NEED THE TRANSCRIPT ONLY!S.
+            `,
+      },
+      {
+        role: "user",
+        content: transcript,
+      },
+    ];
+    const response = await llmProvider.makeRequest(analysisMessages);
+    const processedResponse = await llmProvider.processResponse(response);
+
+    return {
+      transcript: processedResponse.content,
+      usage: processedResponse.usage,
+      error: null,
+    };
+  } catch (error) {
+    console.log("Error at llm prompt: " + error);
+    return { transcript: null, usage: 0, error: error };
+  }
+};
 
 export const makeLlmPrompt = async ({ transcript, model }) => {
   const llmProvider = LLMFactory.createProvider(model);
@@ -189,6 +230,11 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
     if (!transcript) {
       throw new Error("Transcript is required for analysis");
     }
+    const {
+      transcript: correctedTranscript,
+      usage: transcriptCorrectionUsage,
+      error: transcriptError,
+    } = await correctTranscriptErrors({ transcript });
 
     // Analysis request
     const analysisMessages = [
@@ -198,7 +244,9 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
       },
       {
         role: "user",
-        content: await formatAnalysisPrompt({ transcript }),
+        content: await formatAnalysisPrompt(
+          { transcript: correctedTranscript } || transcript
+        ),
       },
     ];
 
@@ -210,7 +258,9 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
       },
       {
         role: "user",
-        content: await formatSummaryPrompt({ transcript }),
+        content: await formatSummaryPrompt(
+          { transcript: correctedTranscript } || transcript
+        ),
       },
     ];
 
@@ -219,19 +269,21 @@ export const makeLlmPrompt = async ({ transcript, model }) => {
       llmProvider.makeRequest(summaryMessages),
     ]);
 
-    const { content: analysisContent } = await llmProvider.processResponse(
-      analysisResponse
-    );
-    const { content: summaryContent } = await llmProvider.processResponse(
-      summaryResponse
-    );
+    const { content: analysisContent, usage: analysisUsage } =
+      await llmProvider.processResponse(analysisResponse);
+    const { content: summaryContent, usage: summaryUsage } =
+      await llmProvider.processResponse(summaryResponse);
 
     const analysis = await JSON.parse(analysisContent);
     const summary = await formatSummaryResponse(summaryContent);
-
-    return { analysis, summary };
+    return {
+      analysis,
+      summary,
+      transcript: correctedTranscript,
+      usage: analysisUsage + summaryUsage + transcriptCorrectionUsage,
+    };
   } catch (error) {
     console.error("Analysis Failed:", error.message);
-    return { analysis: null, summary: null };
+    return { analysis: null, summary: null, usage: 0 };
   }
 };
