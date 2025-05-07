@@ -1,6 +1,8 @@
 import { LLMFactory } from "./llm/factory.js";
 import { configDotenv } from "dotenv";
+
 import { loadData } from "./LoadCoinsData.js";
+import axios from "axios";
 configDotenv();
 const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
@@ -18,60 +20,20 @@ You are an expert in all cryptocurrency coins, cryptocurrency trends etc.
 Your task is to read transcripts from any social media source (e.g., YouTube, X, webpages), identify all cryptocurrency coins mentioned, and provide accurate investment recommendations.
 
 #CONTEXT  
-This task is crucial for making profitable investment decisions in cryptocurrency coins.
+This task is crucial for making profitable investment decisions in cryptocurrency coins. 
+
+#IMPORTANT
+At the bottom of each transcript there is a section for "Coins", this is the list of coins mentioned in the transcript. Use this list in your analysis. DONOT LEAVE ANYTHING OUT.
 
 #INSTRUCTIONS
-
-1. Read the provided Transcript [${transcript}]
-
-2. Identify and list each and every cryptocurrency coin name or symbol mentioned  (both existing, mentioned and proposed) and
-
-     Don't leave out the major coins mentioned.
-
-    "Only take cryptocurrency coins and exclude:
-
-   * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
-
-   * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
-
-   * Non-tradable assets or project names (e.g., Tbot)  
-
-3. Data validation
-
-   * If a coin is referenced with a name, with a ticker or symbol (e.g., BTC, MOG, ETH) , in short form (e.g., eth) or If an unofficial or misspelled coin name appears,
-
-     * First, verify it matches for misspelled or exists in [${coinEmbeddings}]
-
-     * If it does, replace it with the full official name.
-
-     * If it does not exist, discard it.
-
-   * Always use the full coin names from knowledge.crypto_coins for each coin for uniformity
-
-   * Only take tradable cryptocurrency coins and exclude:
-
-     * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
-
-     * Untradable or unknown coins (e.g. Bar chain,Zerro etc.)
-
-     * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
-
-     * Non-tradable assets or project names (e.g., Tbot)  
-       If an entry is not found in [${coinEmbeddings}], ignore it."
-
-   * Match and filter all the coins against knowledge.crypto_coins to ensure validity of the coin name and get the coins full name.
-
-4. Count the mentions of each coin.
-
+1. The transcript ${transcript}
+3. At the end of the transcript there is a seCtion for "Coins", use this list of coins to do the analysis, also each of the coins in this section must be in the final output.
+4. Count the mentions of each coin.(Exclude the counting the coins in "Coins" section at the bottom of each transcript, as this will lead to double counting).
 5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
-
-6. Categorize the coin based on CoinMarketCap categories (e.g., DeFi, Layer 1, Gaming).
-
 7. Classify the coin by market capitalization (large, medium, small, micro).
-
 8. Calculate the total_count of all coins/projects mentioned.
+9. Ensure the JSON output exactly matches the required format.
 
-9. Ensure the JSON output exactly matches the required format. Only include coins validated through knowledge.crypto_coins Exclude all unrecognized names, companies, and categories."
 
 Note:coin_or_project is the coin full name
 
@@ -81,12 +43,8 @@ Note:coin_or_project is the coin full name
 
 **Notes**
 
-* Accuracy is critical—filter out any invalid or unverified coins/projects.
-
-* Only include the coins that exist in [${coinEmbeddings}]
-
+* Only include the coins mentioned at the bottom of each transcript.
 * Ensure the JSON output strictly matches the format provided.
-
 Be precise, follow the structure, and focus on delivering actionable insights.`;
   return JSON.stringify(unformatted);
 }
@@ -96,12 +54,13 @@ async function formatSummaryPrompt({ transcript }) {
 #### **Task:**
 
 You will be given a **YouTube video transcript** ${transcript} related to cryptocurrency markets. Your job is to **extract key insights** and generate a structured summary that is **informative, easy to scan, and user-friendly**.
+At the end ot the transcript their is a section "Coins",  this are the valid crypto coins in the transcript, use only this coins in you summary.
 
 #### **Guidelines:**
 
 ✅ **Identify and extract:**
 
-* All cryptocurrency coins mentioned
+* All cryptocurrency coins mentioned (There should be a section at the end with the list of coins mentioned in the transcript,  use this as a guide )
 
 * Investment recommendations
 
@@ -182,32 +141,67 @@ async function formatSummaryResponse(response) {
   cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
   return cleanedPrompt;
 }
-const correctTranscriptErrors = async ({ transcript }) => {
+export const correctTranscriptErrors = async ({ transcript }) => {
   if (!transcript) return;
   try {
+    //Important step - GET entiere list of coins from CryptoNer
+    const entities = await getEntitiesNer({ transcript: transcript });
+    //
     const llmProvider = LLMFactory.createProvider("grok");
+    const crypto_coins_local = await loadData();
     const analysisMessages = [
       {
         role: "system",
-        content: `Do Analysis of the transcript, and correct the errors in the transcript.
-          #CONTEXT
-          The transcript is from a youtube video. The transcript may contain errors, such as wrong names, wrong words, etc.
-          The transcript is about cryptocurrency coins, often their names are misspelled or wrong. Your purpose is to correct this errors and return the corrected transcript. Try to infer which coin they were mentioning, if they are multiple with the same name.
-          #INSTRUCTIONS
-          -Correct the errors in the transcript.
-          -Do not change the meaning of the transcript.
-          -Do not add any extra information to the transcript.
-          -Do not remove any information from the transcript.
-          -Do not change the format of the transcript.
-          -Do not change the order of the transcript.
-          #Important
-          -Return the corrected transcript .
-          -DO NOT RETURN NOTES OR COMMENTS, I NEED THE TRANSCRIPT ONLY!S.
-            `,
+        content: `
+    # ROLE: Crypto Transcript Editor
+    You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related errors while preserving all other content exactly.
+
+    ## CORE RULES (STRICTLY FOLLOW)
+    1. PRESERVE FORMAT: Maintain original spacing, timestamps, and speaker labels
+    2. NO MEANING CHANGES: Never alter non-crypto terms/phrases
+    3. MINIMAL CHANGES: Only edit crypto-related errors
+    4. OUTPUT FORMAT: 
+       - [Corrected Transcript]
+    ## CRYPTO CORRECTION PROTOCOL
+    1. Here is a preliminary analysis of coins mentioned ${JSON.stringify(
+      entities
+    )}
+    2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
+    3. IMPORTANT, the lit of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
+    ## CRYPTO CORRECTION PROTOCOL
+    ### Identify Candidates
+    - Find ALL crypto mentions using:
+      1. Your knowledge of crypto coins 
+      2. Possible crypto coins from the transcript 
+      2. Common symbols (BTC, ETH)
+      3. Common misspellings (e.g., "bit coin" → "Bitcoin")
+      4. Common abbreviations (e.g., "ETH" → "Ethereum")
+      5. Common phrases (e.g., "chain link" → "Chainlink")
+      5. Common symbols (e.g., "eth" → "ethereum")
+      6. Common slang (e.g., "doge" → "Dogecoin")
+      7. Split words ("chain link" → "Chainlink", " "doge coin" → "Dogecoin", "bit coin" → "Bitcoin")    
+      9. Cross-reference with provided list: ${JSON.stringify(
+        crypto_coins_local
+      )}
+    ## OUTPUT TEMPLATE (USE EXACTLY)
+    [BEGIN CORRECTED TRANSCRIPT]
+    [Original transcript with ONLY crypto corrections]
+    [COINS: 
+    ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER 
+     1. COINS 1 
+     2. COINS 2
+    ]
+    [END CORRECTED TRANSCRIPT]
+
+    # TRANSCRIPT TO CORRECT
+     ${transcript}
+`,
       },
       {
         role: "user",
-        content: transcript,
+        content: `
+                # TRANSCRIPT TO CORRECT
+                  ${transcript}`.trim(),
       },
     ];
     const response = await llmProvider.makeRequest(analysisMessages);
@@ -216,11 +210,30 @@ const correctTranscriptErrors = async ({ transcript }) => {
     return {
       transcript: processedResponse.content,
       usage: processedResponse.usage,
+      default_content: processedResponse.raw,
+      entities: entities,
       error: null,
     };
   } catch (error) {
     console.log("Error at llm prompt: " + error);
-    return { transcript: null, usage: 0, error: error };
+    return { transcript: null, usage: 0, default_content: null, error: error };
+  }
+};
+export const getEntitiesNer = async ({ transcript }) => {
+  if (!transcript) return;
+  try {
+    const response = axios.post(
+      `${process.env.CRYPTO_NER_API_ENDPOINT}/detect`,
+      {
+        text: transcript,
+      }
+    );
+    const { data } = await response;
+    const { entities } = data;
+    return entities;
+  } catch (error) {
+    console.error("Error at NER API:", error);
+    return [];
   }
 };
 

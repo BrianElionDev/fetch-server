@@ -4,7 +4,7 @@ export const LLM_PROVIDERS = {
   PERPLEXITY: {
     name: "perplexity",
     endpoint: "https://api.perplexity.ai/chat/completions",
-    model: "sonar",
+    model: "sonar-pro",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -38,6 +38,15 @@ export const LLM_PROVIDERS = {
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
+    },
+  },
+  DEEPSEEK: {
+    name: "deepseek",
+    endpoint: "https://api.deepseek.com/chat/completions",
+    model: "deepseek-chat",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
     },
   },
   GROK: {

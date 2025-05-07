@@ -191,21 +191,24 @@ app.post("/api/analysis/single", async (req, res) => {
     const { Video_url, Channel_name, Publish_at, Video_title, Model } =
       req.body;
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
-    const { transcript, analysis, summary } = await makeAnalysis({
+    const { transcript, analysis, summary, usage } = await makeAnalysis({
       url: Video_url,
       model: Model || "grok",
     });
 
     console.log("Analysis: " + JSON.stringify(analysis));
-    await CreateNewRecordTest({
-      Video_url: Video_url,
-      Channel_name: Channel_name,
-      Publish_at: Publish_at,
-      Video_title: Video_title,
-      Video_transcipt: transcript,
-      Llm_answer: analysis,
-      Llm_summary: summary,
-    });
+    console.log("\n Summary: " + JSON.stringify(summary));
+    console.log("Corrected Transcript: " + transcript);
+    console.log("Usage: " + usage);
+    // await CreateNewRecordTest({
+    //   Video_url: Video_url,
+    //   Channel_name: Channel_name,
+    //   Publish_at: Publish_at,
+    //   Video_title: Video_title,
+    //   Video_transcipt: transcript,
+    //   Llm_answer: analysis,
+    //   Llm_summary: summary,
+    // });
     res.json({ analysis: analysis });
   } catch (error) {
     console.error("Error processing request:", error);

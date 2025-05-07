@@ -8,6 +8,7 @@ export const makeAnalysis = async ({ url, model }) => {
     analysis,
     summary,
     transcript: correctedTranscript,
+    usage,
   } = await makeLlmPrompt({
     transcript: transcript?.content,
     model: model,
@@ -16,6 +17,7 @@ export const makeAnalysis = async ({ url, model }) => {
     transcript: correctedTranscript,
     analysis: analysis,
     summary: summary,
+    usage: usage,
   };
 };
 export const makeAnalysisBatch = async ({ model }) => {
