@@ -4,15 +4,11 @@ import { makeLlmPrompt } from "./Llm.js";
 let jsonData;
 export const makeAnalysis = async ({ url, model }) => {
   const transcript = await fetchTranscript(url);
-  const {
-    analysis,
-    summary,
-    transcript: correctedTranscript,
-    usage,
-  } = await makeLlmPrompt({
-    transcript: transcript?.content,
-    model: model,
-  });
+  const { analysis, summary, correctedTranscript, originalTranscript, usage } =
+    await makeLlmPrompt({
+      transcript: transcript?.content,
+      model: model,
+    });
   return {
     transcript: correctedTranscript,
     analysis: analysis,

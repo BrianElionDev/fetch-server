@@ -162,12 +162,13 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     3. MINIMAL CHANGES: Only edit crypto-related errors
     4. OUTPUT FORMAT: 
        - [Corrected Transcript]
-    ## CRYPTO CORRECTION PROTOCOL
+    ## CRYPTO IDENTIFICATION PROTOCOL
     1. Here is a preliminary analysis of coins mentioned ${JSON.stringify(
       entities
     )}
     2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
-    3. IMPORTANT, the lit of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
+    3. IMPORTANT, the liSt of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
+    4. DO NOT IDENTIDY BROAD CATEGORIES (e.g., "crypto","meme coin", "RWA coins",  "blockchain", "NFTs") as coins.
     ## CRYPTO CORRECTION PROTOCOL
     ### Identify Candidates
     - Find ALL crypto mentions using:
@@ -179,10 +180,13 @@ export const correctTranscriptErrors = async ({ transcript }) => {
       5. Common phrases (e.g., "chain link" → "Chainlink")
       5. Common symbols (e.g., "eth" → "ethereum")
       6. Common slang (e.g., "doge" → "Dogecoin")
-      7. Split words ("chain link" → "Chainlink", " "doge coin" → "Dogecoin", "bit coin" → "Bitcoin")    
+      7. Split words ("chain link" → "Chainlink", " "doge coin" → "Dogecoin", "bit coin" → "Bitcoin") 
+      8. Do not have duplicates in your list of coins ie ethereum and ETH, BTC and Bitcoin...  
       9. Cross-reference with provided list: ${JSON.stringify(
         crypto_coins_local
       )}
+
+    
     ## OUTPUT TEMPLATE (USE EXACTLY)
     [BEGIN CORRECTED TRANSCRIPT]
     [Original transcript with ONLY crypto corrections]

@@ -1,5 +1,6 @@
 import { supabase } from "../supabaseClient.js";
 import { checkIfShort } from "./CheckVideoType.js";
+import { matchCoins } from "./LoadCoinsData.js";
 
 // Type definitions (for reference)
 /**
@@ -97,7 +98,7 @@ export const CreateNewRecordTest = async ({
     (answer) => !Array.isArray(answer?.projects) || answer.projects.length === 0
   );
   if (noTranscript && noProjects) console.log("Not transcript or projects");
-  const llm_answer = {
+  let llm_answer = {
     projects:
       Array.isArray(Llm_answer) && Llm_answer[0]?.projects
         ? Llm_answer[0].projects.map((project) => ({
@@ -111,21 +112,20 @@ export const CreateNewRecordTest = async ({
             total_count: Number(
               project["Total count"] || project.total_count || 0
             ),
-            category: Array.isArray(project.category)
-              ? project.category
-              : [],
+            category: Array.isArray(project.category) ? project.category : [],
           }))
         : [],
     total_count: Number(Llm_answer[0]?.total_count || 0),
     total_rpoints: Number(
-      Llm_answer[0]?.total_Rpoints ||
-        Llm_answer[0]?.total_rpoints ||
-        0
+      Llm_answer[0]?.total_Rpoints || Llm_answer[0]?.total_rpoints || 0
     ),
   };
 
+  llm_answer = await matchCoins(llm_answer);
+  console.log("Formatted obj: " + JSON.stringify(llm_answer));
   const cleanedData = {
     date: Publish_at || new Date().toISOString(),
+    corrected_transcript: Video_transcipt || "",
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
     link: Video_url || "",
@@ -137,14 +137,14 @@ export const CreateNewRecordTest = async ({
   };
 
   try {
+    console.log("Cleaned data: " + JSON.stringify(cleanedData));
+    const { error } = await supabase
+      .from("knowledge")
+      .insert({ ...cleanedData });
 
-
-console.log("Cleaned data: "+ JSON.stringify(cleanedData));
-  const {error} = await supabase.from("knowledge").insert({...cleanedData});
-   
-   if(error){
-    console.log('Error: '+ JSON.stringify(error));
-   }
+    if (error) {
+      console.log("Error: " + JSON.stringify(error));
+    }
     console.log(
       "Success: Item: " + Video_title + " " + Video_url + " " + Channel_name
     );
