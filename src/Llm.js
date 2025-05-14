@@ -28,6 +28,7 @@ At the bottom of each transcript there is a section for "Coins", this is the lis
 #INSTRUCTIONS
 1. The transcript ${transcript}
 3. At the end of the transcript there is a seCtion for "Coins", use this list of coins to do the analysis, also each of the coins in this section must be in the final output.
+3. At the end of the transcript the section coins has coin names and timestamps extract the timestamps and use them in the final output.
 4. Count the mentions of each coin.(Exclude the counting the coins in "Coins" section at the bottom of each transcript, as this will lead to double counting).
 5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
 7. Classify the coin by market capitalization (large, medium, small, micro).
@@ -39,8 +40,7 @@ Note:coin_or_project is the coin full name
 
 #OUTPUT FORMAT
 
-[ { "projects": [ { "coin_or_project": "Chainlink", "Marketcap": "large", "Rpoints": 10, "Total count": 1, "category": ["Gaming", "Meme coins", "Layer 2"] }, { "coin_or_project": "Bitcoin", "Marketcap": "large", "Rpoints": 9, "Total count": 3, "category": ["DeFi", "Layer 1"] } ], "total_count": 16, "total_Rpoints": 57 } ]  
-
+[{"projects":[{"coin_or_project":"Chainlink","Marketcap":"large","Rpoints":10,"Total count":1,"category":["Gaming","Meme coins","Layer 2"],"Timestamps":[]},{"coin_or_project":"Bitcoin","Marketcap":"large","Rpoints":9,"Total count":3,"category":["DeFi","Layer 1"],"Timestamps":[]}],"total_count":16,"total_Rpoints":57}]
 **Notes**
 
 * Only include the coins mentioned at the bottom of each transcript.
@@ -169,6 +169,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
     3. IMPORTANT, the liSt of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
     4. DO NOT IDENTIDY BROAD CATEGORIES (e.g., "crypto","meme coin", "RWA coins",  "blockchain", "NFTs") as coins.
+    5. After identifying crypto coins, indacate the timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin.
     ## CRYPTO CORRECTION PROTOCOL
     ### Identify Candidates
     - Find ALL crypto mentions using:
@@ -182,6 +183,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
       6. Common slang (e.g., "doge" → "Dogecoin")
       7. Split words ("chain link" → "Chainlink", " "doge coin" → "Dogecoin", "bit coin" → "Bitcoin") 
       8. Do not have duplicates in your list of coins ie ethereum and ETH, BTC and Bitcoin...  
+      9. Do not have symbols instead use the coin name ie no MATIC use polygon, ETH use Ethereum...
       9. Cross-reference with provided list: ${JSON.stringify(
         crypto_coins_local
       )}
@@ -192,8 +194,8 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     [Original transcript with ONLY crypto corrections]
     [COINS: 
     ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER 
-     1. COINS 1 
-     2. COINS 2
+     1. COINS 1 [Timestamps this coin was mentioned]
+     2. COINS 2 [Timestamps this coin was mentioned]
     ]
     [END CORRECTED TRANSCRIPT]
 

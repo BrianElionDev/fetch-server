@@ -5,6 +5,7 @@ import {
   makeLlmPrompt,
 } from "../Llm.js";
 import { LLMFactory } from "../llm/factory.js";
+import { formatTimestamp } from "../utils.js";
 
 // async function fetchKnowledge() {
 //   const { data, error } = await supabase
@@ -104,324 +105,1059 @@ import { LLMFactory } from "../llm/factory.js";
 // const content = await grok.processResponse(results);
 // console.log("Results: " + content.content);
 
-const { transcript, usage, default_content, entities, error } =
-  await correctTranscriptErrors({
-    transcript: `the tile's not click bait i've sold all my stocks i've sold all my crypto and i'm going to tell you why i also think 
-there's a chance coming up right here to make a comical stupid 10 20 x's on a lot of coins that i'm going to show you in 
-this video as well but the point of this video and why i'm not getting into jokes why i'm being very very quick right here 
-is because i don't think you're gonna have a lot of time to make a decision right here i think the market is going to do this right here which is exactly 
-why i've sold everything right here and you can do what you want with this info i will leave it at this though when the 
-market bottomed around june 13th i pointed it out when the market peaked 
-and the gaming bro run peaked and it was time to sell i pointed that out when bitcoin hit its all-time time time time 
-low during coivid i pointed that out and i even absolutely nailed this last 
-earnings and cpi rally am i saying i'm the world's greatest trader you should always listen to me no but i am saying 
-that my same gut and information i've looked at that has told me to buy it those times and sell 
-it those times it's coming off right now and so i want to show you the move i'm trying to make because what i'm trying to do right here is not be wrong and so 
-what i'm doing right here is i'm selling very very specific assets and preparing to get into other assets which i think 
-are going to make crazy crazy gains here and i'll be showing you those coins and assets near the end of this video but we 
-have to talk about what's going on in the market first if i'm wrong if i'm right here this is just going to be an awesome opportunity to get back in the 
-dca range and make really good long-term juicy buys on good companies 
-and coins that we believe in if i'm wrong here we're gonna have a shot to make some crazy crazy returns let me 
-show you what i'm talking about now also i don't always have time to make these videos because i'm the ceo of a company i have other stuff to do follow me on 
-twitter at zss becker that's where you can get the fastest updates anything that i've seen the market anything i've 
-talked about anything i'm buying the coins i'm looking at i share it there first i only make like three videos a 
-month so let's dive into it alright guys so let's talk about what i am seeing 
-right here and what i'm planning to do because i'm trying to win in both scenarios there's a chance that i am totally wrong here and i have a 
-situation where i can win bigly make 10 20 x's very very easily if i'm wrong 
-here if i'm right this is going to set us up for a whole other really awesome buy opportunity so let me break this 
-down so around june 13th you can see by my video title right here this is when i deployed literally tens of millions of 
-dollars into stocks and millions of dollars into crypto usually my portfolio around this time is 
-like five percent crypto 95 stocks okay and you can see that the s p 500 was pretty much bottomed at this time we 
-missed it by just a bit but that's fine the whole point of how i trade and how i trade everything is i don't try to 
-absolutely time the bottom and i like right now i'm not absolutely trying to time the top right here i'm trying to 
-get in at a good time and leave at a pretty much good time aka leave 80 of the way up with all my profits instead 
-of trying to max out the top because that never ever works so i'm going to use crypto charts for the rest of this 
-video instead of smp but i'm super duper focused on smp here so 
-at this time what i expected to happen was essentially it just to kind of grind 
-for the rest of year i thought this was somewhere near the bottom but i thought we were going to go a little bit lower maybe an 800 
-low 800 each maybe 700 and i thought we're just going to diddle dattle around for the rest of year same thing with smp 
-500 i spot right here and i did not expect us to do this this cataclysmic 
-turn up up here i was not expecting this this is not what i was buying for it was all just about diving in at really good prices and then dca for the rest of time 
-because these prices were just they were good okay we're only four percent off the top of the s p 500 at this point 
-we're getting really heated up right here so at this time right here i'm just doing 
-that now i was really expecting this to happen okay and this is what i think is happening right here 
-if we go look at the the bitcoin charts right here we zoom back into 2017 2018 you can see we cratered 
-and then we had this really big rally right here everyone was declaring bull runs back on oh my gosh it's incredible 
-this stuff this is what i think is happening right here this is what i think is happening right here bar none okay i didn't expect it to be 
-this severe is what we're seeing especially in stocks and the reason why i'm selling is because at this point the 
-amount of money i put back in if we return back to our our last bottom it's it's a 
-lot of money i'll be losing a lot of money i'm not i'm willing to do that i'm putting this back in nice safe yielding 
-investments i don't want to play around i'm not looking the juice around right here 
-and so what i think is about to happen is this okay i think bitcoin is going to go to probably 28 000 maybe 32 000 it 
-could also top out right here at twenty five fifty i see a lot of smart people pointing that out 
-my personal opinion is we're gonna grind back up to twenty eight thousand and i think everybody's gonna short at twenty eight thousand and then we're gonna pump 
-to like thirty thirty two thousand and i think we're going right back down i think we're going right back down to 
-i think we're going right back down to 18 17 000 and more importantly to me i don't think the s p 500 is going to sustain 
-there's various reasons i will say that right now the biggest reason i think is we're just i think we're just seeing 
-exactly this i think we're seeing exactly what we've seen every single time with bitcoin where it goes up and 
-it pulls one of these okay this is just very typical in the dot-com crash there was 30-40 40 rallies we saw stuff like 
-this all the time and on twitter what i'm seeing right now it's all the all the [ __ ] 
-who are long at each forty five hundred dollars they're all this is gonna be a paid roll it's gonna go harder than you 
-think all these people are popping back up and these are some of the stupidest investors i've ever seen they when 
-bitcoin was all the way up here they were declaring how oh you better get in before the institutions start buying these people are [ __ ] morons like i 
-could not i could not sit around without smashing my dick if i was on the same side as 
-these people so that's that that's not the most mature way of looking at it that's that's not a 
-trading technique at all but that's also where my thoughts are now there is a flip side to this what if 
-we keep going in the bowl this is going to suck for me because you missed out all this money well one i got in the 
-june lows i was buying matic at 40 cents i was getting sold 
-at 27 bitcoin when it was just tipping around 18 000 sub one thousand dollar eth i'm fine 
-with the profits okay i'm fine with my profits in sap 500. if i'm wrong here fine 
-fine okay that that's fine but it will be a bummer if we do go back 
-to a bull market so i want to show you the plan for that because there is so much money to be made here if i'm wrong 
-okay before we get into that the reason why i don't think we're going any higher is is 
-just this inflation is not solved we're going to keep seeing rate hikes and the effects of the rate hikes that we're 
-seeing have not really hit the market yet okay income on jobs is going to need need to keep going up it's way too low 
-for example my company you know we're having to give a lot of the staff like five ten percent raises that's going to 
-eat into our profits a whole lot other companies are going to start seeing this do we're going to see earnings really 
-start to dip in my opinion and we're also going to see a lot of people being let go 
-we're also seeing going to see a problem in housing and we're going to see rates still going up and we're seeing democrats increasing taxes 
-unless the money printer comes back on i don't see a situation where this is this this needs to be bullish or there needs 
-to be a return to all-time highs i just don't see that okay i see it coming in a 
-year or so from now or in the future because there's so many money so much money that's been printed but in my opinion i think i think it's 
-just way too early for this stuff and i didn't expect to see this type of gains at this time so that's why i'm just like 
-hey you know what i'm putting this in the yield driving assets they're going to be a solid passive income that are kind of resistant to the market 
-and i i don't want to play i don't want to play 
-now on top of that there's so many other things that could happen here by the end of the year one i think china's about to 
-explode it's just an absolute mess over there and i think the underlying system of the united states right now is broken 
-and i i don't think we're gonna go super far past the lows i'm not saying we're going to go to 3 300 smp or something 
-like that what i'm saying is like i think this is just an overzealous point and i'm going 
-to take profits right here and try and catch this next wave okay because when i bought right here before i talk 
-about the next point my entire goal was just long-term wealth building okay i'm trying to buy you know 
-right here right here and just enjoy the slow slow grind up that's what i'm looking for okay this is this is this is 
-turned into something different it's turned into a parabolic rise up this is different i'm looking to switch modes i'm no longer in long-term investing 
-mode there's a different mode i need to get into at this point that i see coming because what is coming requires a totally totally different perspective on 
-the world that perspective is the only perspective in the world that matters it is so accurate so on point so 
-dank and nasty although returns to this perspective it should technically be called a religion it is the religion of 
-the most woke empty house crypto fat advice guy with the best body who is also family friendly and also pg get 
-your [ __ ] stupid kids in the room i know it's been a while but i'm gonna teach them while their father's a failure and how they can do better in 
-life by not making his mistakes look with where the markets going right 
-now there's an opportunity to go behind 7-11 there's an opportunity to revisit our 
-friends the dumpster coins we've left behind like dirty 2 am cardano holders 
-wives and say hey this market's coming back i haven't called you because you're disgusting 
-you were vile but all these top cap coins they're getting they're dn2 egocentral again michael saylor's even starting to look 
-like a brilliant person again it is time to reject this and at this point grandmothers are starting to buy and as 
-you know the number one sign we need to get back to our roots is when all the grandmothers start going up for layups 
-in crypto when we see that that [ __ ] doesn't happen in this [ __ ] house what we do is we come down from the 
-nosebleeds of the stadium and bam shakalaka dump on their asses dunk them out with our dirty 2 a.m all coins 
-and guys look if the market keeps going if i'm wrong here and we're going in the bowl these grandmothers they're getting 
-let's talk about now look guys before i get into this this is not the time to be doing this i'm giving you a preemptive 
-warning look i know if you're a cardona holder and you've lost all your family's money and your wife's boyfriend will not even let you eat the ham out of the 
-french won't even let you watch this video yet you're going to see this late you're going to lose all your money again because that's all cardano holders 
-do but when you see this video don't be thinking okay it's time to ape in and make all my money back because it is not 
-the point i am making here is if i am wrong if we do not see the market go under if the market 
-somehow avoids the cataclysmic underlying scam that is going on the united states if we just keep going up 
-or they turn the printer back on this is the playbook this is not the playbook for now put your dick back in your pants 
-cardano holders don't go tell your wife you're about to make it back are you gonna need her boyfriend to keep paying 
-the rent just a wee bit longer okay i know you can only make the netflix bill it's embarrassing but you gotta hold off 
-a little bit longer you get a patient this isn't like at three dollars we need to get all excited all right because you're gonna get the same situation that 
-happened last time don't get cocky yet you remember what happened at 2.80 when i told you to sell you remember what 
-happened what happens if bitcoin goes and bust 
-28 000. what happens is the s p 500 goes and busts 4300 you know what if it goes 
-bus 4400 what if we just keep on going up you know what if i'm an idiot right here 
-this is totally on the table they could turn the printer back on they could they could do it i mean i could be very wrong here 
-see the reason why i got it again is because i'm not a long-term investment mode anymore i don't want to lose all the money i made on this huge 
-run-up right here i don't want to do it that'd be that'd be painful if we go back to 16k bitcoin uh 3700 3800 s p 500 
-that's gonna suck no no all right i'm not doing that 
-however when the market is getting overheated like this and super hot there is opportunity to make crazy amounts of 
-gains with low capital investments so let's imagine right here say right now in order for us to make a 2x on bitcoin 
-we need to get to a 50 000 bitcoin i don't see that happening it could happen i don't see it happening 
-if if we're at a 50 000 bitcoin you can come back and tag me and say ah it's a 50 000 i'll be like i didn't see it coming you were right you win all right 
-but let's say we're waiting out for that we want to get a 2x in bitcoin let's say we have a million dollars uh in profit now in bitcoin from buying or let's use 
-a little bit more realistic example because no one ever makes any money in bitcoin let's say we bought eth at 
-i don't know uh 900 all right so now we we put in 500 000 guys i realize not 
-everybody has 500 000 i'm just using big numbers that are easy for me to do math with imagine we're at 
-a 2x right now okay so for us to get a 2x on this right now we need to see a four thousand dollar 
-eth okay can we see that yeah we we could but what i rather do is take out that million dollars i have now 
-and go down here and so what i would rather do is go down to mid caps and low cap coins and because 
-if eath goes to four thousand dollars we are going to see these coins down here and the coins i talk about here in a 
-second but this could be literally any coin that's a micro or lower cap we're going to see those 5 and 10x and so 
-we can put in a lot less capital in the crypto markets which are in a very dangerous spot right now in my opinion 
-and see the same returns that if it went to let's say thousand five thousand 
-dollars wanna see better returns if each goes to ten thousand dollars these mid caps and micro caps are going to 2050 x 
-okay and then the reason why i say trade like this is because look 
-if if each goes to ten thousand dollars all these coins are going to 520x 
-easy easy okay so you might as well just be in these coins and the second the crypto market gets wiped out and ethereum gets 
-wiped out as well well these coins are gonna get wiped out as well so if you're gonna be in the crypto market during a pump or a bull market you might as well 
-be in mid caps let me give you the point i'm talking about right here if we go and look at let's say a good old 
-juicy cap right here let's look at one that started to move when if we go look at other coins in this time frame 
-that really start to move let's go look at like avalanche or something all right we go look at this and 
-it just came out so this is a terrible example right here but i mean avalanche was just like at dirt levels right here 
-you made an insane return if you got right here if we go look at sandbox or 
-uh hell let's just look at something boring like v chain right here if we go look at that 
-20 20 i mean yeah these this is where you want to be and that's where we're going to be at if bitcoin goes to forty 
-thousand fifty thousand dollars we can get into coins like this 
-with lower amounts of money that if the market reverses okay [ __ ] at least we didn't lose all the money we've made 
-into this point right now but the market continues going bull holy moly we're looking at 10 20 30 x's 
-and we're doing the whole same crap we made our money in a year ago okay so let's talk about specific projects and 
-themes not specific projects but themes of what we're looking at so first off the game plan 
-i'm waiting till bitcoin bust 30 maybe even 33 000 before i start doing 
-this is it gonna do that is that a way off yeah are we missing some gains in ethereum and bitcoin right now yes but 
-we got into lows my gains i'm happy with i'm fine 
-i did not expect to make this much money this fast it's cool it's it's fine you know i will 
-sit this one out because it is is going to be much more unbearable for me to lose all the gains i've made 
-versus miss out on some of these ups right here and i really don't see the market moving until we get to a 33k bitcoin what i 
-think is going to happen like i said is we get the 28k everybody shorts okay or everybody's gonna it's gonna be this 
-situation right now at 25 50. we get the 28k everyone shorts it pushes it up to 31 and then 
-that that's that's pretty much it that's the top okay like i said i try to get out 80 before 
-the top or twenty percent before the top eighty percent of the way up is fine with me that's fine worked it's worked 
-well for me every time i don't do that i get my butt handed to me where am i gonna be looking to play at 
-so what i want to look at is old all-time highs and so for example matic right here its 
-all-time high is at 2 and 50 cents so we can see like a clean 2x pretty 
-quickly on polygon but i don't want to deal with coins this big what i'm going to do is i'm going to start getting down into the lower coins okay so let's talk 
-about some big old juicy somewhat safe coins okay 
-and i want to show you my logic here i don't want you to copy these coins so if you saw my buddy elliot trades video you 
-might have heard of him he picked some really good decent mid-cap coins that i agree with curve he picked apecoin and i 
-would have to throw in kusama in there i think i think dot is going to make a run here 
-stuff ender dot is going to make a run i think it has a ton of adoption potential right there i'd pick something like 
-encore right here just just really good middle cap coins that really haven't started the move yet pancake swap thor 
-chain phantom i think i already mentioned that one i'd roll a v chain and then maybe some file coin these are 
-all ones that i like i could see all these really easily 5xing like just just no problem easy 5x's i don't like 
-apecoin at all i'm it's not really the whole entire system isn't really for me but i think 
-eight point could easily go up to 20 bucks no problem especially in a bullring especially everyone's going to foam into these things so fast and the 
-market caps are relatively low for crypto right now these things can get to 10 
-billion no problem dude that's not even an issue and that's what that's why i would just roll into i would just make a portfolio 
-of those things what i would not do if the market starts running is make a portfolio of the top 10 because 
-in my opinion this is this is not going to be a bull run i would love to be wrong here because 
-trading micro caps and [ __ ] coins is is what i thrive at and that only really works in a major bull run it doesn't 
-work it hasn't worked for like a year almost at this point it doesn't work so i'd love to be wrong here i don't think i am 
-but in a bull run you know we could see solana we're gonna have to see the bull run 
-here to see like major returns on the top 10 coins i don't think that's going to happen again we'll see bigger returns 
-in the mid caps but i would not build a portfolio of ethereum [Music] solana 
-polygon at this point right now because i don't think this is the ball run and when we go backwards guys we're going 
-backwards like we're we're going back to the [ __ ] future here we're gonna go back and date your mother 
-that's how far back we're gonna go maybe not that far but i just see a very nasty return okay i don't see any reason for 
-us to be going back to all-time highs when there were zero rates endless money printing and basically every advantage 
-you could have with a fake fomo market you could possibly ask for we're not in that market at this point i don't see any reason returned to that market at 
-this point there's also so much nasty stuff coming now what i'm going to be doing is i'm going to be moving into 
-coins that i really liked before that are just in the absolute dumpster first tip i have for you look at the 
-ecosystems where the narrative is if you want to get in the polygon matic look for the stuff that's being built on 
-polygon look for the stuff that i just say polygon look for the stuff on solana and polygon this is where the narrative 
-is okay the polygon and solana people are not going anywhere also bnb 
-this is where the narrative is as well look at the stuff and the ecosystems underneath them 
-look at the dexes and swap sites look at the nft specifically the nft 
-platforms look at the wallets that's what you want to be looking for look at the lower tier projects being built on 
-these systems the things that are in the ecosystem look at the launch pads those are going to give you phenomenal 
-returns much better than just putting in solana because again let's say you know you invest in radium okay 
-one of the key parts of the solana ecosystem if saloni does a 3x radium is going to do a 5x or a 6x that's that's 
-what you want to do that's what you want to do yeah so i'd also be looking at polka dot as well it could make a run stuff like 
-polkadex polkastarter the same [ __ ] different day as last bull run okay so 
-go look at the old all-time highs where i think the best returns are going to be are gaming coins because the entire 
-narrative is there and apecoin is going to be the bitcoin of this market it's going 
-to take off and what everyone's going to do is go well acorn took off so this must be time for the metaverse we'll do this whole 
-we're going to do this whole song and dance all over again no one's going to learn anything if we go back to bull run we do the same crap over again 
-and we also will take advantage of it people want to be ass clowns let's just let's roll with it all right let's go i've 
-already stated my case for gaming crypto i'm not doing again the home page of the channel is why i think gaming crypto and 
-metaverse is going to take over the world now look i truly believe that but if we go back into a mini bull run right here i'm not here to do some altruistic 
-virtue signaling investing i am here to catch all the people acting like fools again that's what i'm looking to do i'm 
-looking to make money here i'm not looking to invest in the future i'm not looking to send little kids to 
-college i'm i'm here say look if you guys want to fomo back into this crap all over again 
-before it before it's time i will be here waiting at the top again that's fine we can do it so with that being 
-said the reason why he's going to get the biggest returns is because they've gotten the biggest losses and the narrative is still there we saw a 
-facebook and all these companies just rolling face type into this stuff so 
-what i'd be looking for is again i'm going to look for the studios i'm going to look for the launch pads 
-i'm going to look for the platforms i'm going to look at the over hyped games okay first and foremost if you want 
-these coins and and and get into these things early and you want to spot these things when like they're happening you 
-want the fast information in this industry right here you should really join neo tokyo specifically getting an s1 there's a 
-link to these in my profile on twitter at css becker why should you join this it's because it's a community completely 
-dedicated to the vcs investing and builders and gaming crypto we share all the information we're seeing all the 
-projects and what happens in this community is via our token bytes which is shared between everybody i'm not 
-saying fomo on the bytes pay attention this allows us to run launch pads for 
-projects and seed investing allows us to have white lists for upcoming nft projects in the space it allows us to share alpha and pay for alpha between 
-each other to basically find the projects the best projects as they're coming up and get the alpha and research 
-in before any of this stuff happens this is not some get rich quick community this is not some ponzi scheme where i 
-have a giant bag i'm waiting to unload on you this is just a community full of people that love crypto gaming in the future of metaverse and that's all we 
-talk about that's where i have all these projects launching out of neo tokyo and that's why we have so much infrastructure built more than any other 
-nft project in the space around investing and finding and participating in gaming crypto so if you're really in 
-the gaming crypto you really believe in it come join neotoku if you're some spaz get rich quick floor flipping idiot i we 
-really don't want you there all right but this is invite the people that have the same mindset as we do if you do not please stay away and just stick to my 
-videos that said bytes 2.0 drops here real soon and s ones are the only ones that generate a lot of bytes basically 
-the main generators of bytes and so there's only like 13 of them before they hit attendee floor so if you've been looking to join or you're like thinking 
-about it price escalates quickly pretty much here soon these are other people i don't own these just letting you know 
-before it happens because when this stuff takes off we are there at the forefront the cutting edge of it every single time just like we were last run 
-when it happens again we're gonna do that now if it does happen again here's what i'm gonna be looking at from a 30 000 foot view okay i talked about 
-the platforms on stuff i would invest in a coin if 
-if i really believed in apecoin and this bullring keeps going i'm i'm not that in the apecoin it's more of like a bitcoin 
-of gaming crypto at this point i think it could go to 20 bucks no 
-problem maybe higher it's it's really not for me i want to see higher returns than that okay so i 
-think there's much higher returns and stuff like gala games the studio where all the best games and all the best stuff is coming out of in gaming crypto 
-i think that's an easy one right there look look look apecoin's at like two billion bucks right here gala is at like 
-four bill 400 and if apecoin goes to 10 right here it goes if it goes to it does 
-a 5x at this point right here this is going to go way higher all right we could easily get the 5 billion see a clean 10x on this this dude right here 
-so gals about where i would start investing at now please understand if i don't mention 
-a gaming project in this video i'm not going to list the 50 plus gaming projects i think are really great i'm not going to do that 
-there's other videos where i have i we talk about all the time in neo tokyo i'm just not going to do i'm just going to give you a summary of how i'm looking at 
-this market okay again vulcan forge is another good one and i think if gala takes off vulcan is 
-very similar to gala in my opinion and so it's just a smaller version of it i think this vulcan could easily get to a billion dollar market cap no problem it 
-could go back to its old all-time high right here at like 45 bucks no no problem no problem that's easy if we 
-if we return back to a bull market easy ad shares i think is really really cool i think advertising the metaverse and 
-advertising and gaming and advertising crypto is going to be huge the market cap of this is disgustingly low for the 
-potential this could be a multi-billion dollar one if they pull off what they're talking about right here keyword if 
-i i would i would be looking at ad shares cdfi now look neo tokyo also has its own launch pad but you have to be a 
-member of neo tokyo to join all right and that's me and elliot are just bringing the best projects to get into early there if you want to get in the 
-projects day one you want to get those seed investments in that you should be in neo-tokyo all right but another favorite of mine uh is also cdfi 
-why because everybody's going to rush back in the gaming audios and cdfi gets a ton of really good ideas as well 
-that's an easy one you can enter if you don't have the money to hop into neo tokyo i think it's going to do great i think it'd go back to its old market cap 
-super duper high because basically c defy is the face of launch pads and gaming uh and that's 
-gonna do really great if we return the bull run again guys we are not in a bull run right now we are in a likely a bear 
-rally so just getting prepared again if i am wrong about the market coming back down 
-this is where we want to be roll into we want to have this list available right in front of us as soon as it happens so 
-we can beat everybody else to it also just have to shout out super farm i'm going to be very light on super farm because just being fully transparent i'm 
-a massive massive investor in super farm elliot is one of my best friends in crypto i 
-totally biased here if there's a word for bias that being said i see everything that elliot is building behind the scenes imposter's launching 
-soon i see the platform that's coming out there i see massive team ds running over there i'm 
-going to let super farms results speak for themselves that being said i am i am very much in super farm i like 
-super farm i will leave it at that veracity i think vericy just the hype 
-behind this alone people love this thing it has like a cult following it's supposed to replace streaming and 
-video game streaming and all the stuff right there i don't know if it's going to do that i think the height behind it is ridiculous i think we'll do very very 
-well alluvium now another really good project is alluvium full transparency i'm an early investor 
-in alluvium and so i i sell a lot of alluvium so if if after this video if someone's like 
-better selling alluvium yeah i do right now and i'm taking profits in my very very very early 
-investments in alluvium so i'm putting fully transparent with you right there that being said i'm going to stop selling alluvium if we go back into a 
-bull market because i think it could go back up to 500 at least you could see the top of this right here is eighteen 
-hundred dollars i think illumi could do it because it's one of the most impressive games being built in crypto gaming right now in my opinion okay 
-depends if we go back into a bull run it'll be good but again also when you're looking at these projects there's another prime example right here you 
-need to look at these fully diluted market caps this is an absolute plague in crypto gaming right this is everybody 
-whose coins are waiting to be released and be sold you can see it's 10 times actual market cap of coins on the market 
-right now that's not good you want to look for that in projects wilder world is going to have a lot of hype behind it 
-and here's what here's where it starts to get really juicy guys as we go down here we're entering 
-market caps under 10 million dollars and we have a lot of good projects going on here and i'm i you can find you can find 
-out what my favorites are in these projects right here by going through my old videos again if you're in 
-neo tokyo you know what these are but i don't want to mention these in the video right now because at 
-look at some of these market caps right here we're breaking the million dollar market caps two hundred thousand three 
-hundred thousand dollar mark three million dollar market cap so mention these things can send these things parabolic 
-so i'm not going to do that at this point i'm about comfortable mentioning everything we've gone down through at 
-this point so what you need to do is you need to go and get a big list of 
-all the coins that and maybe i'll make a video on these in the future i'm not going to do it right now okay i'm not 
-too many people are going to follow in and they don't understand what micro cap trading is they bought it in the crash well that's 
-what it does you [ __ ] that's what micro caps do this is not we're not trying to find a wife to marry for the rest of 
-their life we're trying to find something that pumps and then ride the market and get out of it all right not a bit of people get that and so i'm not 
-they're gonna do that in a bear market so so i'm not even gonna give them the chance to try and do that in a bear mark what you need to do is you need to go 
-through all these coins you need to find the good ones maybe find some partners in gaming crypto and find the good coins 
-and and work through them with people get a good list of them going find stuff that's below a 10 million dollar market 
-cap and the second bitcoin really busts that convincing 33 000 in my point 
-let's go let's go up to the races so guys that's what i think about the market right now [Music] 
-long video a lot to talk about i don't have anything else to say follow me on twitter at css becker because 
-that's where you're going to get the information way way way sooner for me join neo tokyo if you want to be on the 
-inside edge of everything going on in gaming crypto investing projects early interact with people they're doing the heaviest alpha research and finding 
-these gems when they're down that's where you want to be other than that i think i've talked long enough i'll see you next time 
-[Music] 
-you 
- - Generated with https://kome.ai`,
-  });
-console.log(
-  ` Transcript: ${transcript} \n Usage: ${usage} \n Entities: ${JSON.stringify(
-    entities
-  )} `
-);
+// const { transcript, usage, default_content, entities, error } =
+//   await correctTranscriptErrors({
+//     transcript: `it's time for my most important video of the year or potentially my most important video for the next four years
+// and that's because today I'm going to be giving you a complete overview of my portfolio for 2024 I'm going to be
+// explaining to you why I'm buying what I'm buying the odds that I see of this bet working out and of course my plan to
+// eventually sell these assets for what I hope will be a life-changing amount of money but it's time to get real here and
+// talk about the brass tax I'm going to be going into the hot narratives gaming AI layer ones and helping you pull apart
+// and understand exactly why I believe these projects are going to win now in December of 2020 I did a similar video
+// and I called out axi Infiniti on December 7th 2020 the price of axi
+// Infiniti was about 55 and it went on to Peak here at
+// $160 that my friends is not a 100x that is a 300X now beyond that you you know that
+// I've called some of the absolute biggest most face melting gainers of 2023 a year
+// in which most people told us that Bitcoin and all of crypto was going to zero Bitcoin will go to zero and we
+// proved them wrong in fact I do believe that this channel has nailed it more so than almost any other in the entire
+// crypto space but it's time to get real all of this crypto stuff is a massive risk that's why there's the potential
+// upside for literally life-changing gains in the short amount of time when you compare it to any other industry that
+// also means you got to be prepared for that downside even the best projects in this space could crash 70 80 90% in fact
+// some of these projects are so degenerate that you must seek medical help if you want to actually buy them literally the
+// only way you'll be able to view yourself if you lose money here is with clown makeup and a wig so if we're going to do
+// this crypto thing you got to put on your big boy pants you got to take responsibility for each and every coin
+// you buy and most important importantly you have to have a plan why are you buying it what do you believe the valuation for this asset could be and
+// when at what price points will you sell this thing because if you can't answer those questions you are forever going to
+// be fish food to the sharks swimming around you in the crypto waterers now let's talk about the first thing which
+// is why right now is actually really good timing now Bitcoin does this thing where it goes on a four-year cycle it has
+// three good years and then one terrible year the problem is that most people get in when Bitcoin is at the Apex of that
+// one candle they get in at the top when everybody's screaming about crypto how they made all this money Dogecoin
+// Millionaires and so on and so forth the higher Bitcoin and crypto goes in price the more dangerous it is that it could
+// drop in price of course if you flip that around the lower it goes the safer it is to buy and the more likely you are to
+// get the good price close to the bottom and that's why we were buying as soon as we saw some good indications out of the
+// FED when they stepped in and started saving banks in March that's when we hopped in here and said hey look I think
+// think that these bailouts are going to create more liquidity and form a bottom I think the bleed is over and it's time
+// to start allocating even though it feels uncomfortable and it will feel uncomfortable even in these bull runs
+// there are crazy dips as my buddy Alex Becker would say my co-founder in neotokyo this is a chart you're going to
+// see everywhere where you see the massive sell-offs that happened all the way up during the 2017 rally the fact is that
+// bull runs are actually the time to buy the dip bare markets are where you sell the rally if you think about it the
+// overall trend is up so you want to buy as it comes down cuz you know it's going to go back up or at least you have a
+// good idea that the trend will continue remember the trend is your friend and the same is true of the bare Market
+// while things are macro going down you want to sell them as they rally up cuz that's your chance to get out at a good
+// price now I wanted to add in here that Bitcoin is now in a dip and the whole Market has pretty much taken a massive
+// dip well not every coin of course beam and immutable X are still crushing it but you you know most of the coins here
+// have taken a bit of a dip there's plenty of coins in the red here over the last few days and honestly it's kind of
+// popping up right now so you know it's at 42,000 if it gets back above this you know $43,000 Mark or so you know if it
+// gets back Above This 425 or specifically above 43 44 this dip is over right this
+// is going to to new highs for the year what I want to impress upon you is this dips are effectively the thing that you
+// want you don't want to just be chasing when things are up up and away that might feel like the best time to invest
+// it certainly is the most exciting but what you really want to wait for are the times that it's not exciting again so if
+// this dip gets worse goes down into the 30s or so maybe even the low3s that would not be the end of times now it
+// would be very concerning if we go below you know 31,000 or 32,000 that is a very
+// sensitive area and might signal a much more difficult time for Bitcoin ahead
+// really all of crypto but in the case of right now anything above 32,000 to me is
+// a massive massive opportunity if it comes down and the more uncomfortable it gets the more the Bears come out of
+// their caves and start screaming it was all a dream this was the biggest bull trap in the history of the world well
+// that to me my friends is the time that all be looking to smash the buy button but again I'm not doing too much right
+// now I've been buying throughout 2023 and so I'm pretty well positioned here coming into 2024 but I hope this video
+// helps you out a lot and back to the analysis so the point is right now we are still in this three candle which is
+// right before the two most parabolic years the two best years of the Bitcoin cycle that is if the cycle is to
+// continue to play out the way it worked before now a lot of people don't believe in this cycle stuff but get this you
+// want to see something crazy from the all-time low in 2015 to the all-time high in 2017 it was exactly
+// 1,64 days from the all-time high in 2017 to the all-time low in 2018 it was
+// exactly 364 days from all-time low in 2018 to alltime high in 2021 1, 64 days
+// again exactly the time from low to high and then once again from all-time high
+// in November of 2021 to alltime low in November of 2022
+// 364 days honestly some things are Stranger Than Fiction and Bitcoin very
+// well might be one of those maybe we're all in a simulation maybe this is all some collective delusion maybe there are
+// no coins at all what I do know is that as long as this Bitcoin cycle continues to show itself and prove itself out as
+// it has once again in 2023 I feel like I would be a damn fool not to bet hard on
+// the industry that I log into and talk about and obsess over every single day so that's what I'm doing but make no
+// mistake this is risky business and everything you buy into could be manipulated crash the founders could end
+// up not being honorable or doing the right thing the code could get hacked stuff is very very risky and you assume
+// a 70 to 100% loss whenever you buy anything in this crypto space the
+// trade-off here is you're trading a 70% downside for a potential thousand or
+// 10,000% upside that's 10 to 100x upside versus a near total loss those are
+// better odds than you're going to get in Vegas almost any day of the week and for that reason I'm all in on crypto gambling to make my life better and if
+// you're here in crypto right now watching a video like this you need to slam down some hard to swallow pills and
+// understand that you're gambling too well to be fair we all need to gamble that's what the Fiat system forces us to do cuz
+// your money turns to dust in your wallet your labor is not worth anything anymore we need to gamble in stocks in real
+// estate in assets of some kind if you want to get ahead and to me crypto is the one that I know and it's the one
+// that I think is the most generous and most likely to help people Achieve Financial Freedom so I'm gambling here
+// and with that said let's get to my portfolio for 2024 of course we should add that Michael sailor the biggest bull
+// on Wall Street believes Bitcoin will hit a $350,000 price in 2024 now that would
+// mean that Bitcoin is about 10x from here of course what we saw over the last one
+// was Bitcoin went about 3x over its prior all-time high now if Bitcoin goes to 350k that would mean it would do a 5x
+// over its prior all-time high whereas last cycle it did about a 3 and 1/2x over its prior alltime high so it's
+// going way higher and that would mean that what we'd see out of total three meaning the altcoins would probably be
+// even more dramatic right we saw a gain here of total three which went from about 300 billion up to 1.3 trillion
+// this was about a 212% gain or almost a 3X out of the altcoins now if we go 50%
+// more that means we could see about a 4X out of the altcoins from prior all-time high and that would mean altcoins alone
+// would be at $4.5 trillion doll not to mention you add in Bitcoin and eth you have crypto scratching its head on
+// nearly $1 trillion in market value that my friends is the size of gold and that
+// my friends is a whole new ball game as they would say and as always I solicited the community I said I'm doing my 2024
+// portfolio video this week what coins should I include and I literally in a few hours got almost 1,000 responses and
+// they were really bad they were terrible I am not taking advice from you guys ever again I don't know what you're trying to do to me but please God stop
+// trying to give me Alpha because it is not working anyway back to the show all right let's get into it this is going to
+// be a complete breakdown of the 2024 portfolio and I'm not going to give you exact percentage size of these tokens
+// but I'm going to give you a general idea on how I'm organizing my portfolio as a whole and then I'm going to give you the
+// actual products within each category and this is going to be an absolutely monstrous amount of information so get
+// ready smash that like button and make sure you're subscribed with the Bell notification on each video we've come
+// out with over the past few weeks I've been trying to make sure that they are so loaded with information that they are
+// effectively unmissable okay the first one where we started doing this was 185k
+// views we're going to have our first video Hit 200k K views in what feels like years I'm sure it has been and
+// every single video here I've been pouring my heart and soul into making sure that they are jam-packed with Alpa
+// so make sure you put the Bell notification on because everything I put out on this channel going forward will
+// be in my opinion required viewing you absolutely must watch this stuff if you
+// want to be ahead of crypto no channel is covering these niches and these movements like I am and I'm giving this
+// all to you for free and I'm trying to make sure that I don't waste any of your time here so hit that Bell notification
+// and you will be in my opinion way ahead of everyone else but again as I go through these coins I want to be very
+// clear I will explain my logic as to why I like these coins but in the end this
+// community is getting so big and so many people know about the strength of this community that inevitably if you're
+// following the coins here only on this list then you're always going to be late I want you to take the ideas here the
+// mental models of how I'm finding and analyzing coins in this market which I explained in detail and I want you to
+// apply them on your own and that way you can be ahead instead of buying a YouTuber coin like I'm going to be
+// covering here it's going to allow you to get ahead of everyone else but only if you do these things and do the hard work
+// on your own with that said I hope this information helps you now starting at the top we have salana okay this is a
+// risk ranking and by the way you see my technicolored risk ranking chart here again this is completely made up right
+// I'm just trying to give you a sense here of where the the bigger risks are uh blue chips and the medium and the medium
+// highs those are just going to be lower gains there's still a ton of risk in those coins right everything has risk in
+// this industry could get sued by the government founder could die you never know crazy world lot of smells Anything
+// Could Happen okay but anyway enough of that salana you guys know my thesis here salana is the best competitor to ethereum and everything in the salana
+// ecosystem Has Gone Bananas I started giving you guys salana in the teens in the low 20s and it has absolutely
+// crushed it it peaked I think at about $75 um I'm just calling my ET call here 17 though I know I talked about it
+// around the 13 range I just think I was more forceful around the $17 range and so the gains so far are 321 per or 4.21
+// x's and the downside and this is how I'm calculating this the downside is the
+// 2023 low so the low value in 2023 I don't think the market goes and revisits
+// those I think that's a hard bottom and so my logic is your downside in this category is effectively the current
+// value and that is divided by the or the the 2023 low divided by the current
+// value and that allows you to see effectively how low you could go if we revisit those lows which is possible
+// right if there's some apocalyptic scenario and Bitcoin just shreds through 32k and everything turns out to be a
+// massive bull trap and kappo was right well I guess this is possible right we could go revisit those 2023 lows so I'm
+// just showing you your max downside but just know essentially salana has taken on this super Blue Chip status as a
+// testament to that projects like gito which are essentially like Lio or Flash Bots in the salana ecosystem are being
+// valued at multi-billion dollars that's $3 billion fdv for a project like jeto
+// which arguably might be seen as too much too soon but it just shows you how significant the salana ecosystem is that
+// people are valuing uh the coins in the salana ecosystem as equal to their ethereum counterparts and that's a
+// massive narrative so like I said I'll be rotating profits from trades into salana as part of my strategy and that is one
+// that I keep getting laughed at in the YouTube comments so if you want to keep laughing at me go ahead I appreciate it
+// every time I've been laughed at and mocked for my choices that I'm making publicly here for you all it's turned
+// out to be a massive Money Maker so reply guys eat your heart out because you are my best indicator that I'm doing
+// something right I know it's a hard pill to swallow but we have a lot of coins to get through so we are going to start getting through them the second one is
+// chain link again chain link is one of the most important protocols in the entire space they're integrating with
+// swift that's right the banking Swift they are one of the most legitimate ways to communicate between chains and
+// protocols if you have dexes that are feeding in prices well they're using an Oracle and that is coming in through
+// chain link chain link is effectively part of most if not all of Defi and it
+// is a blue chip by all standards again Blue Chips they have a potential for maybe a 10x or so from here maybe a 15x
+// in a very good situation but they're also lower risk they're not going to dump as fast they have much more
+// significant holder bases and chain link is definitely a blue Blue Chip to have on your radar it's part of my portfolio
+// and if you want a more passive portfolio things like salana and chain link are definitely in that lower crypto risk
+// almost guaranteed to be here for the next several years if not on into the future next we have coinbase as you know
+// I'm a big bull on coinbase stock after the fall of CZ and FTX they are the last
+// man standing and they are the white knight of crypto publicly listed on the stock market I've been aping coinbase
+// like a madman since about $60 here $65 is when I covered it on the channel and
+// that would mean that we're about 2.1x over my call and I keep adding to my coinbase position just cuz it's really
+// easy to do for my bank I have sort of my Fiat and crypto worlds separated and it's a really nice easy thing to do that
+// I've been rotating out of my treasury bills and into coinbase stock largely from my treasury bills and it's been an
+// insane play I also think coinbase is a blue chip in that it's not going to do more than a 10x here in fact if it hits
+// $1,000 I would be kind of mind blown I think that that's possible in like a total blowoff top but really I'm just
+// hoping it makes new highs around $500 to $1,000 at the end of the cycle in 20125
+// that would be a blessing and I think that that is a peak price for coinbase this is the only stock you're going to
+// see here but it trades like a crypto so of course if you want something more passive these are things you can just buy and know they're going to be here
+// years from now and probably going to grow with the cycle now we get into something a little more spicy which is Avalanche as you guys know I've been a
+// big Avalanche bull throughout the years I was first on avax in 2021 one I was
+// one of the first YouTubers to bring avax and the avax ecosystem coins like Joe and some other Crazy Ones to the frame
+// here Joe's like the Unis swap of avalanche again Avalanche is to me the next in line after salana as far as
+// hyped layer one ecosystems and it is slightly off of Blue Chip it's not a blue chip it's a medium risk and just to
+// show you here it's been tracking actually the gains of salana really really well if you look here soul is
+// about 73% off its high Avalanche through most of the markets about 74% off its
+// alltime high it was almost identical in its percent draw down from alltime high for the entirety of the bare market and
+// so these two will probably make their way up to alltime high in a similar fashion and if you really study the
+// actual movements Avalanche is a really interesting evm Tech again the layer one ecosystem has a ton of competition there
+// are so many chains now but I just think there's some muscle memory in the charts here because Solana Luna and avax were
+// like the trio of 2021 obviously Luna nuked and doesn't really exist anymore but salana and avac when salana makes a
+// really big run avac seems to want to play catchup and look what is a medium risk goated L1 if you don't have polygon
+// now polygon markets itself as a layer two but it really kind of in practice is a layer one though they are starting to
+// connect the dots here with their cdk right so they have this chain development kit where they effectively
+// allow people to launch their own ZK EVMS now this is very next gen and it's in fact the technology that underpins the
+// newest initiative from immutable X which is of course also on this list and a project that we'll talk about shortly
+// but together this is part of the three-headed dragon of gaming and polygon is beyond that it's also really
+// good Tech and I know this from my developer friends which throughout 2021 really didn't like the technology that
+// underpinned polygon they've made big strides and in my opinion their ZK Tech has started to become best-in-class and
+// really next gen so it's something to consider that polygon and their technology keeps evolving and they're
+// about to evolve from the madic token to the pole token again showing their firm transition to
+// ZK rollup technology this is something to keep your eyes on and I have no reason to believe that polygon won't
+// have a massive run in 2024 with the rest of the market again this thing went on 300X it was trading between 1 and 5
+// cents when I was covering it like crazy in 2019 and 2020 and in 2021 it went on
+// its hallowed run up to $3 it's pretty insane next one up is injective and in
+// this case you want to trust the strength of the chart look at this this is one of the best performing assets of the entire
+// market and one of the few that has actually broken its prior all-time high you can see its prior alltime high was
+// about 24 bucks here and today it is sitting at $26 this is the way that you
+// understand that strength begets strength and obviously we've talked about injective in fact we were one of the
+// first people to cover injective at the beginning of the 2021 run at the end of 2020 we covered injective at 70 I
+// actually participated in the early token sale and was able to get tokens at 70
+// here and we rode this thing up as a community up to $22 absolutely astronomical but look it takes a very
+// special type of team to be one of the first to overcome your prior highs in the new cycle and this chart is screaming that it wants to remain strong
+// so again injective is a defi protocol is part of the cosmos ecosystem and you'd be a fool to fade this kind of strength
+// in a new cycle next we have Celestia now Celestia is like a nerds Paradise again
+// in the cosmos ecosystem both of these are they are their own layer ones and again I put them as medium high because
+// they are newer Kids on the Block they are not as established as Avalanche they are not as established as polygon they do not have as many fundamentals driving
+// them in fact Celestia's brand new and trading like an absolute beast but at the same time I think Celestia's Tech is
+// very exciting to people and the strength of its chart simply cannot be denied I mean essentially it doesn't really know
+// how to take a dip it's absolutely crazy obviously we talked about it here at about four bucks I had people talking to
+// me about it at $2 but I missed that move and as you you can see the strength is just undeniable even when Bitcoin had
+// this dip it just exploded upwards it shows you that there's true demand here for Celestia some additional Alpha here
+// is that I'm hearing that there's going to be a ton of Celestia airdrops so if you're staking Celestia you'll get a ton
+// of these projects that are launching on Celestia essentially giving you free tokens air drops so if you're staking the Tia coin then you could be eligible
+// for some aird drops again this is all early Alpha but in addition they have a 16% APR so you stake you get some
+// Celestial rewards and then you get some free tokens on top of it if this thing moons like crazy it could be one of the
+// gigabrain plays of the cycle I'm certainly hoping it is now the last one is internet computer and what's crazy
+// about this chart is I don't think I've seen a worst looking chart in my whole life like it is easily the worst looking
+// chart of all charts however that is actually kind of a benefit when you zoom in you realize that almost all their
+// tokens are in market right they have a total supply of 510 they have 450 circulating that's like I don't know 80
+// or 90% there and so there's not a lot of inflation and this thing went through this crazy crazy dump where effectively
+// everyone got mad and sold and its reputation went down but meanwhile they kept developing stuff and it's got this
+// decentralized storage play that I actually think makes it slightly different than other layer ones it's not
+// directly competing with the likes of soul and stuff who knows anyway I have some internet computer in my portfolio
+// cuz I think there's a chance and if you see here it hasn't pumped very much its low was like three bucks it's up at like 5.6 it's not even 2x off its lows and
+// get this the all time high was $700 right it's sitting here at $5
+// that's literally more than 100x it's n it's over 99% down from its all-time high so if it does go back and tickle
+// its all-time high which I think of as absolutely absurd it probably won't do that well it's just like there's just a
+// lot of room for this thing to go that these are the charts that if they get going could mean business if they get
+// serious again I have a very small amount of my portfolio but I figured it was worth a bet in case this thing does wake
+// up next there's a project called monad it is not released yet it's in my uh unreleased and I just gave it a risk
+// because I don't really know what the risk is cuz I don't know what the price is risk is heavily correlated to price
+// if you don't know what the price is you can't determine the risk but anyway this is an upand cominging project that a lot
+// of people are hyped about and I would not be shocked if this thing ends up catching some serious hype waves if we
+// do get this bull run that we're all really hoping for this is one to have on your list definitely go ahead and follow
+// it the next is layer zero again this is going to be one of the biggest coins in the the whole ecosystem and you can
+// actually likely qualify for their airdrop if you're using their Stargate Finance defi application which allows
+// you to bridge assets between different chains I highly encourage you to understand what layer zero is as this is
+// likely to be one of the biggest token launches in the whole industry coming up soon shout out to the layer zero team because I've actually been collaborating
+// with them on some other stuff again stuff that will be announced in 2024 now I want to be clear those are like the
+// big coins those are the big pieces of tech out here that I want you to be aware of and most of those are lowerer
+// risk and we'll have most likely pretty muted rewards we're not talking about 100 X's here like if Celestia goes 100x
+// it would be worth like a quad zillion dollars that's not going to happen those are maybe 10 to 20x plays at the max but
+// probably some of them will be closer to 5x plays in my opinion having too much of your crypto portfolio tied up in 5x
+// plays feels like a waste that's my particular approach and to explain this in a little more depth I'm breaking out
+// my portfolio breakdown which is in the end I have a lot of money in Treasures which I'm actually rotating quite a bit
+// of money out of there because I believe interest rates have peaked and that risk is going to be the new thing to allocate
+// towards that's my particular approach but in the end I have what's called a crypto barbell where on one side of the barbell I have lower risk stuff stuff I
+// know is going to be there for a very long time stuff like Bitcoin stuff like coinbase stock stuff that I don't need
+// to wake up in the middle of the night sweating and think has it all gone to zero has it all just evaporated into
+// dust yeah yes this is the high conviction long-term bucket and in that high conviction long-term bucket we have
+// Bitcoin we have ethereum we have salana and we have coinbase stock and that bucket actually has been updated because
+// coinbase has been ripping salana has been absolutely ripping and this is how my long-term conviction bucket looks now
+// I'm actually rotating profits whenever I do take them into salana that's my personal approach again I might rotate
+// profits into some other exotic L1 if I get really carried away but this is my general plan I'm going to try to stick
+// to my plan as much as I can it's also really important to make plans and write them down because the emotion of the market will carry you off into La La
+// Land if you let it and if you write stuff down you can at least sober up for a second and pull yourself out of the
+// Psychedelic Bull Run acid trip that has long since left planet Earth and you're
+// contemplating whether a dogcoin on butthole chain can be worth $10 trillion because you saw a tick tocker made a Tik
+// Tock about it and you're just wondering what the point of life is because you haven't talked to your friends in months
+// and you stare at a screen all day trading crypto coins that's what the bull Run's like all right you lose your godamn marbles so keep it together all
+// right keep it together and write stuff down all right a little break from the video here because if you're new to crypto you need to have a VPN and that's
+// why I'm extremely proud to partner with nordvpn and be one of their leading Partners in the whole crypto space
+// because if you don't have a VPN you're literally like a lamb to the slaughter here your IP address will start showing
+// up on crypto sites which even though the blockchain is secure those sites could be compromised and your IP address
+// effectively you could become a Target so you want to make sure that you avoid that situation with a product that only
+// cost $3 per month but what's great is you get a massive discount if you use my link below again I was hacked a few
+// months ago and so I take cyber security extremely seriously like I've said many
+// times before you can be forgiven for a lot of mistakes in crypto a lot of them are understandable in fact even ogs make
+// mistakes but one thing you will not be forgiven for is not having a VP VN it's so cheap it's so easy and best of all it
+// supports the channel and I appreciate you guys so check out nordvpn sponsor of today's video and let's get back to some
+// good old fashion cryptocoins back to the point here I personally think that the zero Infinity bucket is worth allocating
+// to now I personally think the zero Infinity bucket has odds that in a bull run make sense because in a bull run if
+// Bitcoin continues to grow usually altcoins will continue to grow especially early on in the bull run and
+// quite Frank Al the risk if Bitcoin doesn't continue to grow is it could drop dramatically I mean bitcoin's up 3x
+// on the year so I mean the thing could drop like 70% and still only be touching
+// its 2023 low that my friends is a huge amount of downside but if you're upside
+// is you know somewhat limited compared to the 100x opportunities out there and those 100x opportunities are likely to
+// hold and grow if Bitcoin holds and grows then to me the crazy Bull Run logic is
+// you want to be allocated in some way to these altcoins the zero Infinity bucket knowing that it goes to zero or the damn
+// Moon and you're comfortable with the odds of it doing one or the other and you're ready for either outcome that's
+// where I'm at again make your own decisions I have enough fiat currency I have enough cash in my world that if my
+// crypto goes to zero I'll keep eating I'll keep surviving and my life won't be changed obviously it would suck ass but
+// I would still continue to live and survive and pay rent a lot of people aren't in that same boat so you have to
+// make the decisions based on your own Financial decisions I'm not going to be there to pay your rent or to feed your
+// kids if you can't do it you got to take care of your own period okay so let's get to the fun stuff okay beam
+// Merit Circle again they were called Merit Circle I covered them at about 40 cents and they've shot up here to what
+// was the equivalent of $2 but when they did a 1 to 100 split on beam now the price is reflected you can think of this
+// as 0.0043 or something like that so they've done about a 4.4x since I covered them absolutely smoking those
+// gains and they are one of the most important coins in the crypto gaming space they have a ton of Investments
+// they have a treasury of nearly $100 million they are actively invested in some of the best games in the space and
+// they are now partnered with immutable X to bring some cool technology to the immutable X ZK evm speaking of immutable
+// X they are also on this list as you know I an immutable X seed investor I'm a massive investor in beam and I have huge
+// huge bags of both of these tokens and I am so happy to see them climbing the ranks with absolutely Reckless abandon
+// here and I have no reason to doubt that they will continue to grow as gaming continues to grow my hope is that
+// immutable X becomes the first gaming token to crack the top 10 in crypto market caps and just for some
+// perspective here it's at $2.6 billion market cap the top 10 is 13 here so it
+// would have to five or 6 x from here to overcome the Doge and to me that would
+// have to do that you know against the market so this would take take a massive gaming run but I don't think it's insane
+// I think it might happen here and if it does happen then that might mean that beam becomes a top 25 coin or something
+// like that again understanding that crypto is about categories niches storylines and if one coin from a
+// category makes it astronomically High the entire category will reprice under it so the higher immutable goes that
+// creates a higher ceiling for the rest of the gaming ecosystem to flourish in so as a massive gaming bull I'm very
+// excited that immutable X is continuing to crush on the way up and that to me paves the way it blazes a trail for all
+// of gaming to repic under it so as you see a mutable X make this massive run know that it's bullish for all of gaming
+// that's the facts Gala as we've said they are a publisher they have several games and they had a massive destructive run
+// down from their all-time high their all-time high was like 70 cents they're currently at three here so on their way
+// back up if they are to make it back up could do astronomical gains again their downside is about 60% % they haven't
+// pumped too hard here as you can see these other ones have pumped much harder they're up much more significantly but
+// about 2.1x since we called it here on the channel Ronin again similar to Gala
+// they have some games far less games here like immutable has like hundreds of games that are coming to the immutable
+// xchain but Ronin has axi Infinity which was the most successful crypto game of all time and they also have now pixels
+// online which has 400,000 active users now the thing about the Ronin ecosystem is it caters largely they have a huge
+// fill Lino player base and so there's a lot of emerging economy Dynamics going on there but it is a very interesting
+// and totally unique way to approach gaming and again there's a lot of different approaches here I'm not
+// playing gatekeeper I'm just saying here's all the pieces and as you can see Ronin has performed pretty well of about
+// 3.4x since we covered on the channel and that has a lot I think to do with pixels online which is this game that has a ton
+// of active users right now again very few games on Ronin there's a few games on Gala there's quite a few games that are
+// connected with beam actually launching on it subnet as well as dozens and dozens of Investments by the Merit
+// Circle Dow and then you have a mutable X which is kind of like the big daddy gaming coin which we hope hope breaks
+// into the top 10 next we have cify as you know cify is a Launchpad these launchpads as the market gets super hot
+// again if we are to get this Raging Bull Market launchpads will go bananas they will go absolutely crazy because they
+// will give you early access to tokens before they hit the market and token launches in a bull market can go
+// absolutely dummy High I'm talking 10 20 50 100x 200x and more in the peak heat
+// of the bull market and so if you get into the launch pads you can actually buy allocations to these new projects
+// sometimes just 500 bucks sometimes a few thousand doll but if things go 20x 50x
+// and you instantly have those tokens you can flip and make 20K 50k sometimes even
+// more in single days and that is the magic of launchpads but it only works during Peak bowl season so again cify is
+// kind of the leading gaming Launchpad I have a ton of cify tokens I cover them first at 60 cents here and so you're
+// looking at almost a 6X since I covered them again you are welcome team elot
+// trades if you guys have been rocking with the channel here in 2023 you know this has been probably the best content
+// streak I've ever been on and I only intend to keep pushing harder because getting bullish early in the cycle is
+// lower risk whereas getting bullish at the ultimate Peak is the higher risk and I personally hope I can get the most
+// amount of people excited about this Market at an early stage when most coins are probably going to do well as opposed
+// to at the end of a cycle when most coins are set up to absolutely implode that is
+// the best way to do it and I hope this content helps the maximum amount of people but again it's not a team sport
+// here you all got to understand it is you and you alone out there in the crypto markets once you choose to buy some
+// coins next we got Prime again this is one of the most legit trading card games here in the space you have a $119 2023
+// low and uh their their current value is almost 9 bucks these guys are backed by a16z they're super duper legit and in my
+// opinion this could be one of the highest performing gaming tokens of the cycle I'm definitely a big fan of what they're
+// doing here and I hope hope they continue to crush it as you can see their fully diluted valuation here is almost a
+// billion so they only have you know small amount of their token circulating like less than 30% of their token circulating
+// so it really is a tiny uh circulating Market market cap and there will be token emissions here something to
+// consider but they are one of the most advanced ecosystems and they definitely deserve a slot in anyone's gaming portfolio once again my philosophy on
+// gaming is that it will eventually create mainstream hits the industry will continue to have some of the most
+// attention and excitement surrounding it and when anything succeeds in gaming the rest of the tokens will get a lot of
+// love so that's why I'm hyperfocused on gaming because as a niche I'm convinced it's going to succeed and its success
+// will mean that focusing and distributing my bets within that niche in my opinion are most likely to succeed next we have
+// neotokyo now this is a project that is mine obviously there are three projects here that I have founded and I cannot
+// comment on for that reason I cannot tell you how risky they are or talk about prices or anything like that as a
+// Founder but what I can tell you is that neotokyo has almost certainly fulfilled its highest aspiration of becoming the
+// crypto gaming Illuminati the networking Club where the power Brokers of crypto gaming come to intermingle to share
+// knowledge to build to launch stuff and that's why tons of projects want to actually launch to the neotokyo holders
+// in this case immutable immutable X has recently joined literally every gaming project here is a part of neotokyo
+// almost and it is very much so the place to be if you are a power broker in crypto gaming community members have
+// created all kinds of projects one Community member actually created a Launchpad again this is not owned or
+// controlled in any way by neotokyo or me or Becker but like cify someone created a Launchpad so that citizens could get
+// access to projects before they launch and projects often times choose to want to come to neotokyo because they want
+// these holders these Diamond hands these power Brokers to be a part of their projects and that's why neotokyo has
+// been so successful is it is an absolutely phenomenal experiment that has succeeded in every way of becoming
+// the networking Club of web 3 gaming now imposters is the game of the superverse now I do want to be very clear the best
+// advice I can give you is to go put the Bell notification on for superverse just like this make sure that it's turned on
+// because superverse will be shedding its skin and revealing an entirely new phase of the project that is very much so the
+// connecting fiber between everything that you see in front of you in the crypto gaming space there is no doubt that this
+// community is the biggest and most powerful in the crypto gaming space I've been spreading the good word about
+// crypto gaming since 2018 I don't want to ruin this reveal because we've been working really hard on it but all I can
+// say is turn post notifications on on superverse and understand that as hard as you see me working on content as much
+// as you see me getting ahead of these Trends in the industry year after year week after week month after month year
+// after year cycle after cycle I'm putting far more effort orders of magnitude more into these projects and you'll soon see
+// the fruits of those labors now to be clear imposters is currently an nft form and the studio behind Impostors has
+// recently hired an absolute legend in the form of Rick Ellis I highly encourage you to watch this interview where Rick
+// Ellis list the new head of imposters actually explains why he's so bullish on web 3 gaming and his plan to take
+// imposters mainstream again these projects are my primary focus and if you believe in what I'm doing then all I ask
+// you to do is turn your notifications on for those projects because there is a lot coming in 2024 that you cannot see
+// and if I'm right about this crypto cycle being the one which crypto gaming breaks through to the mainstream well there's a
+// whole lot in store for these projects that you can't even imagine next this is actually the first project that I'm going to put on here that's unreleased
+// this is called terse and when it comes to unreleased projects I want to be completely clear the hype before the release is totally damaging to the
+// project and you do not if you're not one of the early investors you do not want to be buying these projects right out of
+// the gate almost all new token projects during the Bull Run come out at astronomical prices they tend to pump
+// and dump and you want to kind of stay away from them until they dump like crazy but again that depends on when
+// they come out and when the tokens release but I will for your understanding just put these on your radar and I'm not going to talk too much
+// about them cuz I don't want to create any artificial hype about them but I just want you to know that these are projects that are coming next year that
+// I think are ones you should be researching and understanding token launches are very very tumultuous and
+// you should definitely be careful when you get into any new token and understand the 360 view R rever gonzilla
+// ready games pixels online and I'll also add in Heroes of mavia here again these are all super highquality gaming
+// projects I've invested into most of them not all of them and again I'll follow up with more information when the time is
+// relevant but I'm making a 2024 video I want you guys to know what I'm thinking about for 2024 next we have shrapnel
+// shrapnel is one of the hottest gaming tokens they have one of the sickest looking games they're competing in the
+// Big Show which is firstperson Shooters they have their own subnet on Avalanche I certainly certainly hope that they
+// succeed in their mission again any game succeeding is good for all of the games and I'm very hyped on what they're doing
+// definitely part of my 20124 portfolio next big time again I never put calls on trapal big time so I just have na here
+// but again big time and trapnel are two of the best looking games in the industry right now big time is one that
+// is very interesting because if you're actually farming within the game you can play an MMO RPG and players are making
+// up to six figures over the last few months farming their big time tokens it is something that probably won't last
+// forever so if you're looking to spend some time and grind a game and maybe end up earning some crazy amounts of tokens
+// I highly suggest you check out big time and of course we have cus again I've covered cus in depth they're adding a
+// LaunchPad had they burnt a ton of their supply they have tons of games in their ecosystem and they are up almost 10 full
+// X's since we covered them here on the channel absolutely Smokey no jokey gains
+// here out of cus their goal is to focus on browser gameplay totally democratized
+// no fancy chips required and they believe that the Casual gaming route is the way to onboard billions of users again
+// everyone has their own strategy some games are going for immersive AAA like you're seeing with gonzilla like you're
+// seeing with shrapnel like you're seeing with eluvium another one that's on my list for 2024 I don't know why it's not
+// here some are going for more casual games like cus mobile games like maavia or wagi and then you also have more
+// economic games like you saw out of axi Infiniti and you're seeing the same thing out of pixels online next I'm just
+// going to be real this risk rating again the risk rating for all the ones in yellow is high that means you know you
+// could have a 20 to 50x but you could see a 90% correction this is big big risk
+// right the medium highs you're seeing maybe a 15x or an 80% correction medium you have a 75% correction and a 12x you
+// just have to understand the risk scale here and again this is not very sciency I just literally pulled these numbers
+// out again this is like astrology for men here embrace it we're just looking to the stars but we're hoping that we get
+// something right I've caught a lot right over the years it doesn't mean that I have special powers okay I'm just a dude
+// with a webcam and this bright light and a neon sign and a pudgy penguin toy okay speaking of the memes I told you I only
+// have two meme positions that is Pepe and Bon and since I said that Bon has gone on such a ripper it's up 3.1 6X and
+// rumor has it it's going to get listed on coinbase again this is proof that the salana ecosystem is absolutely on fire
+// okay absolutely on fire heepe I still think is the Daner meme by so many orders of magnitudes hoping that the
+// Frog gets its legs under it and has like a Dogecoin moment at some point in the future I don't know I could be wrong
+// it's still up a bit here from where I called it only 37% not crazy here but it's up right it's up we don't turn our
+// noses up at gains here not after a three-year bare Market we do not turn our noses up at gains even small gains
+// now the other thing that is a strategy here and this is so degenerate this is seek medical help degenerate this is you
+// need to see a doctor okay you need to see a doctor if you're doing this there's something wrong with you but if
+// you do want this level of 100x 200x gains from buying literal abysmal meme coins then what you want to do is look
+// for the alternate l1s like Avalanche like Cosmos ecosystem chains and you want to see when they create their
+// leading meme coins if you're early to those you could maybe ride on a real rocket ride here and so that's the dgen
+// next level stuff is buying meme coins that are not goated like Pepe and Bon those ones are so absurdly risky it's
+// not even worth discussing here you really you really just need help you need help you need Jesus next we have the AI Niche and I'm telling you guys my
+// main focus here is aosh I have my own validator on aosh so you can delegate to it it's called ELO trades new go ahead
+// and delegate towards it I think AOS is doing something that almost nobody is they're allowing for subletting of GPU
+// power again AI will continue to make massive news throughout this cycle every few months there's a new AI explosion of
+// interest and excitement and drama that will continue driving crazy amounts of attention excitement and investment into
+// AI cryptocoins that means that things like AOS which allow you to lease computing power which is the driver of
+// AI right now compute power is what this is all about things like aosh will potentially become massive massive
+// focuses going forward there's also a bit tensor that's kind of like the leading one I don't have a big bag of it because it literally doesn't know how to dip
+// it's just been going absolutely bananas it literally will not dip but I do think that if cool apps start launching on top
+// of benser the tow token that could be something to look for again aosh is
+// something I've been holding for years I believe they'll continue to crush it and if I were to say so it's my favorite AI
+// coin I don't have a ton of AI coins but I do believe Ai and gaming will be the driving narratives of this bull run
+// onward if you're looking for a little something extra there's dexes like dydx okay I could see Americans getting
+// frustrated not having access to Futures Trading because none of the exchanges let Americans on anymore so
+// decentralized Futures like dydx could become interesting again it doesn't pump very hard but I think their new version
+// of their protocol which shares fees is quite interesting for me the nft play besides obviously neotokyo and imposters
+// the nft play that is most likely to pull a board ape this cycle is pudgy penguins and that's because lucanet the CEO is an
+// absolute Beast I'm a friend of his and I think his vision is going to take him somewhere crazy so if there's a next nft
+// that is pudgy Penguins you're looking at to me the only thing I see as a pfp project that could hit 100 eth plus I
+// think pudgy Penguins would be that crazy one again they've traded as low as 4 eth this year they're up quite a bit but
+// they just keep delivering and they recently previewed this pudgy World concept which to me screams that they're
+// making a video game and that they will transition from being a consumer packaged Goods project to being a video
+// game project which to me is giga bullish cuz gaming to me is the thing I believe in the most most next if we're talking
+// about ways that you can enhance your 2024 portfolio you're going to want to look at rotations this is when certain
+// ecosystems like salana Ava Cosmos whenever they get hot you'll see the coins within those ecosystems get hot
+// again I don't know what those coins are I'm not bringing attention to any of them in specific but let's just say you didn't want to do gaming for some reason
+// or you didn't want to do AI you wanted to play in specific ecosystems this is one way to do it I'll end here with
+// finally two D5 plays one of which I was an early investor into called Prisma I personally think Prisma will have a
+// really nice future again I'm an early investor I plan to hold those tokens for a significant amount of time and see how
+// the project performs it's still pretty under the radar as well this is in the liquid staking token narrative where you
+// can stake your stake eth and get additional yield on top very interesting project as well as Rune which allows you
+// to do onchain swaps between things like ethereum and Bitcoin I think Rune is kind of in its own category so Prisma
+// and Rune are the two that I like for defi if I was to pick a defi coin okay
+// this Raw video file is now almost an hour and 10 minutes if you guys feel like I delivered a tremendous amount of
+// value for this 2024 portfolio overview the way I've gone through and explained why I'm in each one of these coins the
+// risk involved the upside the downside the left side the right side then smash that like button and make sure you subscribe with that Bell notification on
+// I believe that this is going to be one of the most incredible Cycles we've ever seen but of course there is a risk it doesn't play out if it does however I'm
+// confident that gaming will be the most transformative place to be and I'm excited to continue to show you the light throughout this journey if I
+// missed your favorite token you know what to do leave me a comment in the comment section below if you enjoyed this video check out this one that I made just a
+// few days ago which goes even into more detail on some alt coins that I love as always I'm elot trades and I'll see you
+// very soon on the next
+// episode
+//  `,
+//   });
+// console.log(
+//   ` Transcript: ${transcript} \n Usage: ${usage} \n Entities: ${JSON.stringify(
+//     entities
+//   )} `
+// );
 
 /* console.log(
   await getEntitiesNer({
-    transcript: "I want to invest in Bitcoin and Ethereum",
+    transcript: `while things are macro going down you want to sell them as they rally up cuz that's your chance to get out at a good 
+price now I wanted to add in here that Bitcoin is now in a dip and the whole Market has pretty much taken a massive 
+dip well not every coin of course beam and immutable X are still crushing it but you you know most of the coins here 
+have taken a bit of a dip there's plenty of coins in the red here over the last few days and honestly it's kind of 
+popping up right now so you know it's at 42,
+    000 if it gets back above this you know $43,
+    000 Mark or so you know if it 
+gets back Above This 425 or specifically above 43 44 this dip is over right this 
+is going to to new highs for the year what I want to impress upon you is this dips are effectively the thing that you 
+want you don't want to just be chasing when things are up up and away that might feel like the best time to invest 
+it certainly is the most exciting but what you really want to wait for are the times that it's not exciting again so if 
+this dip gets worse goes down into the 30s or so maybe even the low3s that would not be the end of times now it 
+would be very concerning if we go below you know 31,
+    000 or 32,
+    000 that is a very 
+sensitive area and might signal a much more difficult time for Bitcoin ahead 
+really all of crypto but in the case of right now anything above 32,
+    000 to me is 
+a massive massive opportunity if it comes down and the more uncomfortable it gets the more the Bears come out of 
+their caves and start screaming it was all a dream this was the biggest bull trap in the history of the world well 
+that to me my friends is the time that all be looking to smash the buy button but again I'm not doing too much right 
+now I've been buying throughout 2023 and so I'm pretty well positioned here coming into 2024 but I hope this video 
+helps you out a lot and back to the analysis so the point is right now we are still in this three candle which is 
+right before the two most parabolic years the two best years of the Bitcoin cycle that is if the cycle is to 
+continue to play out the way it worked before now a lot of people don't believe in this cycle stuff but get this you 
+want to see something crazy from the all-time low in 2015 to the all-time high in 2017 it was exactly 
+1,
+    64 days from the all-time high in 2017 to the all-time low in 2018 it was 
+exactly 364 days from all-time low in 2018 to alltime high in 2021 1,
+    64 days 
+again exactly the time from low to high and then once again from all-time high 
+in November of 2021 to alltime low in November of 2022 
+364 days honestly some things are Stranger Than Fiction and Bitcoin very 
+well might be one of those maybe we're all in a simulation maybe this is all some collective delusion maybe there are 
+no coins at all what I do know is that as long as this Bitcoin cycle continues to show itself and prove itself out as 
+it has once again in 2023 I feel like I would be a damn fool not to bet hard on 
+the industry that I log into and talk about and obsess over every single day so that's what I'm doing but make no 
+mistake this is risky business and everything you buy into could be manipulated crash the founders could end 
+up not being honorable or doing the right thing the code could get hacked stuff is very very risky and you assume 
+a 70 to 100% loss whenever you buy anything in this crypto space the 
+trade-off here is you're trading a 70% downside for a potential thousand or 
+10,
+    000% upside that's 10 to 100x upside versus a near total loss those are 
+better odds than you're going to get in Vegas almost any day of the week and for that reason I'm all in on crypto gambling to make my life better and if 
+you're here in crypto right now watching a video like this you need to slam down some hard to swallow pills and 
+understand that you're gambling too well to be fair we all need to gamble that's what the Fiat system forces us to do cuz 
+your money turns to dust in your wallet your labor is not worth anything anymore we need to gamble in stocks in real 
+estate in assets of some kind if you want to get ahead and to me crypto is the one that I know and it's the one 
+that I think is the most generous and most likely to help people Achieve Financial Freedom so I'm gambling here 
+and with that said let's get to my portfolio for 2024 of course we should add that Michael sailor the biggest bull 
+on Wall Street believes Bitcoin will hit a $350,
+    000 price in 2024 now that would 
+mean that Bitcoin is about 10x from here of course what we saw over the last one 
+was Bitcoin went about 3x over its prior all-time high now if Bitcoin goes to 350k that would mean it would do a 5x 
+over its prior all-time high whereas last cycle it did about a 3 and 1/2x over its prior alltime high so it's 
+going way higher and that would mean that what we'd see out of total three meaning the altcoins would probably be 
+even more dramatic right we saw a gain here of total three which went from about 300 billion up to 1.3 trillion 
+this was about a 212% gain or almost a 3X out of the altcoins now if we go 50% 
+more that means we could see about a 4X out of the altcoins from prior all-time high and that would mean altcoins alone 
+would be at $4.5 trillion doll not to mention you add in Bitcoin and eth you have crypto scratching its head on 
+nearly $1 trillion in market value that my friends is the size of gold and that 
+my friends is a whole new ball game as they would say and as always I solicited the community I said I'm doing my 2024 
+portfolio video this week what coins should I include and I literally in a few hours got almost 1,
+    000 responses and 
+they were really bad they were terrible I am not taking advice from you guys ever again I don't know what you're trying to do to me but please God stop 
+trying to give me Alpha because it is not working anyway back to the show all right let's get into it this is going to 
+be a complete breakdown of the 2024 portfolio and I'm not going to give you exact percentage size of these tokens 
+but I'm going to give you a general idea on how I'm organizing my portfolio as a whole and then I'm going to give you the 
+actual products within each category and this is going to be an absolutely monstrous amount of information so get 
+ready smash that like button and make sure you're subscribed with the Bell notification on each video we've come 
+out with over the past few weeks I've been trying to make sure that they are so loaded with information that they are 
+effectively unmissable okay the first one where we started doing this was 185k 
+views we're going to have our first video Hit 200k K views in what feels like years I'm sure it has been and 
+every single video here I've been pouring my heart and soul into making sure that they are jam-packed with Alpa 
+so make sure you put the Bell notification on because everything I put out on this channel going forward will 
+be in my opinion required viewing you absolutely must watch this stuff if you 
+want to be ahead of crypto no channel is covering these niches and these movements like I am and I'm giving this 
+all to you for free and I'm trying to make sure that I don't waste any of your time here so hit that Bell notification 
+and you will be in my opinion way ahead of everyone else but again as I go through these coins I want to be very 
+clear I will explain my logic as to why I like these coins but in the end this 
+community is getting so big and so many people know about the strength of this community that inevitably if you're 
+following the coins here only on this list then you're always going to be late I want you to take the ideas here the 
+mental models of how I'm finding and analyzing coins in this market which I explained in detail and I want you to 
+apply them on your own and that way you can be ahead instead of buying a YouTuber coin like I'm going to be 
+covering here it's going to allow you to get ahead of everyone else but only if you do these things and do the hard work 
+on your own with that said I hope this information helps you now starting at the top we have salana okay this is a 
+risk ranking and by the way you see my technicolored risk ranking chart here again this is completely made up right 
+I'm just trying to give you a sense here of where the the bigger risks are uh blue chips and the medium and the medium 
+highs those are just going to be lower gains there's still a ton of risk in those coins right everything has risk in 
+this industry could get sued by the government founder could die you never know crazy world lot of smells Anything 
+Could Happen okay but anyway enough of that salana you guys know my thesis here salana is the best competitor to ethereum and everything in the salana 
+ecosystem Has Gone Bananas I started giving you guys salana in the teens in the low 20s and it has absolutely 
+crushed it it peaked I think at about $75 um I'm just calling my ET call here 17 though I know I talked about it 
+around the 13 range I just think I was more forceful around the $17 range and so the gains so far are 321 per or 4.21 
+x's and the downside and this is how I'm calculating this the downside is the 
+2023 low so the low value in 2023 I don't think the market goes and revisits 
+those I think that's a hard bottom and so my logic is your downside in this category is effectively the current 
+value and that is divided by the or the the 2023 low divided by the current 
+value and that allows you to see effectively how low you could go if we revisit those lows which is possible 
+right if there's some apocalyptic scenario and Bitcoin just shreds through 32k and everything turns out to be a 
+massive bull trap and kappo was right well I guess this is possible right we could go revisit those 2023 lows so I'm 
+just showing you your max downside but just know essentially salana has taken on this super Blue Chip status as a 
+testament to that projects like gito which are essentially like Lio or Flash Bots in the salana ecosystem are being 
+valued at multi-billion dollars that's $3 billion fdv for a project like jeto 
+which arguably might be seen as too much too soon but it just shows you how significant the salana ecosystem is that 
+people are valuing uh the coins in the salana ecosystem as equal to their ethereum counterparts and that's a 
+massive narrative so like I said I'll be rotating profits from trades into salana as part of my strategy and that is one 
+that I keep getting laughed at in the YouTube comments so if you want to keep laughing at me go ahead I appreciate it 
+every time I've been laughed at and mocked for my choices that I'm making publicly here for you all it's turned 
+out to be a massive Money Maker so reply guys eat your heart out because you are my best indicator that I'm doing 
+something right I know it's a hard pill to swallow but we have a lot of coins to get through so we are going to start getting through them the second one is 
+chain link again chain link is one of the most important protocols in the entire space they're integrating with 
+swift that's right the banking Swift they are one of the most legitimate ways to communicate between chains and 
+protocols if you have dexes that are feeding in prices well they're using an Oracle and that is coming in through 
+chain link chain link is effectively part of most if not all of Defi and it 
+is a blue chip by all standards again Blue Chips they have a potential for maybe a 10x or so from here maybe a 15x 
+in a very good situation but they're also lower risk they're not going to dump as fast they have much more 
+significant holder bases and chain link is definitely a blue Blue Chip to have on your radar it's part of my portfolio 
+and if you want a more passive portfolio things like salana and chain link are definitely in that lower crypto risk 
+almost guaranteed to be here for the next several years if not on into the future next we have coinbase as you know 
+I'm a big bull on coinbase stock after the fall of CZ and FTX they are the last 
+man standing and they are the white knight of crypto publicly listed on the stock market I've been aping coinbase 
+like a madman since about $60 here $65 is when I covered it on the channel and 
+that would mean that we're about 2.1x over my call and I keep adding to my coinbase position just cuz it's really 
+easy to do for my bank I have sort of my Fiat and crypto worlds separated and it's a really nice easy thing to do that 
+I've been rotating out of my treasury bills and into coinbase stock largely from my treasury bills and it's been an 
+insane play I also think coinbase is a blue chip in that it's not going to do more than a 10x here in fact if it hits 
+$1,
+    000 I would be kind of mind blown I think that that's possible in like a total blowoff top but really I'm just 
+hoping it makes new highs around $500 to $1,
+    000 at the end of the cycle in 20125 
+that would be a blessing and I think that that is a peak price for coinbase this is the only stock you're going to 
+see here but it trades like a crypto so of course if you want something more passive these are things you can just buy and know they're going to be here 
+years from now and probably going to grow with the cycle now we get into something a little more spicy which is Avalanche as you guys know I've been a 
+big Avalanche bull throughout the years I was first on avax in 2021 one I was 
+one of the first YouTubers to bring avax and the avax ecosystem coins like Joe and some other Crazy Ones to the frame 
+here Joe's like the Unis swap of avalanche again Avalanche is to me the next in line after salana as far as 
+hyped layer one ecosystems and it is slightly off of Blue Chip it's not a blue chip it's a medium risk and just to 
+show you here it's been tracking actually the gains of salana really really well if you look here soul is 
+about 73% off its high Avalanche through most of the markets about 74% off its 
+alltime high it was almost identical in its percent draw down from alltime high for the entirety of the bare market and 
+so these two will probably make their way up to alltime high in a similar fashion and if you really study the 
+actual movements Avalanche is a really interesting evm Tech again the layer one ecosystem has a ton of competition there 
+are so many chains now but I just think there's some muscle memory in the charts here because Solana Luna and avax were 
+like the trio of 2021 obviously Luna nuked and doesn't really exist anymore but salana and avac when salana makes a 
+really big run avac seems to want to play catchup and look what is a medium risk goated L1 if you don't have polygon 
+now polygon markets itself as a layer two but it really kind of in practice is a layer one though they are starting to 
+connect the dots here with their cdk right so they have this chain development kit where they effectively 
+allow people to launch their own ZK EVMS now this is very next gen and it's in fact the technology that underpins the 
+newest initiative from immutable X which is of course also on this list and a project that we'll talk about shortly 
+but together this is part of the three-headed dragon of gaming and polygon is beyond that it's also really 
+good Tech and I know this from my developer friends which throughout 2021 really didn't like the technology that 
+underpinned polygon they've made big strides and in my opinion their ZK Tech has started to become best-in-class and 
+really next gen so it's something to consider that polygon and their technology keeps evolving and they're 
+about to evolve from the madic token to the pole token again showing their firm transition to 
+ZK rollup technology this is something to keep your eyes on and I have no reason to believe that polygon won't 
+have a massive run in 2024 with the rest of the market again this thing went on 300X it was trading between 1 and 5 
+cents when I was covering it like crazy in 2019 and 2020 and in 2021 it went on 
+its hallowed run up to $3 it's pretty insane next one up is injective and in 
+this case you want to trust the strength of the chart look at this this is one of the best performing assets of the entire 
+market and one of the few that has actually broken its prior all-time high you can see its prior alltime high was 
+about 24 bucks here and today it is sitting at $26 this is the way that you 
+understand that strength begets strength and obviously we've talked about injective in fact we were one of the 
+first people to cover injective at the beginning of the 2021 run at the end of 2020 we covered injective at 70 I 
+actually participated in the early token sale and was able to get tokens at 70 
+here and we rode this thing up as a community up to $22 absolutely astronomical but look it takes a very 
+special type of team to be one of the first to overcome your prior highs in the new cycle and this chart is screaming that it wants to remain strong 
+so again injective is a defi protocol is part of the cosmos ecosystem and you'd be a fool to fade this kind of strength 
+in a new cycle next we have Celestia now Celestia is like a nerds Paradise again 
+in the cosmos ecosystem both of these are they are their own layer ones and again I put them as medium high because 
+they are newer Kids on the Block they are not as established as Avalanche they are not as established as polygon they do not have as many fundamentals driving 
+them in fact Celestia's brand new and trading like an absolute beast but at the same time I think Celestia's Tech is 
+very exciting to people and the strength of its chart simply cannot be denied I mean essentially it doesn't really know 
+how to take a dip it's absolutely crazy obviously we talked about it here at about four bucks I had people talking to 
+me about it at $2 but I missed that move and as you you can see the strength is just undeniable even when Bitcoin had 
+this dip it just exploded upwards it shows you that there's true demand here for Celestia some additional Alpha here 
+is that I'm hearing that there's going to be a ton of Celestia airdrops so if you're staking Celestia you'll get a ton 
+of these projects that are launching on Celestia essentially giving you free tokens air drops so if you're staking the Tia coin then you could be eligible 
+for some aird drops again this is all early Alpha but in addition they have a 16% APR so you stake you get some 
+Celestial rewards and then you get some free tokens on top of it if this thing moons like crazy it could be one of the 
+gigabrain plays of the cycle I'm certainly hoping it is now the last one is internet computer and what's crazy 
+about this chart is I don't think I've seen a worst looking chart in my whole life like it is easily the worst looking 
+chart of all charts however that is actually kind of a benefit when you zoom in you realize that almost all their 
+tokens are in market right they have a total supply of 510 they have 450 circulating that's like I don't know 80 
+or 90% there and so there's not a lot of inflation and this thing went through this crazy crazy dump where effectively 
+everyone got mad and sold and its reputation went down but meanwhile they kept developing stuff and it's got this 
+decentralized storage play that I actually think makes it slightly different than other layer ones it's not 
+directly competing with the likes of soul and stuff who knows anyway I have some internet computer in my portfolio 
+cuz I think there's a chance and if you see here it hasn't pumped very much its low was like three bucks it's up at like 5.6 it's not even 2x off its lows and 
+get this the all time high was $700 right it's sitting here at $5 
+that's literally more than 100x it's n it's over 99% down from its all-time high so if it does go back and tickle 
+its all-time high which I think of as absolutely absurd it probably won't do that well it's just like there's just a 
+lot of room for this thing to go that these are the charts that if they get going could mean business if they get 
+serious again I have a very small amount of my portfolio but I figured it was worth a bet in case this thing does wake 
+up next there's a project called monad it is not released yet it's in my uh unreleased and I just gave it a risk 
+because I don't really know what the risk is cuz I don't know what the price is risk is heavily correlated to price 
+if you don't know what the price is you can't determine the risk but anyway this is an upand cominging project that a lot 
+of people are hyped about and I would not be shocked if this thing ends up catching some serious hype waves if we 
+do get this bull run that we're all really hoping for this is one to have on your list definitely go ahead and follow 
+it the next is layer zero again this is going to be one of the biggest coins in the the whole ecosystem and you can 
+actually likely qualify for their airdrop if you're using their Stargate Finance defi application which allows 
+you to bridge assets between different chains I highly encourage you to understand what layer zero is as this is 
+likely to be one of the biggest token launches in the whole industry coming up soon shout out to the layer zero team because I've actually been collaborating 
+with them on some other stuff again stuff that will be announced in 2024 now I want to be clear those are like the 
+big coins those are the big pieces of tech out here that I want you to be aware of and most of those are lowerer 
+risk and we'll have most likely pretty muted rewards we're not talking about 100 X's here like if Celestia goes 100x 
+it would be worth like a quad zillion dollars that's not going to happen those are maybe 10 to 20x plays at the max but 
+probably some of them will be closer to 5x plays in my opinion having too much of your crypto portfolio tied up in 5x 
+plays feels like a waste that's my particular approach and to explain this in a little more depth I'm breaking out 
+my portfolio breakdown which is in the end I have a lot of money in Treasures which I'm actually rotating quite a bit 
+of money out of there because I believe interest rates have peaked and that risk is going to be the new thing to allocate 
+towards that's my particular approach but in the end I have what's called a crypto barbell where on one side of the barbell I have lower risk stuff stuff I 
+know is going to be there for a very long time stuff like Bitcoin stuff like coinbase stock stuff that I don't need 
+to wake up in the middle of the night sweating and think has it all gone to zero has it all just evaporated into 
+dust yeah yes this is the high conviction long-term bucket and in that high conviction long-term bucket we have 
+Bitcoin we have ethereum we have salana and we have coinbase stock and that bucket actually has been updated because 
+coinbase has been ripping salana has been absolutely ripping and this is how my long-term conviction bucket looks now 
+I'm actually rotating profits whenever I do take them into salana that's my personal approach again I might rotate 
+profits into some other exotic L1 if I get really carried away but this is my general plan I'm going to try to stick 
+to my plan as much as I can it's also really important to make plans and write them down because the emotion of the market will carry you off into La La 
+Land if you let it and if you write stuff down you can at least sober up for a second and pull yourself out of the 
+Psychedelic Bull Run acid trip that has long since left planet Earth and you're 
+contemplating whether a dogcoin on butthole chain can be worth $10 trillion because you saw a tick tocker made a Tik 
+Tock about it and you're just wondering what the point of life is because you haven't talked to your friends in months 
+and you stare at a screen all day trading crypto coins that's what the bull Run's like all right you lose your godamn marbles so keep it together all 
+right keep it together and write stuff down all right a little break from the video here because if you're new to crypto you need to have a VPN and that's 
+why I'm extremely proud to partner with nordvpn and be one of their leading Partners in the whole crypto space 
+because if you don't have a VPN you're literally like a lamb to the slaughter here your IP address will start showing 
+up on crypto sites which even though the blockchain is secure those sites could be compromised and your IP address 
+effectively you could become a Target so you want to make sure that you avoid that situation with a product that only 
+cost $3 per month but what's great is you get a massive discount if you use my link below again I was hacked a few 
+months ago and so I take cyber security extremely seriously like I've said many 
+times before you can be forgiven for a lot of mistakes in crypto a lot of them are understandable in fact even ogs make 
+mistakes but one thing you will not be forgiven for is not having a VP VN it's so cheap it's so easy and best of all it 
+supports the channel and I appreciate you guys so check out nordvpn sponsor of today's video and let's get back to some 
+good old fashion cryptocoins back to the point here I personally think that the zero Infinity bucket is worth allocating 
+to now I personally think the zero Infinity bucket has odds that in a bull run make sense because in a bull run if 
+Bitcoin continues to grow usually altcoins will continue to grow especially early on in the bull run and 
+quite Frank Al the risk if Bitcoin doesn't continue to grow is it could drop dramatically I mean bitcoin's up 3x 
+on the year so I mean the thing could drop like 70% and still only be touching 
+its 2023 low that my friends is a huge amount of downside but if you're upside 
+is you know somewhat limited compared to the 100x opportunities out there and those 100x opportunities are likely to 
+hold and grow if Bitcoin holds and grows then to me the crazy Bull Run logic is 
+you want to be allocated in some way to these altcoins the zero Infinity bucket knowing that it goes to zero or the damn 
+Moon and you're comfortable with the odds of it doing one or the other and you're ready for either outcome that's 
+where I'm at again make your own decisions I have enough fiat currency I have enough cash in my world that if my 
+crypto goes to zero I'll keep eating I'll keep surviving and my life won't be changed obviously it would suck ass but 
+I would still continue to live and survive and pay rent a lot of people aren't in that same boat so you have to 
+make the decisions based on your own Financial decisions I'm not going to be there to pay your rent or to feed your 
+kids if you can't do it you got to take care of your own period okay so let's get to the fun stuff okay beam 
+Merit Circle again they were called Merit Circle I covered them at about 40 cents and they've shot up here to what 
+was the equivalent of $2 but when they did a 1 to 100 split on beam now the price is reflected you can think of this 
+as 0.0043 or something like that so they've done about a 4.4x since I covered them absolutely smoking those 
+gains and they are one of the most important coins in the crypto gaming space they have a ton of Investments 
+they have a treasury of nearly $100 million they are actively invested in some of the best games in the space and 
+they are now partnered with immutable X to bring some cool technology to the immutable X ZK evm speaking of immutable 
+X they are also on this list as you know I an immutable X seed investor I'm a massive investor in beam and I have huge 
+huge bags of both of these tokens and I am so happy to see them climbing the ranks with absolutely Reckless abandon 
+here and I have no reason to doubt that they will continue to grow as gaming continues to grow my hope is that 
+immutable X becomes the first gaming token to crack the top 10 in crypto market caps and just for some 
+perspective here it's at $2.6 billion market cap the top 10 is 13 here so it 
+would have to five or 6 x from here to overcome the Doge and to me that would 
+have to do that you know against the market so this would take take a massive gaming run but I don't think it's insane 
+I think it might happen here and if it does happen then that might mean that beam becomes a top 25 coin or something 
+like that again understanding that crypto is about categories niches storylines and if one coin from a 
+category makes it astronomically High the entire category will reprice under it so the higher immutable goes that 
+creates a higher ceiling for the rest of the gaming ecosystem to flourish in so as a massive gaming bull I'm very 
+excited that immutable X is continuing to crush on the way up and that to me paves the way it blazes a trail for all 
+of gaming to repic under it so as you see a mutable X make this massive run know that it's bullish for all of gaming 
+that's the facts Gala as we've said they are a publisher they have several games and they had a massive destructive run 
+down from their all-time high their all-time high was like 70 cents they're currently at three here so on their way 
+back up if they are to make it back up could do astronomical gains again their downside is about 60% % they haven't 
+pumped too hard here as you can see these other ones have pumped much harder they're up much more significantly but 
+about 2.1x since we called it here on the channel Ronin again similar to Gala 
+they have some games far less games here like immutable has like hundreds of games that are coming to the immutable 
+xchain but Ronin has axi Infinity which was the most successful crypto game of all time and they also have now pixels 
+online which has 400,
+    000 active users now the thing about the Ronin ecosystem is it caters largely they have a huge 
+fill Lino player base and so there's a lot of emerging economy Dynamics going on there but it is a very interesting 
+and totally unique way to approach gaming and again there's a lot of different approaches here I'm not 
+playing gatekeeper I'm just saying here's all the pieces and as you can see Ronin has performed pretty well of about 
+3.4x since we covered on the channel and that has a lot I think to do with pixels online which is this game that has a ton 
+of active users right now again very few games on Ronin there's a few games on Gala there's quite a few games that are 
+connected with beam actually launching on it subnet as well as dozens and dozens of Investments by the Merit 
+Circle Dow and then you have a mutable X which is kind of like the big daddy gaming coin which we hope hope breaks 
+into the top 10 next we have cify as you know cify is a Launchpad these launchpads as the market gets super hot 
+again if we are to get this Raging Bull Market launchpads will go bananas they will go absolutely crazy because they 
+will give you early access to tokens before they hit the market and token launches in a bull market can go 
+absolutely dummy High I'm talking 10 20 50 100x 200x and more in the peak heat 
+of the bull market and so if you get into the launch pads you can actually buy allocations to these new projects 
+sometimes just 500 bucks sometimes a few thousand doll but if things go 20x 50x 
+and you instantly have those tokens you can flip and make 20K 50k sometimes even 
+more in single days and that is the magic of launchpads but it only works during Peak bowl season so again cify is 
+kind of the leading gaming Launchpad I have a ton of cify tokens I cover them first at 60 cents here and so you're 
+looking at almost a 6X since I covered them again you are welcome team elot 
+trades if you guys have been rocking with the channel here in 2023 you know this has been probably the best content 
+streak I've ever been on and I only intend to keep pushing harder because getting bullish early in the cycle is 
+lower risk whereas getting bullish at the ultimate Peak is the higher risk and I personally hope I can get the most 
+amount of people excited about this Market at an early stage when most coins are probably going to do well as opposed 
+to at the end of a cycle when most coins are set up to absolutely implode that is 
+the best way to do it and I hope this content helps the maximum amount of people but again it's not a team sport 
+here you all got to understand it is you and you alone out there in the crypto markets once you choose to buy some 
+coins next we got Prime again this is one of the most legit trading card games here in the space you have a $119 2023 
+low and uh their their current value is almost 9 bucks these guys are backed by a16z they're super duper legit and in my 
+opinion this could be one of the highest performing gaming tokens of the cycle I'm definitely a big fan of what they're 
+doing here and I hope hope they continue to crush it as you can see their fully diluted valuation here is almost a 
+billion so they only have you know small amount of their token circulating like less than 30% of their token circulating 
+so it really is a tiny uh circulating Market market cap and there will be token emissions here something to 
+consider but they are one of the most advanced ecosystems and they definitely deserve a slot in anyone's gaming portfolio once again my philosophy on 
+gaming is that it will eventually create mainstream hits the industry will continue to have some of the most 
+attention and excitement surrounding it and when anything succeeds in gaming the rest of the tokens will get a lot of 
+love so that's why I'm hyperfocused on gaming because as a niche I'm convinced it's going to succeed and its success 
+will mean that focusing and distributing my bets within that niche in my opinion are most likely to succeed next we have 
+neotokyo now this is a project that is mine obviously there are three projects here that I have founded and I cannot 
+comment on for that reason I cannot tell you how risky they are or talk about prices or anything like that as a 
+Founder but what I can tell you is that neotokyo has almost certainly fulfilled its highest aspiration of becoming the 
+crypto gaming Illuminati the networking Club where the power Brokers of crypto gaming come to intermingle to share 
+knowledge to build to launch stuff and that's why tons of projects want to actually launch to the neotokyo holders 
+in this case immutable immutable X has recently joined literally every gaming project here is a part of neotokyo 
+almost and it is very much so the place to be if you are a power broker in crypto gaming community members have 
+created all kinds of projects one Community member actually created a Launchpad again this is not owned or 
+controlled in any way by neotokyo or me or Becker but like cify someone created a Launchpad so that citizens could get 
+access to projects before they launch and projects often times choose to want to come to neotokyo because they want 
+these holders these Diamond hands these power Brokers to be a part of their projects and that's why neotokyo has 
+been so successful is it is an absolutely phenomenal experiment that has succeeded in every way of becoming 
+the networking Club of web 3 gaming now imposters is the game of the superverse now I do want to be very clear the best 
+advice I can give you is to go put the Bell notification on for superverse just like this make sure that it's turned on 
+because superverse will be shedding its skin and revealing an entirely new phase of the project that is very much so the 
+connecting fiber between everything that you see in front of you in the crypto gaming space there is no doubt that this 
+community is the biggest and most powerful in the crypto gaming space I've been spreading the good word about 
+crypto gaming since 2018 I don't want to ruin this reveal because we've been working really hard on it but all I can 
+say is turn post notifications on on superverse and understand that as hard as you see me working on content as much 
+as you see me getting ahead of these Trends in the industry year after year week after week month after month year 
+after year cycle after cycle I'm putting far more effort orders of magnitude more into these projects and you'll soon see 
+the fruits of those labors now to be clear imposters is currently an nft form and the studio behind Impostors has 
+recently hired an absolute legend in the form of Rick Ellis I highly encourage you to watch this interview where Rick 
+Ellis list the new head of imposters actually explains why he's so bullish on web 3 gaming and his plan to take 
+imposters mainstream again these projects are my primary focus and if you believe in what I'm doing then all I ask 
+you to do is turn your notifications on for those projects because there is a lot coming in 2024 that you cannot see 
+and if I'm right about this crypto cycle being the one which crypto gaming breaks through to the mainstream well there's a 
+whole lot in store for these projects that you can't even imagine next this is actually the first project that I'm going to put on here that's unreleased 
+this is called terse and when it comes to unreleased projects I want to be completely clear the hype before the release is totally damaging to the 
+project and you do not if you're not one of the early investors you do not want to be buying these projects right out of 
+the gate almost all new token projects during the Bull Run come out at astronomical prices they tend to pump 
+and dump and you want to kind of stay away from them until they dump like crazy but again that depends on when 
+they come out and when the tokens release but I will for your understanding just put these on your radar and I'm not going to talk too much 
+about them cuz I don't want to create any artificial hype about them but I just want you to know that these are projects that are coming next year that 
+I think are ones you should be researching and understanding token launches are very very tumultuous and 
+you should definitely be careful when you get into any new token and understand the 360 view R rever gonzilla 
+ready games pixels online and I'll also add in Heroes of mavia here again these are all super highquality gaming 
+projects I've invested into most of them not all of them and again I'll follow up with more information when the time is 
+relevant but I'm making a 2024 video I want you guys to know what I'm thinking about for 2024 next we have shrapnel 
+shrapnel is one of the hottest gaming tokens they have one of the sickest looking games they're competing in the 
+Big Show which is firstperson Shooters they have their own subnet on Avalanche I certainly certainly hope that they 
+succeed in their mission again any game succeeding is good for all of the games and I'm very hyped on what they're doing 
+definitely part of my 20124 portfolio next big time again I never put calls on trapal big time so I just have na here 
+but again big time and trapnel are two of the best looking games in the industry right now big time is one that 
+is very interesting because if you're actually farming within the game you can play an MMO RPG and players are making 
+up to six figures over the last few months farming their big time tokens it is something that probably won't last 
+forever so if you're looking to spend some time and grind a game and maybe end up earning some crazy amounts of tokens 
+I highly suggest you check out big time and of course we have cus again I've covered cus in depth they're adding a 
+LaunchPad had they burnt a ton of their supply they have tons of games in their ecosystem and they are up almost 10 full 
+X's since we covered them here on the channel absolutely Smokey no jokey gains 
+here out of cus their goal is to focus on browser gameplay totally democratized 
+no fancy chips required and they believe that the Casual gaming route is the way to onboard billions of users again 
+everyone has their own strategy some games are going for immersive AAA like you're seeing with gonzilla like you're 
+seeing with shrapnel like you're seeing with eluvium another one that's on my list for 2024 I don't know why it's not 
+here some are going for more casual games like cus mobile games like maavia or wagi and then you also have more 
+economic games like you saw out of axi Infiniti and you're seeing the same thing out of pixels online next I'm just 
+going to be real this risk rating again the risk rating for all the ones in yellow is high that means you know you 
+could have a 20 to 50x but you could see a 90% correction this is big big risk 
+right the medium highs you're seeing maybe a 15x or an 80% correction medium you have a 75% correction and a 12x you 
+just have to understand the risk scale here and again this is not very sciency I just literally pulled these numbers 
+out again this is like astrology for men here embrace it we're just looking to the stars but we're hoping that we get 
+something right I've caught a lot right over the years it doesn't mean that I have special powers okay I'm just a dude 
+with a webcam and this bright light and a neon sign and a pudgy penguin toy okay speaking of the memes I told you I only 
+have two meme positions that is Pepe and Bon and since I said that Bon has gone on such a ripper it's up 3.1 6X and 
+rumor has it it's going to get listed on coinbase again this is proof that the salana ecosystem is absolutely on fire 
+okay absolutely on fire heepe I still think is the Daner meme by so many orders of magnitudes hoping that the 
+Frog gets its legs under it and has like a Dogecoin moment at some point in the future I don't know I could be wrong 
+it's still up a bit here from where I called it only 37% not crazy here but it's up right it's up we don't turn our 
+noses up at gains here not after a three-year bare Market we do not turn our noses up at gains even small gains 
+now the other thing that is a strategy here and this is so degenerate this is seek medical help degenerate this is you 
+need to see a doctor okay you need to see a doctor if you're doing this there's something wrong with you but if 
+you do want this level of 100x 200x gains from buying literal abysmal meme coins then what you want to do is look 
+for the alternate l1s like Avalanche like Cosmos ecosystem chains and you want to see when they create their 
+leading meme coins if you're early to those you could maybe ride on a real rocket ride here and so that's the dgen 
+next level stuff is buying meme coins that are not goated like Pepe and Bon those ones are so absurdly risky it's 
+not even worth discussing here you really you really just need help you need help you need Jesus next we have the AI Niche and I'm telling you guys my 
+main focus here is aosh I have my own validator on aosh so you can delegate to it it's called ELO trades new go ahead 
+and delegate towards it I think AOS is doing something that almost nobody is they're allowing for subletting of GPU 
+power again AI will continue to make massive news throughout this cycle every few months there's a new AI explosion of 
+interest and excitement and drama that will continue driving crazy amounts of attention excitement and investment into 
+AI cryptocoins that means that things like AOS which allow you to lease computing power which is the driver of 
+AI right now compute power is what this is all about things like aosh will potentially become massive massive 
+focuses going forward there's also a bit tensor that's kind of like the leading one I don't have a big bag of it because it literally doesn't know how to dip 
+it's just been going absolutely bananas it literally will not dip but I do think that if cool apps start launching on top 
+of benser the tow token that could be something to look for again aosh is 
+something I've been holding for years I believe they'll continue to crush it and if I were to say so it's my favorite AI 
+coin I don't have a ton of AI coins but I do believe Ai and gaming will be the driving narratives of this bull run 
+onward if you're looking for a little something extra there's dexes like dydx okay I could see Americans getting 
+frustrated not having access to Futures Trading because none of the exchanges let Americans on anymore so 
+decentralized Futures like dydx could become interesting again it doesn't pump very hard but I think their new version 
+of their protocol which shares fees is quite interesting for me the nft play besides obviously neotokyo and imposters 
+the nft play that is most likely to pull a board ape this cycle is pudgy penguins and that's because lucanet the CEO is an 
+absolute Beast I'm a friend of his and I think his vision is going to take him somewhere crazy so if there's a next nft 
+that is pudgy Penguins you're looking at to me the only thing I see as a pfp project that could hit 100 eth plus I 
+think pudgy Penguins would be that crazy one again they've traded as low as 4 eth this year they're up quite a bit but 
+they just keep delivering and they recently previewed this pudgy World concept which to me screams that they're 
+making a video game and that they will transition from being a consumer packaged Goods project to being a video 
+game project which to me is giga bullish cuz gaming to me is the thing I believe in the most most next if we're talking 
+about ways that you can enhance your 2024 portfolio you're going to want to look at rotations this is when certain 
+ecosystems like salana Ava Cosmos whenever they get hot you'll see the coins within those ecosystems get hot 
+again I don't know what those coins are I'm not bringing attention to any of them in specific but let's just say you didn't want to do gaming for some reason 
+or you didn't want to do AI you wanted to play in specific ecosystems this is one way to do it I'll end here with 
+finally two D5 plays one of which I was an early investor into called Prisma I personally think Prisma will have a 
+really nice future again I'm an early investor I plan to hold those tokens for a significant amount of time and see how 
+the project performs it's still pretty under the radar as well this is in the liquid staking token narrative where you 
+can stake your stake eth and get additional yield on top very interesting project as well as Rune which allows you 
+to do onchain swaps between things like ethereum and Bitcoin I think Rune is kind of in its own category so Prisma 
+and Rune are the two that I like for defi if I was to pick a defi coin okay 
+this Raw video file is now almost an hour and 10 minutes if you guys feel like I delivered a tremendous amount of 
+value for this 2024 portfolio overview the way I've gone through and explained why I'm in each one of these coins the 
+risk involved the upside the downside the left side the right side then smash that like button and make sure you subscribe with that Bell notification on 
+I believe that this is going to be one of the most incredible Cycles we've ever seen but of course there is a risk it doesn't play out if it does however I'm 
+confident that gaming will be the most transformative place to be and I'm excited to continue to show you the light throughout this journey if I 
+missed your favorite token you know what to do leave me a comment in the comment section below if you enjoyed this video check out this one that I made just a 
+few days ago which goes even into more detail on some alt coins that I love as always I'm elot trades and I'll see you 
+very soon on the next 
+episode 
+ `,
   })
-);
- */
+); */
+
+const data = {
+  projects: [
+    {
+      rpoints: 9,
+      category: ["Layer 1"],
+      marketcap: "large",
+      timestamps: ["00:00:06", "00:00:11", "00:01:06"],
+      total_count: 3,
+      coin_or_project: "Ethereum",
+    },
+    {
+      rpoints: 8,
+      category: ["Layer 1"],
+      marketcap: "large",
+      timestamps: ["00:00:06", "00:03:31", "00:04:23"],
+      total_count: 3,
+      coin_or_project: "Bitcoin",
+    },
+    {
+      rpoints: 8,
+      category: ["Layer 1"],
+      marketcap: "large",
+      timestamps: ["00:00:14", "00:18:31", "00:19:19"],
+      total_count: 3,
+      coin_or_project: "Solana",
+    },
+    {
+      rpoints: 7,
+      category: ["Layer 1"],
+      marketcap: "large",
+      timestamps: ["00:00:16", "00:18:32", "00:20:39"],
+      total_count: 3,
+      coin_or_project: "Cardano",
+    },
+    {
+      rpoints: 7,
+      category: ["Meme coins"],
+      marketcap: "large",
+      timestamps: ["00:18:31", "00:19:25", "00:22:25"],
+      total_count: 3,
+      coin_or_project: "Dogecoin",
+    },
+    {
+      rpoints: 8,
+      category: ["Layer 1", "Gaming"],
+      marketcap: "medium",
+      timestamps: ["00:18:32", "00:22:08", "00:22:18"],
+      total_count: 3,
+      coin_or_project: "Avalanche",
+    },
+    {
+      rpoints: 7,
+      category: ["DeFi", "Oracle"],
+      marketcap: "large",
+      timestamps: ["00:18:32", "00:18:38"],
+      total_count: 2,
+      coin_or_project: "Chainlink",
+    },
+    {
+      rpoints: 8,
+      category: ["Layer 1"],
+      marketcap: "medium",
+      timestamps: ["00:18:37", "00:22:18"],
+      total_count: 2,
+      coin_or_project: "Sui",
+    },
+    {
+      rpoints: 8,
+      category: ["Payments"],
+      marketcap: "large",
+      timestamps: ["00:18:37", "00:19:18"],
+      total_count: 2,
+      coin_or_project: "XRP",
+    },
+    {
+      rpoints: 7,
+      category: ["Exchange token"],
+      marketcap: "large",
+      timestamps: ["00:19:36", "00:19:43", "00:19:50"],
+      total_count: 3,
+      coin_or_project: "Binance Coin",
+    },
+    {
+      rpoints: 8,
+      category: ["Layer 1", "AI"],
+      marketcap: "medium",
+      timestamps: ["00:24:31"],
+      total_count: 1,
+      coin_or_project: "Near Protocol",
+    },
+    {
+      rpoints: 8,
+      category: ["DeFi", "AI"],
+      marketcap: "medium",
+      timestamps: ["00:24:36"],
+      total_count: 1,
+      coin_or_project: "Internet Computer",
+    },
+    {
+      rpoints: 8,
+      category: ["AI"],
+      marketcap: "medium",
+      timestamps: ["00:24:37"],
+      total_count: 1,
+      coin_or_project: "Bittensor",
+    },
+    {
+      rpoints: 8,
+      category: ["AI"],
+      marketcap: "small",
+      timestamps: ["00:24:49"],
+      total_count: 1,
+      coin_or_project: "AIOZ Network",
+    },
+    {
+      rpoints: 8,
+      category: ["AI"],
+      marketcap: "small",
+      timestamps: ["00:24:53"],
+      total_count: 1,
+      coin_or_project: "Destra Network",
+    },
+    {
+      rpoints: 8,
+      category: ["RWA"],
+      marketcap: "small",
+      timestamps: ["00:23:25"],
+      total_count: 1,
+      coin_or_project: "ZIGChain",
+    },
+    {
+      rpoints: 8,
+      category: ["RWA"],
+      marketcap: "small",
+      timestamps: ["00:23:27", "00:23:30"],
+      total_count: 2,
+      coin_or_project: "PinLink",
+    },
+  ],
+  total_count: 34,
+  total_rpoints: 135,
+};
+function getOffsetTimestamps(timeStamp) {
+  const split = timeStamp.split(":");
+  const hours = split[0];
+  const minutes = split[1];
+  const seconds = split[2];
+  let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  totalSeconds = parseInt(totalSeconds);
+  const negativeOffset = Math.max(0, totalSeconds - 2);
+  const positiveOffset = totalSeconds + 2;
+  const negativeOffsetTime = formatTimestamp(negativeOffset);
+  const positiveOffsetTime = formatTimestamp(positiveOffset);
+  return [negativeOffsetTime, timeStamp, positiveOffsetTime];
+}
+const timestamps = getOffsetTimestamps(data.projects[0].timestamps[0]);
+
+console.log(`${timestamps[0]}: ${timestamps[1]}:  ${timestamps[2]}`);

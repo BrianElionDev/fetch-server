@@ -397,10 +397,11 @@ export const matchCoins = async (data) => {
           console.log(`No coin data found for ${project.coin_or_project}`);
           return {
             rpoints: project.rpoints,
-            category: project.category.map((cat) => ({
+            category: project.category.slice(0, 3).map((cat) => ({
               name: cat,
               id: cat.toLowerCase().replace(/\s+/g, "-"),
             })),
+            Timestamps: project.Timestamps,
             marketcap: project.marketcap,
             total_count: project.total_count,
             coin: null,
@@ -415,8 +416,9 @@ export const matchCoins = async (data) => {
 
         return {
           rpoints: project.rpoints,
-          category: categories,
+          category: categories.slice(0, 3),
           marketcap: project.marketcap,
+          Timestamps: project.Timestamps,
           total_count: project.total_count,
           coin: {
             name: coin.name,

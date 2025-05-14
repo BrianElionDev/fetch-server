@@ -1,16 +1,22 @@
-import { fetchTranscript, fetchTranscriptFromAPI } from "./FetchTranscript.js";
+import { fetchTranscript } from "./FetchTranscript.js";
 import { readFile } from "fs/promises";
-import { makeLlmPrompt } from "./Llm.js";
+import { correctTranscriptErrors, makeLlmPrompt } from "./Llm.js";
 let jsonData;
+
 export const makeAnalysis = async ({ url, model }) => {
   const transcript = await fetchTranscript(url);
-  const { analysis, summary, correctedTranscript, originalTranscript, usage } =
-    await makeLlmPrompt({
-      transcript: transcript?.content,
-      model: model,
-    });
-  return {
+  const {
+    analysis,
+    summary,
     transcript: correctedTranscript,
+    usage,
+  } = await makeLlmPrompt({
+    transcript: transcript?.content,
+    model: model,
+  });
+  return {
+    correctedTranscript: correctedTranscript,
+    transcript: transcript?.content,
     analysis: analysis,
     summary: summary,
     usage: usage,
@@ -18,6 +24,7 @@ export const makeAnalysis = async ({ url, model }) => {
 };
 export const makeAnalysisBatch = async ({ model }) => {
   const data = await loadData();
+
   const results = [];
   console.log("Starting Analysis");
   for (const item of data) {
@@ -25,11 +32,13 @@ export const makeAnalysisBatch = async ({ model }) => {
       analysis,
       summary,
       transcript: correctedTranscript,
+      usage,
     } = await makeLlmPrompt({
       transcript: item.transcript,
       model: model,
     });
     results.push({ analysis, summary, data: item });
+    console.log("Corrected Transcript:", correctedTranscript);
   }
   console.log("Analysis Complete");
   return results;
