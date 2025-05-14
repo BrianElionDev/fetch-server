@@ -33,3 +33,31 @@ export const calculatePromptCost = ({
   const outputCost = outputTokens * config.promptCost.completionCost;
   return inputCost + outputCost;
 };
+export function formatTimestamp(ms) {
+  const hours = Math.floor(ms / 3600)
+    .toString()
+    .padStart(2, "0");
+  ms %= 3600;
+  const minutes = Math.floor(ms / 60)
+    .toString()
+    .padStart(2, "0");
+  ms %= 60;
+  const seconds = Math.floor(ms / 1)
+    .toString()
+    .padStart(2, "0");
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+export function getOffsetTimestamps(timeStamp) {
+  const split = timeStamp.split(":");
+  const hours = split[0];
+  const minutes = split[1];
+  const seconds = split[2];
+  let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  totalSeconds = parseInt(totalSeconds);
+  const negativeOffset = Math.max(0, totalSeconds - 2);
+  const positiveOffset = totalSeconds + 2;
+  const negativeOffsetTime = formatTimestamp(negativeOffset);
+  const positiveOffsetTime = formatTimestamp(positiveOffset);
+  return [negativeOffsetTime, timeStamp, positiveOffsetTime];
+}

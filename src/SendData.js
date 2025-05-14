@@ -1,5 +1,7 @@
 import { supabase } from "../supabaseClient.js";
 import { checkIfShort } from "./CheckVideoType.js";
+import { matchCoins } from "./LoadCoinsData.js";
+import { getOffsetTimestamps } from "./utils.js";
 
 // Type definitions (for reference)
 /**
@@ -80,7 +82,9 @@ export const CreateNewRecordTest = async ({
   Video_url,
   Video_title,
   Video_transcipt,
+  Video_corrected_Transcript,
   Channel_name,
+  Usage,
   Publish_at,
   Llm_answer,
   Llm_summary,
@@ -97,7 +101,7 @@ export const CreateNewRecordTest = async ({
     (answer) => !Array.isArray(answer?.projects) || answer.projects.length === 0
   );
   if (noTranscript && noProjects) console.log("Not transcript or projects");
-  const llm_answer = {
+  let llm_answer = {
     projects:
       Array.isArray(Llm_answer) && Llm_answer[0]?.projects
         ? Llm_answer[0].projects.map((project) => ({
@@ -111,25 +115,29 @@ export const CreateNewRecordTest = async ({
             total_count: Number(
               project["Total count"] || project.total_count || 0
             ),
-            category: Array.isArray(project.category)
-              ? project.category
+            category: Array.isArray(project.category) ? project.category : [],
+            timestamps: Array.isArray(project.Timestamps)
+              ? getOffsetTimestamps(project.Timestamps)
               : [],
           }))
         : [],
     total_count: Number(Llm_answer[0]?.total_count || 0),
     total_rpoints: Number(
-      Llm_answer[0]?.total_Rpoints ||
-        Llm_answer[0]?.total_rpoints ||
-        0
+      Llm_answer[0]?.total_Rpoints || Llm_answer[0]?.total_rpoints || 0
     ),
   };
 
+  //llm_answer = await matchCoins(llm_answer);
+  console.log("Formatted obj: " + JSON.stringify(llm_answer));
   const cleanedData = {
     date: Publish_at || new Date().toISOString(),
+    ["channel name"]: Channel_name || "",
+    corrected_transcript: Video_corrected_Transcript || "",
     transcript: Video_transcipt || "",
     video_title: Video_title || "",
     link: Video_url || "",
     summary: Llm_summary,
+    usage: Usage || 0.01,
     llm_answer: JSON.parse(JSON.stringify(llm_answer)),
     video_type: await checkIfShort(Video_url),
     created_at: new Date().toISOString(),
@@ -137,14 +145,14 @@ export const CreateNewRecordTest = async ({
   };
 
   try {
+    console.log("Cleaned data: " + JSON.stringify(cleanedData));
+    const { error } = await supabase
+      .from("knowledge")
+      .insert({ ...cleanedData });
 
-
-console.log("Cleaned data: "+ JSON.stringify(cleanedData));
-  const {error} = await supabase.from("knowledge").insert({...cleanedData});
-   
-   if(error){
-    console.log('Error: '+ JSON.stringify(error));
-   }
+    if (error) {
+      console.log("Error: " + JSON.stringify(error));
+    }
     console.log(
       "Success: Item: " + Video_title + " " + Video_url + " " + Channel_name
     );
@@ -184,7 +192,7 @@ export const CreatOrUpdateRecord = async ({ data, model }) => {
       }
 
       // Transform llm_answer to match database structure
-      const llm_answer = {
+      let llm_answer = {
         projects:
           Array.isArray(item.analysis) && item.analysis[0]?.projects
             ? item.analysis[0].projects.map((project) => ({
@@ -210,6 +218,7 @@ export const CreatOrUpdateRecord = async ({ data, model }) => {
             0
         ),
       };
+      llm_answer = await matchCoins(llm_answer);
 
       // Check if record exists
       const { data: existingData, error: fetchError } = await supabase

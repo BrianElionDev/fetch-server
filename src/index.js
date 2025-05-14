@@ -191,19 +191,22 @@ app.post("/api/analysis/single", async (req, res) => {
     const { Video_url, Channel_name, Publish_at, Video_title, Model } =
       req.body;
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
-    const { transcript, analysis, summary } = await makeAnalysis({
-      url: Video_url,
-      model: Model || "grok",
-    });
+    const { transcript, analysis, summary, usage, correctedTranscript } =
+      await makeAnalysis({
+        url: Video_url,
+        model: Model || "grok",
+      });
 
-    console.log("Analysis: " + JSON.stringify(analysis));
+    console.log("Corrected transcript: " + correctedTranscript);
     await CreateNewRecordTest({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
       Video_title: Video_title,
       Video_transcipt: transcript,
+      Video_corrected_Transcript: correctedTranscript,
       Llm_answer: analysis,
+      Usage: usage,
       Llm_summary: summary,
     });
     res.json({ analysis: analysis });
@@ -212,93 +215,7 @@ app.post("/api/analysis/single", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-app.post("/api/analysis/batch", async (req, res) => {
-  /*  const videos = req.body.map((item) => ({
-    Video_url: `https://www.youtube.com/watch?v=${item.snippet.resourceId.videoId}`,
-    Channel_name: item.snippet.channelTitle,
-    Publish_at: item.snippet.publishedAt,
-    Video_title: item.snippet.title,
-  }));
-  const batchId = Date.now().toString();
-  const initialResponse = {
-    success: true,
-    message: "Processing started in background",
-    batchId: batchId,
-    totalVideos: videos.length,
-    startedAt: new Date().toISOString(),
-  };
-  console.log("Notification: " + JSON.stringify(initialResponse));
-  res.json(initialResponse);
-  (async () => {
-    const results = [];
-    const errors = [];
 
-    try {
-      console.log(`Processing batch ${batchId} with ${videos.length} videos`);
-
-      for (const video of videos) {
-        try {
-          const { Video_url, Channel_name, Publish_at, Video_title } = video;
-          console.log(`Processing video: ${Video_title}`);
-
-          const { transcript, analysis, summary } = await makeAnalysis(
-            Video_url
-          );
-          await CreateNewRecord({
-            Video_url,
-            Channel_name,
-            Publish_at,
-            Video_title,
-            Video_transcipt: transcript?.content,
-            Llm_answer: analysis,
-            Llm_summary: summary,
-          });
-
-          results.push({
-            url: Video_url,
-            title: Video_title,
-            status: "success",
-            timestamp: new Date().toISOString(),
-          });
-        } catch (error) {
-          console.error(`Error processing video ${video.Video_url}:`, error);
-          errors.push({
-            url: video.Video_url,
-            title: video.Video_title,
-            error: error.message,
-            timestamp: new Date().toISOString(),
-          });
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      }
-
-      const finalResponse = {
-        batchId: batchId,
-        success: true,
-        totalVideos: videos.length,
-        processed: results.length,
-        failed: errors.length,
-        results,
-        errors,
-        completedAt: new Date().toISOString(),
-      };
-
-      console.log(
-        `Batch ${batchId} processing completed:`,
-        JSON.stringify(finalResponse)
-      );
-    } catch (error) {
-      console.error(`Batch ${batchId} processing failed:`, error);
-    }
-  })(); */
-  const { model } = req.body;
-  const results = await makeAnalysisBatch({
-    model: model?.toLowerCase() || "grok",
-  });
-  await CreatOrUpdateRecord({ data: results, model: model || "grok" });
-  res.json(results);
-});
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
 

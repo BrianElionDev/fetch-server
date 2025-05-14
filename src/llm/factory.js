@@ -3,6 +3,7 @@ import { PerplexityProvider } from "./providers/perplexity.js";
 import { OpenAIProvider } from "./providers/openai.js";
 import { GeminiProvider } from "./providers/gemini.js";
 import { GrokProvider } from "./providers/grok.js";
+import { DeepSeekProvider } from "./providers/deepseek.js";
 
 export class LLMFactory {
   static createProvider(providerName) {
@@ -16,6 +17,8 @@ export class LLMFactory {
         return new PerplexityProvider(config);
       case "openai":
         return new OpenAIProvider(config);
+      case "deepseek":
+        return new DeepSeekProvider(config);
       case "gemini":
         return new GeminiProvider(config);
       case "grok":

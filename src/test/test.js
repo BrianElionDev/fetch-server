@@ -1,363 +1,296 @@
-import { configDotenv } from "dotenv";
-import fs from "fs/promises";
+/* import fs from "fs";
 import path from "path";
-import { supabase } from "../../supabaseClient.js";
-import { fetchTranscript } from "../FetchTranscript.js";
-import { loadData } from "../ToolAnalysis.js";
-import { link } from "fs";
-import { makeLlmPrompt } from "../Llm.js";
-import { LLMFactory } from "../llm/factory.js";
-import { table } from "console";
-configDotenv();
+import { pipeline } from "@xenova/transformers";
 
-async function writeResultsToFile(results, filename) {
+// 1. Trie Implementation for Fast Matching
+class TrieNode {
+  constructor() {
+    this.children = new Map();
+    this.isEnd = false;
+    this.crypto = null;
+  }
+}
+
+class CryptoMatcher {
+  constructor(cryptos) {
+    this.root = new TrieNode();
+    for (const crypto of cryptos) {
+      this.insert(crypto.symbol.toLowerCase(), crypto);
+      this.insert(crypto.name.toLowerCase(), crypto);
+    }
+  }
+
+  insert(word, crypto) {
+    let node = this.root;
+    for (const char of word) {
+      if (!node.children.has(char)) {
+        node.children.set(char, new TrieNode());
+      }
+      node = node.children.get(char);
+    }
+    node.isEnd = true;
+    node.crypto = crypto;
+  }
+
+  search(text) {
+    const results = new Map();
+    const cleanText = text.toLowerCase().replace(/[^\w\s]/g, " ");
+
+    for (let i = 0; i < cleanText.length; i++) {
+      let node = this.root;
+      let buffer = "";
+      for (let j = i; j < cleanText.length; j++) {
+        const char = cleanText[j];
+        if (!node.children.has(char)) break;
+        node = node.children.get(char);
+        buffer += char;
+        if (node.isEnd) {
+          const existing = results.get(node.crypto.id);
+          if (!existing || buffer.length > existing.matchLength) {
+            results.set(node.crypto.id, {
+              ...node.crypto,
+              matchLength: buffer.length,
+            });
+          }
+        }
+      }
+    }
+    return Array.from(results.values());
+  }
+}
+
+// 2. Local Crypto Data Loader
+const COIN_CORRECTIONS = {
+  btc: { id: "btc", name: "bitcoin", symbol: "btc" },
+  eth: { id: "eth", name: "ethereum", symbol: "eth" },
+};
+
+async function fetchCryptoList() {
   try {
-    // Create logs directory if it doesn't exist
-    const logsDir = path.join(process.cwd(), "logs");
-    await fs.mkdir(logsDir, { recursive: true });
-
-    // Create filename with timestamp
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const fullPath = path.join(logsDir, `${filename}_${timestamp}.json`);
-
-    // Format the data for better readability
-    const formattedData = JSON.stringify(results, null, 2);
-
-    // Write to file
-    await fs.writeFile(fullPath, formattedData, "utf8");
-    console.log(`Results written to ${fullPath}`);
-
-    return fullPath;
+    const filePath = path.join(process.cwd(), "src", "CoinEmbedding.min.json");
+    const fileData = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return fileData[0]
+      .map((coin) => ({
+        id: coin.i,
+        name: coin.n.toLowerCase(),
+        symbol: coin.s.toLowerCase(),
+      }))
+      .map((coin) => COIN_CORRECTIONS[coin.symbol] || coin);
   } catch (error) {
-    console.error("Error writing results to file:", error);
-    throw error;
+    console.error("Using fallback crypto list");
+    return Object.values(COIN_CORRECTIONS);
   }
 }
 
-async function fetchKnowledge() {
-  const links = [
-    //Across the rubicon
-    "https://www.youtube.com/watch?v=CUzz4_a1PPI",
-    "https://www.youtube.com/watch?v=tLcTJ__QD54",
-    //AlexBecker
-    "https://www.youtube.com/watch?v=ZjY7r4HEZfY",
-    "https://www.youtube.com/watch?v=xmuJ8n39Kwk",
-    "https://www.youtube.com/watch?v=4fQhNVcg6jc",
-    //Coin Bureau
-    "https://www.youtube.com/watch?v=Qw6NBIgAgQQ",
-    "https://www.youtube.com/watch?v=_G1VQLQtlro",
-    //Ellio Trades
-    "https://www.youtube.com/watch?v=m0XEeejOOkU",
-    "https://www.youtube.com/watch?v=openhM5Gurs",
-    "https://www.youtube.com/watch?v=mRK8OOal5V4",
-  ];
+// 3. Live Crypto Data Fetcher
+async function getLiveCryptos() {
+  const MAX_RETRIES = 3;
+  let retries = 0;
+
+  while (retries < MAX_RETRIES) {
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/coins/list?include_platform=false",
+        { timeout: 5000 }
+      );
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+      return data.map((coin) => ({
+        id: coin.id,
+        name: coin.name.toLowerCase(),
+        symbol: coin.symbol.toLowerCase(),
+      }));
+    } catch (error) {
+      if (++retries === MAX_RETRIES) {
+        console.error("Failed to fetch live crypto data:", error);
+        return [];
+      }
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+  }
+}
+
+// 4. Contextual Validation with NLP
+let nerPipeline = null;
+
+async function detectWithContext(text, cryptos) {
   try {
-    if (!Array.isArray(links) || links.length === 0) {
-      throw new Error("Please provide an array of links");
+    if (!nerPipeline) {
+      nerPipeline = await pipeline("ner", "Xenova/bert-base-ner");
     }
 
-    const { data, error } = await supabase
-      .from("knowledge")
-      .select("*")
-      .in("link", links)
-      .order("updated_at", { ascending: false });
+    const cryptoNames = new Set(cryptos.map((c) => c.name));
+    const cryptoSymbols = new Set(cryptos.map((c) => c.symbol));
 
-    if (error) {
-      console.log("Error: " + JSON.stringify(error));
-      return;
+    const results = await nerPipeline(text);
+    const matched = new Map();
+
+    // Merge tokenized words
+    let currentEntity = null;
+    for (const entity of results) {
+      if (entity.entity.startsWith("B-ORG")) {
+        currentEntity = entity.word;
+      } else if (entity.entity.startsWith("I-ORG") && currentEntity) {
+        currentEntity += entity.word.replace(/^##/, "");
+      } else {
+        if (currentEntity) {
+          const cleanEntity = currentEntity.toLowerCase();
+          if (cryptoNames.has(cleanEntity) || cryptoSymbols.has(cleanEntity)) {
+            const crypto = cryptos.find(
+              (c) => c.name === cleanEntity || c.symbol === cleanEntity
+            );
+            if (crypto) matched.set(crypto.id, crypto);
+          }
+          currentEntity = null;
+        }
+      }
     }
 
-    const results = data.map((item) => ({
-      new_id: item.new_id,
-      link: item.link,
-    }));
-
-    await writeResultsToFile(data, "data_file");
-    console.log(data);
-
-    return results;
+    return Array.from(matched.values());
   } catch (error) {
-    console.error("Error in fetchKnowledge:", error);
-    throw error;
+    console.error("NER processing failed:", error);
+    return [];
   }
 }
 
-async function fetchWrongData() {
-  const { data, error } = await supabase
-    .from("knowledge")
-    .select(`date, video_title, "channel name"`)
-    .neq("channel name", "XU7FUTBOL")
-    .gte("date", "2025-03-27T00:00:09+00:00");
-  if (error) {
-    console.error("Error: " + JSON.stringify(error));
+// 5. Optimal Detection Integration
+async function optimalDetection(transcript) {
+  try {
+    // Step 1: Local Trie Matching
+    const localCryptos = await fetchCryptoList();
+    const trieMatches = new CryptoMatcher(localCryptos).search(transcript);
+
+    // Step 2: Live Data Augmentation
+    const liveCryptos = await getLiveCryptos();
+    const liveMatches = new CryptoMatcher(liveCryptos).search(transcript);
+
+    // Step 3: Context Validation with Merged Data
+    const mergedCryptos = [...localCryptos, ...liveCryptos];
+    const nerResults = await detectWithContext(transcript, mergedCryptos);
+
+    // Merge and Deduplicate
+    const resultMap = new Map();
+    [...trieMatches, ...liveMatches, ...nerResults].forEach((crypto) => {
+      if (!resultMap.has(crypto.id)) {
+        resultMap.set(crypto.id, crypto);
+      }
+    });
+
+    return Array.from(resultMap.values());
+  } catch (error) {
+    console.error("Detection pipeline failed:", error);
+    return [];
   }
-  console.table(data);
 }
 
-async function make(videoUrl = "") {
-  console.log("Started analysis....");
-  const { transcript, analysis, summary } = await makeAnalysis({
-    url: "https://www.youtube.com/watch?v=0qitQoWgTaQ",
-    model: "perplexity",
-  });
-  const cleanLlmAnswer = await cleanJsonResponse(analysis);
-
-  console.log("Cleaned: " + JSON.stringify(cleanLlmAnswer));
-  return;
-  const { data, error } = await supabase
-    .from("knowledge")
-    .update({ summary: summary, analysis: analysis })
-    .eq("link", videoUrl);
-  if (error) {
-    console.log("Error: " + error);
-  }
-}
-const transcript = await fetchTranscript(
-  "https://www.youtube.com/watch?v=xmuJ8n39Kwk"
-);
-
-async function cleanJsonResponse(response) {
-  const llm_answer = {
-    projects:
-      Array.isArray(response) && response[0]?.projects
-        ? response[0].projects.map((project) => ({
-            coin_or_project: project.coin_or_project,
-            marketcap: (
-              project.Marketcap ||
-              project.marketcap ||
-              ""
-            ).toLowerCase(),
-            rpoints: Number(project.Rpoints || project.rpoints || 0),
-            total_count: Number(
-              project["Total count"] || project.total_count || 0
-            ),
-            category: Array.isArray(project.category) ? project.category : [],
-          }))
-        : [],
-    total_count: Number(response[0]?.total_count || 0),
-    total_rpoints: Number(
-      response[0]?.total_Rpoints || response[0]?.total_rpoints || 0
-    ),
-  };
-  return await JSON.parse(JSON.stringify(llm_answer));
-}
-/* fetchKnowledge()
-  .then((results) => {
-    if (results) {
-      console.log("All videos processed successfully");
-    }
-  })
-  .catch((error) => {
-    console.error("Error in main execution:", error);
-  });
+// Usage Example
+(async () => {
+  const sampleTranscript = `Bitcoin and ETH are volatile. Consider SOL and AVAX for long-term growth.`;
+  const results = await optimalDetection(sampleTranscript);
+  console.log("Detected Cryptocurrencies:", results);
+})();
  */
 
-//fetchWrongData();
-//make();
-/* const analysisMessages = [
+import { LLMFactory } from "../llm/factory.js";
+
+const llmProvider = LLMFactory.createProvider("openai");
+const analysisMessages = [
   {
     role: "system",
-    content: "You are an intelligent assistant",
+    content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a text block.`,
   },
   {
     role: "user",
-    content: "What colour is the moon?",
-  },
-];
-const grok = LLMFactory.createProvider("grok");
-const results = await grok.makeRequest(analysisMessages);
-const content = await grok.processResponse(results);
-console.log("Results: " + content.content); */
-
-/* const transcriptP = await fetchTranscript(
-  "https://www.youtube.com/watch?v=gAUfddboeOo"
-);
-console.log("Transcript: " + transcriptP); */
-/* try{
-const {data, error} = await supabase.from("knowledge").insert(cleanedData).limit(2);
-
-if(error){
-  console.log(JSON.stringify(error));
-}
-}catch(error){
-  console.log("Error Out: "+ error);
-} */
-
-/* const analysisMessages = [
-  {
-    role: "system",
     content: `
-      #Context
-        You are an intelligent agent in a multi agents environmet who recieves requests and you have to delegate it to other agents.
-        You delegate it to other agents and give the special request of what to do. 
-      #Agents
-      You have several agents at your displosal
-        -Data_gathering_agent: Responsisble for data gathering on a specific topic.
-        -Communication_agent: It has access to communication channels-: (email and whatsapp). It is responsible for handling  communications.
-        -Data_analysis_agent: It analyses data gathered.
-      #Objective
-      Give a clear step by step overview of how you will you use agents provided to you to achieve the specified task. The steps provided will be used by the individual models as a prompt, so make the prompt detailed to avoid vagueness and confusion.
+    ##Instructions
+    1. Your task is to verify if a coin exists in a block of text (marked by the keyword content).
+    2. If the coin exists the return true, If it does not then return false. Also Identify if the coin was wrongly identified.
+    3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
+    4. At times the match might be not close, try to infer which coin was wrongly picked.
+    3. The content of the text is the most accurate record. 
+    ##Task
+    Coin checking: [Terse]
+    Content: [
+    -1- AlL
+2 Highlights
+• #
+Coin
+• Pump.fun C
+• Categories
+Polkadot Ecosystem
+Price
+1h
+24h
+$103,682
+- 0.0%
+• 0.9%
+Ethereum ETH
+GunZilla
+Illuvium
+Treeverse
+Akash
+Sidus
+$2,649.83
+• 0.7%
+# 3
+X XRP XRP
+- 7.5%
+~ 3.9%
+* 4
+$2.60
+$1
+• 0.3%
+• 0.0%
+Tether USDT
+BNB BNB
+= Solana SOL
+- 0.0%
+$658.75
+- 0.5%
+$181.84
+- 0.8%
+스 1.4%
+- 5.9%
+7d
+- 7.4%
+• 44.8%
+- 21.8%
+- 0.0%
+- 9.0%
+~ 24.6%
+« Customize
+Last 7 Days
+24h Volume
+Market Cap
+$31,865,751,727 $2,059,484,876,195
+$37,379,161,575
+$319,887,295,386
+$5,296,108,532
+$80,467,164,910
+$1,504,438,380
+$6,751,663,198
+$151,834,909,192
+$150,333,073,372 Mfumen
+$96,100,096,724
+$94,419,490,344
+wirtet
+不
+    ]
 
-      #Output
-      RETURN A VALID JSON, which has the agent and the task it should do.
+  #Output format: The output format should be: 
+
+  [{
+    "coin": "",
+    "valid: true or false depending on if it is valid,
+    "possible_match": "This is a coin which is available in the text block but is not the one trying to match for. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicated here the text in the content section which resembles the coin we are checking for. "
+  }]
     
     `,
   },
-  {
-    role: "user",
-    content: "I need to market a  in kenya.",
-  },
-]; */
-import { readFile } from "fs/promises";
-async function formatAnalysisPrompt({ transcript }) {
-  const coinEmbeddings = "Use coins from coinmarketcap";
-  const unformatted = `#ROLE  
-You are an expert in all cryptocurrency coins, cryptocurrency trends etc.
-
-#OBJECTIVE  
-Your task is to read transcripts from any social media source (e.g., YouTube, X, webpages), identify all cryptocurrency coins mentioned, and provide accurate investment recommendations.
-
-#CONTEXT  
-This task is crucial for making profitable investment decisions in cryptocurrency coins.
-
-#INSTRUCTIONS
-
-1. Read the provided Transcript [${transcript}]
-
-2. Identify and list each and every cryptocurrency coin name or symbol mentioned  (both existing, mentioned and proposed) and
-
-     Don't leave out the major coins mentioned.
-
-    "Only take cryptocurrency coins and exclude:
-
-   * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
-
-   * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
-
-   * Non-tradable assets or project names (e.g., Tbot)  
-
-3. Data validation
-
-   * If a coin is referenced with a name, with a ticker or symbol (e.g., BTC, MOG, ETH) , in short form (e.g., eth) or If an unofficial or misspelled coin name appears,
-
-     * First, verify it matches for misspelled or exists in [${coinEmbeddings}]
-
-     * If it does, replace it with the full official name.
-
-     * If it does not exist, discard it.
-
-   * Always use the full coin names from knowledge.crypto_coins for each coin for uniformity
-
-   * Only take tradable cryptocurrency coins and exclude:
-
-     * Company names (e.g., NVIDIA, MicroStrategy, Deep Seek)
-
-     * Untradable or unknown coins (e.g. Bar chain,Zerro etc.)
-
-     * Categories (e.g., RWA coins, DeFi tokens, Meme coins)
-
-     * Non-tradable assets or project names (e.g., Tbot)  
-       If an entry is not found in [${coinEmbeddings}], ignore it."
-
-   * Match and filter all the coins against knowledge.crypto_coins to ensure validity of the coin name and get the coins full name.
-
-4. Count the mentions of each coin.
-
-5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
-
-6. Categorize the coin based on CoinMarketCap categories (e.g., DeFi, Layer 1, Gaming).
-
-7. Classify the coin by market capitalization (large, medium, small, micro).
-
-8. Calculate the total_count of all coins/projects mentioned.
-
-9. Ensure the JSON output exactly matches the required format. Only include coins validated through knowledge.crypto_coins Exclude all unrecognized names, companies, and categories."
-
-Note:coin_or_project is the coin full name
-
-#OUTPUT FORMAT
-
-[ { "projects": [ { "coin_or_project": "Chainlink", "Marketcap": "large", "Rpoints": 10, "Total count": 1, "category": ["Gaming", "Meme coins", "Layer 2"] }, { "coin_or_project": "Bitcoin", "Marketcap": "large", "Rpoints": 9, "Total count": 3, "category": ["DeFi", "Layer 1"] } ], "total_count": 16, "total_Rpoints": 57 } ]  
-
-**Notes**
-
-* Accuracy is critical—filter out any invalid or unverified coins/projects.
-
-* Only include the coins that exist in [${coinEmbeddings}]
-
-* Ensure the JSON output strictly matches the format provided.
-
-Be precise, follow the structure, and focus on delivering actionable insights.`;
-  return JSON.stringify(unformatted);
-}
-export const makeAnalysisBat = async () => {
-  const data = await loadData();
-  console.log("Starting Analysis");
-  const item = data[9];
-
-  const analysisMessages = [
-    {
-      role: "system",
-      content:
-        JSON.stringify(`STRICTLY FOLLOW THESE REQUIREMENTS:EXCLUDE JSON CODE INDICATORS . 
-      #Context
-      You are an AI specialiazing in analysis of video transcripts from youtube, fix transcription errors and return a corrected transcript.
-      The transcripts are from youtube and they are about crypto channels.
-      
-      #What to watch for
-      -Correct coin names, usually the transcription has crypto coins which maybe transcribed wrongly, Please correct that.
-      -Infer coins mentioned from context where there are multiple coins with the same name, Use coinmarket/coingecko/binance data.
-
-      #Response format
-      A valid json:
-        {
-          "transcript": "Corrected transcript data. At the end add notes: Showing changes made to the initial transcript"
-         
-
-        `),
-    },
-    {
-      role: "user",
-      content: item.transcript,
-    },
-  ];
-  const perplexity = LLMFactory.createProvider("grok");
-  const results = await perplexity.makeRequest(analysisMessages);
-  const { content } = await perplexity.processResponse(results);
-  updateSupabase({ link: item.link, transcript: content });
-  console.log("Results: " + content);
-};
-makeAnalysisBat();
-
-async function updateSupabase({ link, transcript }) {
-  const parsedJ = JSON.parse(transcript);
-  const { data, error } = await supabase
-    .from("tests")
-    .update({
-      corrected_transcript: parsedJ.transcript,
-      temporaryHasUpdatedTranscript: true,
-    })
-    .eq("link", link);
-
-  if (error) {
-    console.log("Error at: " + JSON.stringify(error));
-  }
-}
-
-/* const analysisMessages = [
-  {
-    role: "system",
-    content: "You are an intelligent assistant",
-  },
-  {
-    role: "user",
-    content: "What colour is the moon?",
-  },
 ];
-const grok = LLMFactory.createProvider("grok");
-const results = await grok.makeRequest(analysisMessages);
-const content = await grok.processResponse(results);
-console.log("Results: " + content.content); */
-/* const res = `[\n  {\n    \"projects\": [\n      {\n        \"coin_or_project\": \"Bitcoin\",\n        \"Marketcap\": \"large\",\n        \"Rpoints\": 9,\n        \"Total count\": 3,\n        \"category\": [\"DeFi\", \"Layer 1\"]\n      },\n      {\n        \"coin_or_project\": \"Ethereum\",\n        \"Marketcap\": \"large\",\n        \"Rpoints\": 10,\n        \"Total count\": 2,\n        \"category\": [\"DeFi\", \"Layer 1\"]\n      },\n      {\n        \"coin_or_project\": \"Solana\",\n        \"Marketcap\": \"large\",\n        \"Rpoints\": 8,\n        \"Total count\": 4,\n        “category”: [“Layer 1”, “Gaming”]\n      },\n      {\n          “coin_or_project”: “Chainlink”,\n          “Marketcap”: “large”,\n          “Rpoints”: 10,\n          “Total count”: 3,\n          “category”: [“DeFi”,“Oracle”]\n       },\n       {\n         ”coin_or_project”: ”Ripple” ,\n         ”Marketcap”: ”large” ,\n         ”Rpoints”：8，\n         ”Total count”：2，\n         ”category”：[\"Payment\",\"DeFi\"]\n       },\n       {\n           'coin_or_project': 'Binance Coin',\n           'Marketcap': 'large',\n           'Rpoints': 7, \n           'Total count':1, \n           'category':['Exchange']\n       },  \n       { \n            ‘coin_or_project’: ‘Avalanche’ , \n            ‘Marketcap’: ’medium’, \n            ‘Rpoints’: ’6’, \n            ‘Total count’: ’2’,  \n           
- ‘category’:[‘Layer-1’]  \n       },   \n     {    \n             ’coin_or_project’: ’Dogecoin’ ,    \n             ’Marketcap’: ’medium’,     \n             ’Rpoints’:5,     \n             ’Total count:’2,      \n              category:[‘Meme coins’]   \n     }   \n    ],\n    total_count:16,  \n    total_Rpoints:57\n   }\n]`;
-console.log(JSON.parse(res)); */
+const response = await llmProvider.makeRequest(analysisMessages);
+const processedResponse = await llmProvider.processResponse(response);
+
+console.log("Processed Response:", processedResponse.content);
