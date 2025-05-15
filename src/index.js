@@ -215,6 +215,14 @@ app.post("/api/analysis/single", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+app.post("/api/analysis/validate", async (req, res) => {
+  try {
+    console.log(`Recieved req: ${JSON.stringify(req)}`);
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
