@@ -193,7 +193,7 @@ async function optimalDetection(transcript) {
 })();
  */
 
-import { LLMFactory } from "../llm/factory.js";
+/* import { LLMFactory } from "../llm/factory.js";
 
 const llmProvider = LLMFactory.createProvider("openai");
 const analysisMessages = [
@@ -294,3 +294,12 @@ const response = await llmProvider.makeRequest(analysisMessages);
 const processedResponse = await llmProvider.processResponse(response);
 
 console.log("Processed Response:", processedResponse.content);
+ */
+const arr = [
+  {
+    coin: "Bitcoin",
+    valid: true,
+    possible_match: "",
+  },
+];
+console.log(arr.length);

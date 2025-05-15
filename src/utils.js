@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises";
 import { LLM_PROVIDERS } from "./llm/config.js";
+import { supabase } from "../supabaseClient.js";
 
 export function cleanCodeBlockIndicators(content) {
   if (!content) return content;
@@ -70,4 +71,47 @@ export function getOffsetTimestamps(timeStamps) {
     timestampsArray.push(negativeOffsetTime, timeStamp, positiveOffsetTime);
   }
   return [...new Set([...timestampsArray])];
+}
+export async function formatValidatedData(data, link) {
+  try {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format - expected array");
+    }
+
+    const { data: record, error } = await supabase
+      .from("knowledge")
+      .select("*")
+      .eq("link", link)
+      .single();
+
+    if (error) {
+      throw new Error(`Supabase query error: ${error.message}`);
+    }
+
+    if (!record?.llm_answer?.projects) {
+      throw new Error("Invalid data structure from database");
+    }
+
+    const projectsDB = record.llm_answer.projects;
+    const finalData = { ...record.llm_answer };
+    const finalProjectsArray = [];
+
+    for (const project of projectsDB) {
+      const correspondingCoin = data.find(
+        (item) => item.coin === project.coin_or_project
+      );
+
+      finalProjectsArray.push({
+        ...project,
+        valid: correspondingCoin?.valid ?? false,
+        possible_match: correspondingCoin?.possible_match || "",
+      });
+    }
+
+    finalData.projects = finalProjectsArray;
+    return finalData;
+  } catch (error) {
+    console.error("Validation failed:", error);
+    throw error;
+  }
 }
