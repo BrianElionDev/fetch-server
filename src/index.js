@@ -221,11 +221,11 @@ app.post("/api/analysis/validate", async (req, res) => {
   try {
     const data = req.body;
     console.log(`Recieved req: ` + JSON.stringify(data));
+    res.send("Processing response in the background!");
+    return;
     const { analysis, usage, default_content, error } = await validateCoins(
       data.projects
     );
-    res.send("Processing response in the background!");
-    return;
     console.log("Analysis: " + analysis);
     await UpdateCoinsWithValidatedData(analysis, data.link || "");
   } catch (error) {
