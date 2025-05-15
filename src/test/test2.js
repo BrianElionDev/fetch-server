@@ -1174,17 +1174,3 @@ const sampleArray = [
 
 const setAble = [...new Set([...sampleArray])];
 console.log(setAble);
-
-
-{
-    "projects": [
-        {
-            "coin_or_project": "Bitcoin",
-            "content": "Screenshot content",
-
-            
-        },
-    
-    ],
-    "link": "Youtube url" 
-}

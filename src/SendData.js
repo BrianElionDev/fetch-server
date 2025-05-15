@@ -1,7 +1,7 @@
 import { supabase } from "../supabaseClient.js";
 import { checkIfShort } from "./CheckVideoType.js";
 import { matchCoins } from "./LoadCoinsData.js";
-import { getOffsetTimestamps } from "./utils.js";
+import { formatValidatedData, getOffsetTimestamps } from "./utils.js";
 
 // Type definitions (for reference)
 /**
@@ -163,6 +163,35 @@ export const CreateNewRecordTest = async ({
     );
     console.error(`❌ Sending Data failed!: ${error}`);
 
+    return { success: false, error: error.message };
+  }
+};
+export const UpdateCoinsWithValidatedData = async (analysis, link) => {
+  analysis = JSON.parse(analysis);
+  if (!analysis || !Array.isArray(analysis) || link == "") {
+    throw new Error(
+      "Expected an analysis and youtube link, but got something else."
+    );
+  }
+  const updatedLlmAnswer = await formatValidatedData(analysis, link);
+
+  //analysis = await matchCoins(analysis);
+  console.log("Formatted obj: " + JSON.stringify(updatedLlmAnswer));
+
+  try {
+    const { error } = await supabase
+      .from("knowledge")
+      .update({ ...cleanedData });
+
+    if (error) {
+      console.log("Error: " + JSON.stringify(error));
+    }
+    console.log(
+      "Success: Item: " + Video_title + " " + Video_url + " " + Channel_name
+    );
+    return { success: true, error: null };
+  } catch (error) {
+    console.error(`❌ Sending Data failed!: ${error}`);
     return { success: false, error: error.message };
   }
 };

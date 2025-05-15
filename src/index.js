@@ -6,7 +6,9 @@ import {
   CreateNewRecordBatch,
   CreateNewRecordTest,
   CreatOrUpdateRecord,
+  UpdateCoinsWithValidatedData,
 } from "./SendData.js";
+import { validateCoins } from "./Llm.js";
 const app = express();
 
 app.use(express.json());
@@ -217,7 +219,15 @@ app.post("/api/analysis/single", async (req, res) => {
 });
 app.post("/api/analysis/validate", async (req, res) => {
   try {
-    console.log(`Recieved req: ${JSON.stringify(req)}`);
+    const data = req.body;
+    console.log(`Recieved req: ` + JSON.stringify(data));
+    const { analysis, usage, default_content, error } = await validateCoins(
+      data.projects
+    );
+    res.send("Processing response in the background!");
+    return;
+    console.log("Analysis: " + analysis);
+    await UpdateCoinsWithValidatedData(analysis, data.link || "");
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).send("Internal Server Error");
