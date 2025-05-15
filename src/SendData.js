@@ -181,7 +181,8 @@ export const UpdateCoinsWithValidatedData = async (analysis, link) => {
   try {
     const { error } = await supabase
       .from("knowledge")
-      .update({ ...cleanedData });
+      .update({ llm_answer: updatedLlmAnswer })
+      .eq("link", link);
 
     if (error) {
       console.log("Error: " + JSON.stringify(error));
