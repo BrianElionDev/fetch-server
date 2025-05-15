@@ -1003,7 +1003,8 @@ episode
   })
 ); */
 
-const data = {
+/* const data = {
+
   projects: [
     {
       rpoints: 9,
@@ -1160,4 +1161,30 @@ function getOffsetTimestamps(timeStamp) {
 }
 const timestamps = getOffsetTimestamps(data.projects[0].timestamps[0]);
 
-console.log(`${timestamps[0]}: ${timestamps[1]}:  ${timestamps[2]}`);
+console.log(`${timestamps[0]}: ${timestamps[1]}:  ${timestamps[2]}`); */
+
+const sampleArray = [
+  "00:00:28",
+  "00:00:30",
+  "00:00:32",
+  "00:00:30",
+  "00:00:32",
+  "00:00:34",
+];
+
+const setAble = [...new Set([...sampleArray])];
+console.log(setAble);
+
+
+{
+    "projects": [
+        {
+            "coin_or_project": "Bitcoin",
+            "content": "Screenshot content",
+
+            
+        },
+    
+    ],
+    "link": "Youtube url" 
+}

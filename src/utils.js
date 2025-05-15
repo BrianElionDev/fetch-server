@@ -48,16 +48,26 @@ export function formatTimestamp(ms) {
 
   return `${hours}:${minutes}:${seconds}`;
 }
-export function getOffsetTimestamps(timeStamp) {
-  const split = timeStamp.split(":");
-  const hours = split[0];
-  const minutes = split[1];
-  const seconds = split[2];
-  let totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  totalSeconds = parseInt(totalSeconds);
-  const negativeOffset = Math.max(0, totalSeconds - 2);
-  const positiveOffset = totalSeconds + 2;
-  const negativeOffsetTime = formatTimestamp(negativeOffset);
-  const positiveOffsetTime = formatTimestamp(positiveOffset);
-  return [negativeOffsetTime, timeStamp, positiveOffsetTime];
+export function getOffsetTimestamps(timeStamps) {
+  if (timeStamps == null) return [];
+  let timestampsArray = [];
+  for (let timeStamp of timeStamps) {
+    timeStamp = timeStamp.toString();
+    console.log(`Timestamp: ${timeStamp}`);
+    const split = timeStamp.split(":");
+    const hours = split[0];
+    const minutes = split[1];
+    const seconds = split[2];
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    totalSeconds = parseInt(totalSeconds);
+    const negativeOffset = Math.max(0, totalSeconds - 2);
+    const positiveOffset = totalSeconds + 2;
+    const negativeOffsetTime = formatTimestamp(negativeOffset);
+    const positiveOffsetTime = formatTimestamp(positiveOffset);
+    console.log(
+      `Neg: ${negativeOffsetTime} Act: ${timeStamp} Pos: ${positiveOffsetTime}`
+    );
+    timestampsArray.push(negativeOffsetTime, timeStamp, positiveOffsetTime);
+  }
+  return [...new Set([...timestampsArray])];
 }

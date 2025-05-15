@@ -117,7 +117,7 @@ export const CreateNewRecordTest = async ({
             ),
             category: Array.isArray(project.category) ? project.category : [],
             timestamps: Array.isArray(project.Timestamps)
-              ? getOffsetTimestamps(project.Timestamps)
+              ? getOffsetTimestamps(project?.Timestamps)
               : [],
           }))
         : [],
