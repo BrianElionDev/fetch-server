@@ -202,7 +202,8 @@ app.post("/api/analysis/validate", async (req, res) => {
   try {
     const data = req.body;
     console.log(`Recieved req: ` + JSON.stringify(data));
-    if (data?.projects.length == 0) {
+
+    if (data?.projects.length == 0 || !Array.isArray(data.projects)) {
       res.status(500).send("Error validating analysis. Projects are missing!");
       console.error("Error validating analysis. Projects are missing!");
       return;
