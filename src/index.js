@@ -217,12 +217,17 @@ app.post("/api/analysis/single", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 app.post("/api/analysis/validate", async (req, res) => {
   try {
     const data = req.body;
     console.log(`Recieved req: ` + JSON.stringify(data));
-    res.send("Processing response in the background!");
-    return;
+    if (data?.projects.length == 0) {
+      res.status(500).send("Error validating analysis. Projects are missing!");
+      console.error("Error validating analysis. Projects are missing!");
+      return;
+    }
+    res.send("Processing in background. We will notify you once done!");
     const { analysis, usage, default_content, error } = await validateCoins(
       data.projects
     );
@@ -234,6 +239,47 @@ app.post("/api/analysis/validate", async (req, res) => {
   }
 });
 
+app.post("/api/analysis/test/single", async (req, res) => {
+  try {
+    const { Video_url, Channel_name, Publish_at, Video_title, Model } =
+      req.body;
+    console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
+    res.send(
+      "Recieved request. Processing in the background. We will notify you once done."
+    );
+    const { transcript, analysis, summary, usage, correctedTranscript } =
+      await makeAnalysis({
+        url: Video_url,
+        model: Model || "grok",
+      });
+
+    console.log("Corrected transcript: " + correctedTranscript);
+    console.log("Anaysis : " + JSON.stringify(analysis));
+
+    await CreateNewRecordTest({
+      Video_url: Video_url,
+      Channel_name: Channel_name,
+      Publish_at: Publish_at,
+      Video_title: Video_title,
+      Video_transcipt: transcript,
+      Video_corrected_Transcript: correctedTranscript,
+      Llm_answer: analysis?.projects,
+      Usage: usage,
+      Llm_summary: summary,
+    });
+    axios
+      .post("https://crypto-ner-production.up.railway.app/take_screenshots", {
+        youtube_url: Video_url || "",
+        projects_json: JSON.stringify(analysis) || {},
+      })
+      .catch((error) => {
+        console.log("Error at processing request: " + error);
+      });
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
 

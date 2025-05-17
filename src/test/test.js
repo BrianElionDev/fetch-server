@@ -295,7 +295,7 @@ const processedResponse = await llmProvider.processResponse(response);
 
 console.log("Processed Response:", processedResponse.content);
  */
-const arr = [
+/* const arr = [
   {
     coin: "Bitcoin",
     valid: true,
@@ -303,3 +303,4 @@ const arr = [
   },
 ];
 console.log(arr.length);
+ */

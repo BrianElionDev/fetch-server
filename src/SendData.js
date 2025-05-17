@@ -175,21 +175,20 @@ export const UpdateCoinsWithValidatedData = async (analysis, link) => {
   }
   const updatedLlmAnswer = await formatValidatedData(analysis, link);
 
-  //analysis = await matchCoins(analysis);
   console.log("Formatted obj: " + JSON.stringify(updatedLlmAnswer));
 
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("knowledge")
       .update({ llm_answer: updatedLlmAnswer })
-      .eq("link", link);
+      .eq("link", link)
+      .select();
 
     if (error) {
       console.log("Error: " + JSON.stringify(error));
     }
-    console.log(
-      "Success: Item: " + Video_title + " " + Video_url + " " + Channel_name
-    );
+    console.log("Json data: " + JSON.stringify(data[0]));
+    console.log(" Successfully Validated: Item:  " + data[0].video_title);
     return { success: true, error: null };
   } catch (error) {
     console.error(`❌ Sending Data failed!: ${error}`);

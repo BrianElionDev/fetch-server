@@ -40,7 +40,7 @@ Note:coin_or_project is the coin full name
 
 #OUTPUT FORMAT
 
-[{"projects":[{"coin_or_project":"Chainlink","Marketcap":"large","Rpoints":10,"Total count":1,"category":["Gaming","Meme coins","Layer 2"],"Timestamps":[]},{"coin_or_project":"Bitcoin","Marketcap":"large","Rpoints":9,"Total count":3,"category":["DeFi","Layer 1"],"Timestamps":[]}],"total_count":16,"total_Rpoints":57}]
+{"projects":[{"coin_or_project":"Chainlink","Marketcap":"large","Rpoints":10,"Total count":1,"category":["Gaming","Meme coins","Layer 2"],"Timestamps":[]},{"coin_or_project":"Bitcoin","Marketcap":"large","Rpoints":9,"Total count":3,"category":["DeFi","Layer 1"],"Timestamps":[]}],"total_count":16,"total_Rpoints":57}
 **Notes**
 
 * Only include the coins mentioned at the bottom of each transcript.
