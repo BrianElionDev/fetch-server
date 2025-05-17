@@ -2,11 +2,11 @@ import axios from "axios";
 import express from "express";
 import { makeAnalysis, makeAnalysisBatch } from "./ToolAnalysis.js";
 import {
-  CreateNewRecord,
-  CreateNewRecordBatch,
-  CreateNewRecordTest,
+  CreateNewRecordKnowledgeTable,
+  CreateNewRecordTestTable,
   CreatOrUpdateRecord,
   UpdateCoinsWithValidatedData,
+  UpdateCoinsWithValidatedDataTests,
 } from "./SendData.js";
 import { validateCoins } from "./Llm.js";
 const app = express();
@@ -55,20 +55,54 @@ app.get("/api/youtube", async (req, res) => {
     throw error;
   }
 });
-const sendSubscriptionToMake = async ({
-  hubChallenge,
-  hubCallback,
-  hubLease,
-  hubMode,
-  hubTopic,
-}) => {
-  const response = await axios.post(MAKE_WEBHOOK_SEND_SUBSCRIPTION, {
-    hubChallenge: hubChallenge,
-    hubTopic: hubTopic,
-    hubMode: hubMode,
-    hubLease: hubLease,
-    hubCallback: hubCallback,
-  });
+const getYoutubeVideoMetadata = async (youtubeUrl) => {
+  if (!youtubeUrl) {
+    console.error("Video ID is required");
+    return;
+  }
+
+  let videoId = youtubeUrl.split("?v=")[1];
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/videos",
+      {
+        params: {
+          part: "id,snippet,statistics,contentDetails,status",
+          id: videoId,
+          key: process.env.YOUTUBE_API_KEY,
+        },
+      }
+    );
+
+    if (!response.data.items || response.data.items.length === 0) {
+      console.error("Video not found");
+      return;
+    }
+
+    const video = response.data.items[0];
+
+    const videoDetails = {
+      id: video.id,
+      title: video.snippet.title,
+      description: video.snippet.description,
+      publishedAt: video.snippet.publishedAt,
+      channelTitle: video.snippet.channelTitle,
+      thumbnails: video.snippet.thumbnails,
+      duration: video.contentDetails.duration,
+      viewCount: video.statistics.viewCount || null,
+      likeCount: video.statistics.likeCount || null,
+      commentCount: video.statistics.commentCount || null,
+      status: {
+        privacyStatus: video.status.privacyStatus,
+        license: video.status.license,
+        embeddable: video.status.embeddable,
+      },
+    };
+
+    return videoDetails;
+  } catch (error) {
+    console.error("An error ocurred!" + JSON.stringify(error));
+  }
 };
 app.get("/api/youtube/new", async (req, res) => {
   const { publishedAfter, publishedBefore, channelId, key } = req.query;
@@ -128,64 +162,10 @@ app.get("/api/youtube/new", async (req, res) => {
     }
   }
 });
-app.get("/api/youtube/single", async (req, res) => {
-  const { videoId, key } = req.query;
-
-  if (!videoId) {
-    return res.status(400).json({
-      error: "Video ID is required",
-    });
-  }
-
-  try {
-    const response = await axios.get(
-      "https://www.googleapis.com/youtube/v3/videos",
-      {
-        params: {
-          part: "id,snippet,statistics,contentDetails,status",
-          id: videoId,
-          key: key,
-        },
-      }
-    );
-
-    if (!response.data.items || response.data.items.length === 0) {
-      return res.status(404).json({
-        error: "Video not found",
-      });
-    }
-
-    const video = response.data.items[0];
-
-    const videoDetails = {
-      id: video.id,
-      title: video.snippet.title,
-      description: video.snippet.description,
-      publishedAt: video.snippet.publishedAt,
-      thumbnails: video.snippet.thumbnails,
-      duration: video.contentDetails.duration,
-      viewCount: video.statistics.viewCount || null,
-      likeCount: video.statistics.likeCount || null,
-      commentCount: video.statistics.commentCount || null,
-      status: {
-        privacyStatus: video.status.privacyStatus,
-        license: video.status.license,
-        embeddable: video.status.embeddable,
-      },
-    };
-
-    res.json(videoDetails);
-  } catch (error) {
-    if (error.response) {
-      res.status(error.response.status).json({
-        error: `YouTube API Error: ${error.response.data.error.message}`,
-      });
-    } else {
-      res.status(500).json({
-        error: error.message,
-      });
-    }
-  }
+app.post("/api/youtube/single", async (req, res) => {
+  const { youtubeUrl } = req.body;
+  const videoMetadata = await getYoutubeVideoMetadata(youtubeUrl);
+  res.json(videoMetadata);
 });
 
 app.post("/api/analysis/single", async (req, res) => {
@@ -200,7 +180,7 @@ app.post("/api/analysis/single", async (req, res) => {
       });
 
     console.log("Corrected transcript: " + correctedTranscript);
-    await CreateNewRecordTest({
+    await CreateNewRecordKnowledgeTable({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
@@ -232,7 +212,7 @@ app.post("/api/analysis/validate", async (req, res) => {
       data.projects
     );
     console.log("Analysis: " + analysis);
-    await UpdateCoinsWithValidatedData(analysis, data.link || "");
+    await UpdateCoinsWithValidatedDataTests(analysis, data.link || "");
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).send("Internal Server Error");
@@ -241,8 +221,12 @@ app.post("/api/analysis/validate", async (req, res) => {
 
 app.post("/api/analysis/test/single", async (req, res) => {
   try {
-    const { Video_url, Channel_name, Publish_at, Video_title, Model } =
-      req.body;
+    const { Video_url, Model } = req.body;
+    const {
+      channelTitle: Channel_name,
+      publishedAt: Publish_at,
+      title: Video_title,
+    } = await getYoutubeVideoMetadata(Video_url);
     console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
     res.send(
       "Recieved request. Processing in the background. We will notify you once done."
@@ -252,20 +236,17 @@ app.post("/api/analysis/test/single", async (req, res) => {
         url: Video_url,
         model: Model || "grok",
       });
-
-    console.log("Corrected transcript: " + correctedTranscript);
-    console.log("Anaysis : " + JSON.stringify(analysis));
-
-    await CreateNewRecordTest({
+    await CreateNewRecordTestTable({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
       Video_title: Video_title,
       Video_transcipt: transcript,
       Video_corrected_Transcript: correctedTranscript,
-      Llm_answer: analysis?.projects,
+      Llm_answer: analysis,
       Usage: usage,
       Llm_summary: summary,
+      Model: Model || "grok",
     });
     axios
       .post("https://crypto-ner-production.up.railway.app/take_screenshots", {
@@ -277,7 +258,6 @@ app.post("/api/analysis/test/single", async (req, res) => {
       });
   } catch (error) {
     console.error("Error processing request:", error);
-    res.status(500).send("Internal Server Error");
   }
 });
 app.post("/api/analysis/test/batch", async (req, res) => {
