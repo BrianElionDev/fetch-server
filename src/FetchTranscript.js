@@ -25,6 +25,7 @@ async function formatTranscript(rawTranscript) {
 }
 
 export const fetchTranscript = async (url) => {
+  //trying to check if issue was with location
   try {
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
     const formattedTranscript = await formatTranscript(transcriptItems);
