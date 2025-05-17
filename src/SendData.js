@@ -78,7 +78,7 @@ export const CreateNewRecord = async ({
   }
 };
 
-export const CreateNewRecordTest = async ({
+export const CreateNewRecordKnowledgeTable = async ({
   Video_url,
   Video_title,
   Video_transcipt,
@@ -166,6 +166,109 @@ export const CreateNewRecordTest = async ({
     return { success: false, error: error.message };
   }
 };
+export const CreateNewRecordTestTable = async ({
+  Video_url,
+  Video_title,
+  Video_transcipt,
+  Video_corrected_Transcript,
+  Channel_name,
+  Usage,
+  Publish_at,
+  Llm_answer,
+  Llm_summary,
+  Model,
+}) => {
+  if (!Llm_answer || !Array.isArray(Llm_answer?.projects)) {
+    throw new Error(
+      "Expected an array in retrieve_data.results, but got something else."
+    );
+  }
+  const answers = Array.isArray(Llm_answer.projects) ? Llm_answer : [];
+  const noTranscript = !Video_transcipt;
+  const noProjects = Llm_answer.projects.length == 0;
+  if (noTranscript && noProjects) console.log("Not transcript or projects");
+  console.log("Recieved: " + JSON.stringify(Llm_answer));
+  let llm_answer = {
+    projects: Array.isArray(Llm_answer?.projects)
+      ? Llm_answer?.projects?.map((project) => ({
+          coin_or_project: project.coin_or_project,
+          marketcap: (
+            project.Marketcap ||
+            project.marketcap ||
+            ""
+          ).toLowerCase(),
+          rpoints: Number(project.Rpoints || project.rpoints || 0),
+          total_count: Number(
+            project["Total count"] || project.total_count || 0
+          ),
+          category: Array.isArray(project.category) ? project.category : [],
+          timestamps: Array.isArray(project.Timestamps)
+            ? getOffsetTimestamps(project?.Timestamps)
+            : [],
+        }))
+      : [],
+    total_count: Number(Llm_answer?.total_count || 0),
+    total_rpoints: Number(
+      Llm_answer?.total_Rpoints || Llm_answer?.total_rpoints || 0
+    ),
+  };
+  //llm_answer = await matchCoins(llm_answer);
+  console.log("Formatted obj: " + JSON.stringify(llm_answer));
+  const cleanedData = {
+    date: Publish_at || new Date().toISOString(),
+    ["channel name"]: Channel_name || "",
+    corrected_transcript: Video_corrected_Transcript || "",
+    transcript: Video_transcipt || "",
+    video_title: Video_title || "",
+    link: Video_url || "",
+    summary: Llm_summary,
+    model: Model || "grok",
+    usage: Usage || 0.01,
+    llm_answer: JSON.parse(JSON.stringify(llm_answer)),
+    video_type: await checkIfShort(Video_url),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  // Check if record exists
+  const { data: existingData, error: fetchError } = await supabase
+    .from("tests")
+    .select("*")
+    .eq("link", Video_url)
+    .eq("model", Model);
+
+  if (fetchError) {
+    console.error("Error fetching existing data:", fetchError);
+  }
+
+  try {
+    if (existingData && existingData.length > 0) {
+      const { error: updateError } = await supabase
+        .from("tests")
+        .update(cleanedData)
+        .eq("link", Video_url)
+        .eq("model", Model);
+
+      if (updateError) {
+        console.error("Error updating data:", updateError);
+      }
+    } else {
+      const { error: insertError } = await supabase
+        .from("tests")
+        .insert(cleanedData);
+
+      if (insertError) {
+        console.error("Error inserting data:", insertError);
+        console.error("Failed data:", cleanedData);
+      }
+    }
+
+    console.log(`Successfully processed: ${Video_url}`);
+  } catch (error) {
+    console.error("Error processing item:", error);
+    console.error("Failed item:", Video_url);
+  }
+};
 export const UpdateCoinsWithValidatedData = async (analysis, link) => {
   analysis = JSON.parse(analysis);
   if (!analysis || !Array.isArray(analysis) || link == "") {
@@ -180,6 +283,35 @@ export const UpdateCoinsWithValidatedData = async (analysis, link) => {
   try {
     const { data, error } = await supabase
       .from("knowledge")
+      .update({ llm_answer: updatedLlmAnswer })
+      .eq("link", link)
+      .select();
+
+    if (error) {
+      console.log("Error: " + JSON.stringify(error));
+    }
+    console.log("Json data: " + JSON.stringify(data[0]));
+    console.log(" Successfully Validated: Item:  " + data[0].video_title);
+    return { success: true, error: null };
+  } catch (error) {
+    console.error(`❌ Sending Data failed!: ${error}`);
+    return { success: false, error: error.message };
+  }
+};
+export const UpdateCoinsWithValidatedDataTests = async (analysis, link) => {
+  analysis = JSON.parse(analysis);
+  if (!analysis || !Array.isArray(analysis) || link == "") {
+    throw new Error(
+      "Expected an analysis and youtube link, but got something else."
+    );
+  }
+  const updatedLlmAnswer = await formatValidatedData(analysis, link);
+
+  console.log("Formatted obj: " + JSON.stringify(updatedLlmAnswer));
+
+  try {
+    const { data, error } = await supabase
+      .from("tests")
       .update({ llm_answer: updatedLlmAnswer })
       .eq("link", link)
       .select();
