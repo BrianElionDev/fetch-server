@@ -27,21 +27,25 @@ async function formatTranscript(rawTranscript) {
 
 export const fetchTranscript = async (url) => {
   try {
+    //Taciq
+    const { transcript: fallbackTranscript } =
+      await FetchTranscriptFallbackTaciq(url);
+    console.log("Taciq youtube transcript: " + fallbackTranscript);
+
+    if (fallbackTranscript) {
+      return { content: fallbackTranscript };
+    }
+
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
       (error) =>
         console.log("An error occured with youtube transcript: " + error)
     );
+    console.log("Transcript items: " + JSON.stringify(transcriptItems));
     if (transcriptItems) {
       const formattedTranscript = await formatTranscript(transcriptItems);
       console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
     }
-    const { transcript: fallbackTranscript } =
-      await FetchTranscriptFallbackTaciq(url);
-    if (fallbackTranscript) {
-      return { content: fallbackTranscript };
-    }
-    console.log("Taciq youtube transcript: " + fallbackTranscript);
 
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
@@ -61,7 +65,7 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
     ],
-    protocolTimeout: 120000,
+    protocolTimeout: 240000,
   });
   const page = await browser.newPage();
 
@@ -101,7 +105,7 @@ async function FetchTranscriptFallbackTaciq(youtubeUrl) {
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
     ],
-    protocolTimeout: 120000,
+    protocolTimeout: 240000,
   });
   const page = await browser.newPage();
 
