@@ -33,13 +33,15 @@ export const fetchTranscript = async (url) => {
     );
     if (!transcriptItems) {
       const formattedTranscript = await formatTranscript(transcriptItems);
-      console.log("Running the trancript valid section!");
+      console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
     }
 
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
     if (fallbackTranscript) {
+      console.log("Trascript Fallback: " + fallbackTranscript);
+
       return { content: fallbackTranscript };
     }
 
@@ -61,6 +63,7 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
     ],
+    protocolTimeout: 120000,
   });
   const page = await browser.newPage();
 
@@ -100,6 +103,7 @@ async function FetchTranscriptFallbackTaciq(youtubeUrl) {
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
     ],
+    protocolTimeout: 120000,
   });
   const page = await browser.newPage();
 
