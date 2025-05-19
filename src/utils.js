@@ -54,7 +54,6 @@ export function getOffsetTimestamps(timeStamps) {
   let timestampsArray = [];
   for (let timeStamp of timeStamps) {
     timeStamp = timeStamp.toString();
-    console.log(`Timestamp: ${timeStamp}`);
     const split = timeStamp.split(":");
     const hours = split[0];
     const minutes = split[1];
@@ -65,9 +64,6 @@ export function getOffsetTimestamps(timeStamps) {
     const positiveOffset = totalSeconds + 2;
     const negativeOffsetTime = formatTimestamp(negativeOffset);
     const positiveOffsetTime = formatTimestamp(positiveOffset);
-    console.log(
-      `Neg: ${negativeOffsetTime} Act: ${timeStamp} Pos: ${positiveOffsetTime}`
-    );
     timestampsArray.push(negativeOffsetTime, timeStamp, positiveOffsetTime);
   }
   return [...new Set([...timestampsArray])];

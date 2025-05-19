@@ -29,8 +29,6 @@ export const fetchTranscript = async (url) => {
   try {
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
-    console.log("Trascript Fallback: " + fallbackTranscript);
-
     if (fallbackTranscript) {
       return { content: fallbackTranscript };
     }

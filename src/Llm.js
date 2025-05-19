@@ -264,7 +264,6 @@ export const validateCoins = async (data) => {
     `,
       },
     ];
-    console.log("Prompt: " + analysisMessages[1].content);
     const response = await llmProvider.makeRequest(analysisMessages);
     const processedResponse = await llmProvider.processResponse(response);
     return {
