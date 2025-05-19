@@ -31,7 +31,7 @@ export const fetchTranscript = async (url) => {
       (error) =>
         console.log("An error occured with youtube transcript: " + error)
     );
-    if (transcriptItems.length !== 0) {
+    if (!transcriptItems) {
       const formattedTranscript = await formatTranscript(transcriptItems);
       console.log("Running the trancript valid section!");
       return { content: formattedTranscript };
