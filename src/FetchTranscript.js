@@ -29,10 +29,11 @@ export const fetchTranscript = async (url) => {
   try {
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
       (error) =>
-        console.error("An error occured with youtube transcript: " + error)
+        console.log("An error occured with youtube transcript: " + error)
     );
     if (transcriptItems.length !== 0) {
       const formattedTranscript = await formatTranscript(transcriptItems);
+      console.log("Running the trancript valid section!");
       return { content: formattedTranscript };
     }
 
@@ -47,7 +48,7 @@ export const fetchTranscript = async (url) => {
     );
     return { content: komeTranscript };
   } catch (error) {
-    console.error("Error fetching transcript:", error);
+    console.warn("Error fetching transcript:", error);
     return { content: null };
   }
 };
