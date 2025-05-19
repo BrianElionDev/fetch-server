@@ -27,19 +27,22 @@ async function formatTranscript(rawTranscript) {
 
 export const fetchTranscript = async (url) => {
   try {
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
-    if (transcriptItems) {
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
+      (error) =>
+        console.error("An error occured with youtube transcript: " + error)
+    );
+    if (transcriptItems.length !== 0) {
       const formattedTranscript = await formatTranscript(transcriptItems);
       return { content: formattedTranscript };
     }
 
-    const { trancript: fallbackTranscript } =
+    const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
     if (fallbackTranscript) {
       return { content: fallbackTranscript };
     }
 
-    const { trancript: komeTranscript } = await FetchTranscriptFallbackKome(
+    const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
     );
     return { content: komeTranscript };
@@ -119,7 +122,7 @@ async function FetchTranscriptFallbackTaciq(youtubeUrl) {
         return "Failed to read clipboard: " + err.message;
       }
     });
-    return { trancript: clipboardText };
+    return { transcript: clipboardText };
   } catch (error) {
     console.error("Error during automation: ", error);
     return { transcript: null };
