@@ -115,3 +115,16 @@ export async function formatValidatedData(data, link) {
     throw error;
   }
 }
+/**
+ * Returns a promise that resolves after a specified number of seconds.
+ *
+ * @param {number} seconds - The number of seconds to wait.
+ * @returns {Promise<void>} A promise that resolves after the specified number of seconds.
+ */
+export function waitSeconds(seconds) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, seconds * 1000);
+  });
+}

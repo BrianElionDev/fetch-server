@@ -28,7 +28,7 @@ At the bottom of each transcript there is a section for "Coins", this is the lis
 #INSTRUCTIONS
 1. The transcript ${transcript}
 3. At the end of the transcript there is a seCtion for "Coins", use this list of coins to do the analysis, also each of the coins in this section must be in the final output.
-3. At the end of the transcript the section coins has coin names and timestamps extract the timestamps and use them in the final output.
+3. At the end of the transcript the section coins has coin names and timestamps extract the timestamps and use them in the final output. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output. Timestamp should be in the format 00:00:00.
 4. Count the mentions of each coin.(Exclude the counting the coins in "Coins" section at the bottom of each transcript, as this will lead to double counting).
 5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
 7. Classify the coin by market capitalization (large, medium, small, micro).
@@ -169,7 +169,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
     3. IMPORTANT, the liSt of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
     4. DO NOT IDENTIDY BROAD CATEGORIES (e.g., "crypto","meme coin", "RWA coins",  "blockchain", "NFTs") as coins.
-    5. After identifying crypto coins, indacate the timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin.
+    5. After identifying crypto coins, indacate the timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output. Timestamp should be in the format 00:00:00.
     ## CRYPTO CORRECTION PROTOCOL
     ### Identify Candidates
     - Find ALL crypto mentions using:

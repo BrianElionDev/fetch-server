@@ -193,6 +193,8 @@ async function optimalDetection(transcript) {
 })();
  */
 
+import { fetchTranscript } from "../FetchTranscript.js";
+
 /* import { LLMFactory } from "../llm/factory.js";
 
 const llmProvider = LLMFactory.createProvider("openai");
@@ -304,3 +306,8 @@ console.log("Processed Response:", processedResponse.content);
 ];
 console.log(arr.length);
  */
+
+const trancript = await fetchTranscript(
+  "https://www.youtube.com/watch?v=M1P0KwqDPTc"
+);
+console.log("Transcript: " + trancript.content);

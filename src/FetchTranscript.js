@@ -1,5 +1,6 @@
 import { YoutubeTranscript } from "youtube-transcript";
-import { formatTimestamp } from "./utils.js";
+import { formatTimestamp, waitSeconds } from "./utils.js";
+import puppeteer from "puppeteer";
 
 async function formatTranscript(rawTranscript) {
   try {
@@ -25,13 +26,104 @@ async function formatTranscript(rawTranscript) {
 }
 
 export const fetchTranscript = async (url) => {
-  //trying to check if issue was with location
   try {
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
-    const formattedTranscript = await formatTranscript(transcriptItems);
-    return { content: formattedTranscript };
+    if (transcriptItems) {
+      const formattedTranscript = await formatTranscript(transcriptItems);
+      return { content: formattedTranscript };
+    }
+
+    const { trancript: fallbackTranscript } =
+      await FetchTranscriptFallbackTaciq(url);
+    if (fallbackTranscript) {
+      return { content: fallbackTranscript };
+    }
+
+    const { trancript: komeTranscript } = await FetchTranscriptFallbackKome(
+      url
+    );
+    return { content: komeTranscript };
   } catch (error) {
     console.error("Error fetching transcript:", error);
     return { content: null };
   }
 };
+
+async function FetchTranscriptFallbackKome(youtubeUrl) {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+    ],
+  });
+  const page = await browser.newPage();
+
+  await page.goto("https://kome.ai/tools/youtube-transcript-generator");
+  const client = await page.target().createCDPSession();
+  await client.send("Browser.grantPermissions", {
+    origin: page.url(),
+    permissions: ["clipboardReadWrite", "clipboardSanitizedWrite"],
+  });
+  try {
+    await page.locator('[name="url"]').fill(youtubeUrl);
+    await waitSeconds(1);
+    await page.locator('[aria-label="Generate Transcript"]').click();
+    await waitSeconds(1);
+    await page.locator(".form_copyButton__suVIn").click();
+    const clipboardText = await page.evaluate(async () => {
+      try {
+        return await navigator.clipboard.readText();
+      } catch (err) {
+        console.error("Failed to read clipboard:", err);
+        return "Failed to read clipboard: " + err.message;
+      }
+    });
+    return { transcript: clipboardText };
+  } catch (error) {
+    console.error("Error during automation: ", error);
+    return { transcript: null };
+  } finally {
+    await browser.close();
+  }
+}
+async function FetchTranscriptFallbackTaciq(youtubeUrl) {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+    ],
+  });
+  const page = await browser.newPage();
+
+  await page.goto(
+    `https://tactiq.io/tools/run/youtube_transcript?yt=${encodeURIComponent(
+      youtubeUrl
+    )}`
+  );
+  const client = await page.target().createCDPSession();
+  await client.send("Browser.grantPermissions", {
+    origin: page.url(),
+    permissions: ["clipboardReadWrite", "clipboardSanitizedWrite"],
+  });
+  try {
+    await page.locator("#copy").click();
+    const clipboardText = await page.evaluate(async () => {
+      try {
+        return await navigator.clipboard.readText();
+      } catch (err) {
+        console.error("Failed to read clipboard:", err);
+        return "Failed to read clipboard: " + err.message;
+      }
+    });
+    return { trancript: clipboardText };
+  } catch (error) {
+    console.error("Error during automation: ", error);
+    return { transcript: null };
+  } finally {
+    await browser.close();
+  }
+}
