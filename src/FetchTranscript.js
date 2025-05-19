@@ -29,15 +29,16 @@ export const fetchTranscript = async (url) => {
   try {
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
+    console.log("Trascript Fallback: " + fallbackTranscript);
+
     if (fallbackTranscript) {
-      console.log("Trascript Fallback: " + fallbackTranscript);
       return { content: fallbackTranscript };
     }
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
       (error) =>
         console.log("An error occured with youtube transcript: " + error)
     );
-    if (!transcriptItems) {
+    if (transcriptItems) {
       const formattedTranscript = await formatTranscript(transcriptItems);
       console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
