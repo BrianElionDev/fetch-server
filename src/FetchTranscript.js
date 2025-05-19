@@ -31,22 +31,21 @@ export const fetchTranscript = async (url) => {
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
     console.log("Taciq youtube transcript: " + fallbackTranscript);
-
     if (fallbackTranscript) {
       return { content: fallbackTranscript };
     }
-
+    //Youtube Transcript
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
       (error) =>
         console.log("An error occured with youtube transcript: " + error)
     );
-    console.log("Transcript items: " + JSON.stringify(transcriptItems));
-    if (transcriptItems) {
+    if (transcriptItems && transcriptItems.length >= 0) {
       const formattedTranscript = await formatTranscript(transcriptItems);
       console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
     }
 
+    //Kome ai
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
     );

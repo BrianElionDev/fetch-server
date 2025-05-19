@@ -262,11 +262,12 @@ export const CreateNewRecordTestTable = async ({
         console.error("Failed data:", cleanedData);
       }
     }
-
     console.log(`Successfully processed: ${Video_url}`);
+    return { data: JSON.stringify(llm_answer) };
   } catch (error) {
     console.error("Error processing item:", error);
     console.error("Failed item:", Video_url);
+    return { data: JSON.stringify(llm_answer) };
   }
 };
 export const UpdateCoinsWithValidatedData = async (analysis, link) => {

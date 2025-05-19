@@ -237,7 +237,8 @@ app.post("/api/analysis/test/single", async (req, res) => {
         url: Video_url,
         model: Model || "grok",
       });
-    await CreateNewRecordTestTable({
+    console.log("Test Analysis: " + JSON.stringify(analysis));
+    const { data: formatedAnalysis } = await CreateNewRecordTestTable({
       Video_url: Video_url,
       Channel_name: Channel_name,
       Publish_at: Publish_at,
@@ -249,10 +250,12 @@ app.post("/api/analysis/test/single", async (req, res) => {
       Llm_summary: summary,
       Model: Model || "grok",
     });
+
+    //Send data for screenshot anlysis
     axios
       .post("https://crypto-ner-production.up.railway.app/take_screenshots", {
         youtube_url: Video_url || "",
-        projects_json: JSON.stringify(analysis) || {},
+        projects_json: JSON.stringify(formatedAnalysis) || {},
       })
       .catch((error) => {
         console.log("Error at processing request: " + error);
