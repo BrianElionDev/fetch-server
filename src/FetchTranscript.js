@@ -27,11 +27,6 @@ async function formatTranscript(rawTranscript) {
 
 export const fetchTranscript = async (url) => {
   try {
-    const { transcript: fallbackTranscript } =
-      await FetchTranscriptFallbackTaciq(url);
-    if (fallbackTranscript) {
-      return { content: fallbackTranscript };
-    }
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
       (error) =>
         console.log("An error occured with youtube transcript: " + error)
@@ -41,6 +36,12 @@ export const fetchTranscript = async (url) => {
       console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
     }
+    const { transcript: fallbackTranscript } =
+      await FetchTranscriptFallbackTaciq(url);
+    if (fallbackTranscript) {
+      return { content: fallbackTranscript };
+    }
+    console.log("Taciq youtube transcript: " + fallbackTranscript);
 
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
