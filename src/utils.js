@@ -55,9 +55,9 @@ export function getOffsetTimestamps(timeStamps) {
   for (let timeStamp of timeStamps) {
     timeStamp = timeStamp.toString();
     const split = timeStamp.split(":");
-    const hours = split[0];
-    const minutes = split[1];
-    const seconds = split[2];
+    const hours = parseInt(split[0]);
+    const minutes = parseInt(split[1]);
+    const seconds = parseInt(split[2]);
     let totalSeconds = hours * 3600 + minutes * 60 + seconds;
     totalSeconds = parseInt(totalSeconds);
     const negativeOffset = Math.max(0, totalSeconds - 2);

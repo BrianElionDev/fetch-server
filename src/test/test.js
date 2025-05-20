@@ -194,6 +194,7 @@ async function optimalDetection(transcript) {
  */
 
 import { fetchTranscript } from "../FetchTranscript.js";
+import { getOffsetTimestamps } from "../utils.js";
 
 /* import { LLMFactory } from "../llm/factory.js";
 
@@ -307,7 +308,314 @@ console.log("Processed Response:", processedResponse.content);
 console.log(arr.length);
  */
 
-const trancript = await fetchTranscript(
-  "https://www.youtube.com/watch?v=M1P0KwqDPTc"
-);
-console.log("Transcript: " + trancript.content);
+// const trancript = await fetchTranscript(
+//   "https://www.youtube.com/watch?v=M1P0KwqDPTc"
+// );
+// console.log("Transcript: " + trancript.content);
+// const ars = {
+//   projects: [
+//     {
+//       coin_or_project: "Bitcoin",
+//       Marketcap: "large",
+//       Rpoints: 9,
+//       "Total count": 3,
+//       category: ["DeFi", "Layer 1"],
+//       Timestamps: ["00:01:08", "00:02:22", "00:03:02"],
+//     },
+//     {
+//       coin_or_project: "Axie Infinity",
+//       Marketcap: "medium",
+//       Rpoints: 8,
+//       "Total count": 2,
+//       category: ["Gaming"],
+//       Timestamps: ["00:00:42", "00:30:16"],
+//     },
+//     {
+//       coin_or_project: "Dogecoin",
+//       Marketcap: "large",
+//       Rpoints: 7,
+//       "Total count": 2,
+//       category: ["Meme coins"],
+//       Timestamps: ["00:02:36", "00:28:54"],
+//     },
+//     {
+//       coin_or_project: "Chainlink",
+//       Marketcap: "large",
+//       Rpoints: 10,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:13:47"],
+//     },
+//     {
+//       coin_or_project: "Coinbase",
+//       Marketcap: "large",
+//       Rpoints: 9,
+//       "Total count": 2,
+//       category: ["Exchange"],
+//       Timestamps: ["00:14:43", "00:23:51"],
+//     },
+//     {
+//       coin_or_project: "Avalanche",
+//       Marketcap: "large",
+//       Rpoints: 8,
+//       "Total count": 2,
+//       category: ["Layer 1"],
+//       Timestamps: ["00:15:52", "00:16:01"],
+//     },
+//     {
+//       coin_or_project: "Polygon",
+//       Marketcap: "large",
+//       Rpoints: 8,
+//       "Total count": 2,
+//       category: ["Layer 2"],
+//       Timestamps: ["00:17:07", "00:17:53"],
+//     },
+//     {
+//       coin_or_project: "Injective",
+//       Marketcap: "medium",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:18:26"],
+//     },
+//     {
+//       coin_or_project: "Celestia",
+//       Marketcap: "medium",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Layer 1"],
+//       Timestamps: ["00:19:21"],
+//     },
+//     {
+//       coin_or_project: "Internet Computer",
+//       Marketcap: "medium",
+//       Rpoints: 7,
+//       "Total count": 1,
+//       category: ["Layer 1"],
+//       Timestamps: ["00:20:36"],
+//     },
+//     {
+//       coin_or_project: "Monad",
+//       Marketcap: "small",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Layer 1"],
+//       Timestamps: ["00:21:56"],
+//     },
+//     {
+//       coin_or_project: "LayerZero",
+//       Marketcap: "medium",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:22:26"],
+//     },
+//     {
+//       coin_or_project: "Beam",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:27:37"],
+//     },
+//     {
+//       coin_or_project: "Immutable",
+//       Marketcap: "medium",
+//       Rpoints: 10,
+//       "Total count": 3,
+//       category: ["Gaming"],
+//       Timestamps: ["00:27:46", "00:28:09", "00:34:34"],
+//     },
+//     {
+//       coin_or_project: "Gala",
+//       Marketcap: "small",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:29:41"],
+//     },
+//     {
+//       coin_or_project: "Ronin",
+//       Marketcap: "small",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:30:08"],
+//     },
+//     {
+//       coin_or_project: "Pixels",
+//       Marketcap: "small",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:30:20"],
+//     },
+//     {
+//       coin_or_project: "Seedify",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:31:09"],
+//     },
+//     {
+//       coin_or_project: "Echelon Prime",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:32:54"],
+//     },
+//     {
+//       coin_or_project: "Neotokyo",
+//       Marketcap: "micro",
+//       Rpoints: 10,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:34:00"],
+//     },
+//     {
+//       coin_or_project: "SuperVerse",
+//       Marketcap: "small",
+//       Rpoints: 10,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:35:19"],
+//     },
+//     {
+//       coin_or_project: "Terse",
+//       Marketcap: "micro",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:36:58"],
+//     },
+//     {
+//       coin_or_project: "Rever",
+//       Marketcap: "micro",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:37:45"],
+//     },
+//     {
+//       coin_or_project: "Gonzilla",
+//       Marketcap: "micro",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:39:23"],
+//     },
+//     {
+//       coin_or_project: "Ready Games",
+//       Marketcap: "micro",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:37:45"],
+//     },
+//     {
+//       coin_or_project: "Heroes of Mavia",
+//       Marketcap: "micro",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:37:48"],
+//     },
+//     {
+//       coin_or_project: "Shrapnel",
+//       Marketcap: "micro",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:38:03"],
+//     },
+//     {
+//       coin_or_project: "Big Time",
+//       Marketcap: "micro",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:38:24"],
+//     },
+//     {
+//       coin_or_project: "CUS",
+//       Marketcap: "micro",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["Gaming"],
+//       Timestamps: ["00:38:53"],
+//     },
+//     {
+//       coin_or_project: "Pepe",
+//       Marketcap: "small",
+//       Rpoints: 7,
+//       "Total count": 1,
+//       category: ["Meme coins"],
+//       Timestamps: ["00:41:21"],
+//     },
+//     {
+//       coin_or_project: "Bonk",
+//       Marketcap: "small",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["Meme coins"],
+//       Timestamps: ["00:41:23"],
+//     },
+//     {
+//       coin_or_project: "AIOZ",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["AI"],
+//       Timestamps: ["00:41:42"],
+//     },
+//     {
+//       coin_or_project: "Bittensor",
+//       Marketcap: "medium",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["AI"],
+//       Timestamps: ["00:42:24"],
+//     },
+//     {
+//       coin_or_project: "dYdX",
+//       Marketcap: "medium",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:42:54"],
+//     },
+//     {
+//       coin_or_project: "Pudgy Penguins",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["NFT"],
+//       Timestamps: ["00:43:11"],
+//     },
+//     {
+//       coin_or_project: "Prisma",
+//       Marketcap: "small",
+//       Rpoints: 9,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:44:22"],
+//     },
+//     {
+//       coin_or_project: "THORChain",
+//       Marketcap: "medium",
+//       Rpoints: 8,
+//       "Total count": 1,
+//       category: ["DeFi"],
+//       Timestamps: ["00:44:44"],
+//     },
+//   ],
+//   total_count: 47,
+//   total_Rpoints: 305,
+// };
+
+// for (const item of ars.projects) {
+//   const data = getOffsetTimestamps(item.Timestamps);
+//   console.log("Data: " + JSON.stringify(data));
+// }
