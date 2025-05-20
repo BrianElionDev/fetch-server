@@ -187,7 +187,6 @@ export const CreateNewRecordTestTable = async ({
   const noTranscript = !Video_transcipt;
   const noProjects = Llm_answer.projects.length == 0;
   if (noTranscript && noProjects) console.log("Not transcript or projects");
-  console.log("Recieved: " + JSON.stringify(Llm_answer));
   let llm_answer = {
     projects: Array.isArray(Llm_answer?.projects)
       ? Llm_answer?.projects?.map((project) => ({

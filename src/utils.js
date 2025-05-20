@@ -75,21 +75,22 @@ export async function formatValidatedData(data, link) {
     }
 
     const { data: record, error } = await supabase
-      .from("knowledge")
+      .from("tests")
       .select("*")
-      .eq("link", link)
-      .single();
+      .eq("link", link);
 
     if (error) {
       throw new Error(`Supabase query error: ${error.message}`);
     }
 
-    if (!record?.llm_answer?.projects) {
-      throw new Error("Invalid data structure from database");
+    if (!record || record.length == 0 || !record[0]?.llm_answer?.projects) {
+      throw new Error(
+        "Invalid data structure from database or No records found"
+      );
     }
 
-    const projectsDB = record.llm_answer.projects;
-    const finalData = { ...record.llm_answer };
+    const projectsDB = record[0].llm_answer.projects;
+    const finalData = { ...record[0].llm_answer };
     const finalProjectsArray = [];
 
     for (const project of projectsDB) {
