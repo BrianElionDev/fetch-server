@@ -64,7 +64,7 @@ export function getOffsetTimestamps(timeStamps) {
     const positive4sOffset = totalSeconds + 4;
     const positive2sOffsetTime = formatTimestamp(positive2sOffset);
     const positive4sOffsetTime = formatTimestamp(positive4sOffset);
-    timestampsArray.push(timeStamp, positive2sOffset, positive4sOffsetTime);
+    timestampsArray.push(timeStamp, positive2sOffsetTime, positive4sOffsetTime);
   }
   return [...new Set([...timestampsArray])];
 }
