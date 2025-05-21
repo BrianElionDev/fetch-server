@@ -60,11 +60,11 @@ export function getOffsetTimestamps(timeStamps) {
     const seconds = parseInt(split[2]);
     let totalSeconds = hours * 3600 + minutes * 60 + seconds;
     totalSeconds = parseInt(totalSeconds);
-    const negativeOffset = Math.max(0, totalSeconds - 2);
-    const positiveOffset = totalSeconds + 2;
-    const negativeOffsetTime = formatTimestamp(negativeOffset);
-    const positiveOffsetTime = formatTimestamp(positiveOffset);
-    timestampsArray.push(negativeOffsetTime, timeStamp, positiveOffsetTime);
+    const positive2sOffset = totalSeconds + 2;
+    const positive4sOffset = totalSeconds + 4;
+    const positive2sOffsetTime = formatTimestamp(positive2sOffset);
+    const positive4sOffsetTime = formatTimestamp(positive4sOffset);
+    timestampsArray.push(timeStamp, positive2sOffset, positive4sOffsetTime);
   }
   return [...new Set([...timestampsArray])];
 }
