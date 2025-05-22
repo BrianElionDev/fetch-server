@@ -9,6 +9,7 @@ import {
   UpdateCoinsWithValidatedDataTests,
 } from "./SendData.js";
 import { validateCoins } from "./Llm.js";
+import { validateTimestamps } from "./utils.js";
 const app = express();
 
 app.use(express.json());
@@ -237,7 +238,14 @@ app.post("/api/analysis/test/single", async (req, res) => {
         url: Video_url,
         model: Model || "grok",
       });
-    console.log("Test Analysis: " + JSON.stringify(analysis));
+    const analysisValidatedForTimestamps = validateTimestamps(
+      analysis,
+      transcript
+    );
+    console.log(
+      "Test Analysis: " + JSON.stringify(analysisValidatedForTimestamps)
+    );
+
     const { data: formatedAnalysis } = await CreateNewRecordTestTable({
       Video_url: Video_url,
       Channel_name: Channel_name,
@@ -245,7 +253,7 @@ app.post("/api/analysis/test/single", async (req, res) => {
       Video_title: Video_title,
       Video_transcipt: transcript,
       Video_corrected_Transcript: correctedTranscript,
-      Llm_answer: analysis,
+      Llm_answer: analysisValidatedForTimestamps,
       Usage: usage,
       Llm_summary: summary,
       Model: Model || "grok",

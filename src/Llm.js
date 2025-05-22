@@ -169,7 +169,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
     3. IMPORTANT, the liSt of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
     4. DO NOT IDENTIDY BROAD CATEGORIES (e.g., "crypto","meme coin", "RWA coins",  "blockchain", "NFTs") as coins.
-    5. After identifying crypto coins, indacate the timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output. Timestamp should be in the format 00:00:00.
+    5. After identifying crypto coins, indicate the precise timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output (No rounding off). Timestamp should be in the format 00:00:00.
     ## CRYPTO CORRECTION PROTOCOL
     ### Identify Candidates
     - Find ALL crypto mentions using:

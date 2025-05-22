@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
 import { LLM_PROVIDERS } from "./llm/config.js";
 import { supabase } from "../supabaseClient.js";
+import Fuse from "fuse.js";
 
 export function cleanCodeBlockIndicators(content) {
   if (!content) return content;
@@ -61,10 +62,8 @@ export function getOffsetTimestamps(timeStamps) {
     let totalSeconds = hours * 3600 + minutes * 60 + seconds;
     totalSeconds = parseInt(totalSeconds);
     const positive2sOffset = totalSeconds + 2;
-    const positive4sOffset = totalSeconds + 4;
     const positive2sOffsetTime = formatTimestamp(positive2sOffset);
-    const positive4sOffsetTime = formatTimestamp(positive4sOffset);
-    timestampsArray.push(timeStamp, positive2sOffsetTime, positive4sOffsetTime);
+    timestampsArray.push(timeStamp, positive2sOffsetTime);
   }
   return [...new Set([...timestampsArray])];
 }
@@ -124,4 +123,76 @@ export function waitSeconds(seconds) {
       resolve();
     }, seconds * 1000);
   });
+}
+export function validateTimestamps(analysis, transcript) {
+  const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})/g;
+  const lines = transcript.trim().split("\n");
+  let analysisCopy = analysis;
+  const dataArray = [];
+  lines
+    .map((line) => {
+      const match = line.match(regex);
+      if (match) {
+        dataArray.push({
+          timestamp: match[0].split(".")[0],
+          text: line.replace(match[0], "").trim(),
+        });
+      }
+      return null;
+    })
+    .filter((item) => item !== null);
+
+  const fuseOptions = {
+    threshold: 0.3,
+    keys: ["timestamp", "text"],
+  };
+  for (const project of analysisCopy.projects) {
+    const fuse = new Fuse(dataArray, fuseOptions);
+    const searchPattern = project.coin_or_project;
+    console.log(`Checking for: ${searchPattern}`);
+    let matches = fuse.search(searchPattern);
+    const matchesTimestamps = matches.map((match) => match.item.timestamp);
+    const consistentMatches = findCommonTimestamps(
+      getNegativeTimestamps(project.Timestamps),
+      matchesTimestamps
+    );
+    console.log("Consistent matches: " + consistentMatches);
+    console.log(
+      "Timestamps: " +
+        [...consistentMatches, ...matchesTimestamps, ...project.Timestamps]
+    );
+    console.log("####### \n");
+
+    project.Timestamps = [
+      ...new Set(
+        [...consistentMatches, ...matchesTimestamps, ...project.Timestamps].map(
+          (item) => item.toString()
+        )
+      ),
+    ].slice(0, 3);
+  }
+  console.log("####### \n \n");
+  console.log("Final validated data: " + JSON.stringify(analysisCopy));
+  return analysisCopy;
+}
+function findCommonTimestamps(list1, list2) {
+  const set2 = new Set(list2);
+  return list1.filter((ts) => set2.has(ts));
+}
+function getNegativeTimestamps(timeStamps) {
+  if (timeStamps == null) return [];
+  let timestampsArray = [];
+  for (let timeStamp of timeStamps) {
+    timeStamp = timeStamp.toString();
+    const split = timeStamp.split(":");
+    const hours = parseInt(split[0]);
+    const minutes = parseInt(split[1]);
+    const seconds = parseInt(split[2]);
+    let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    totalSeconds = parseInt(totalSeconds);
+    const negative2sOffset = Math.max(0, totalSeconds - 2);
+    const negative2sOffsetTime = formatTimestamp(negative2sOffset);
+    timestampsArray.push(timeStamp, negative2sOffsetTime);
+  }
+  return [...new Set([...timestampsArray])];
 }
