@@ -27,7 +27,7 @@ export const LLM_PROVIDERS = {
   OPENAI: {
     name: "openai",
     endpoint: "https://api.openai.com/v1/chat/completions",
-    model: "gpt-4o",
+    model: "gpt-4.1",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,

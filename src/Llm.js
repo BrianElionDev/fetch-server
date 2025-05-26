@@ -266,7 +266,7 @@ export const validateCoins = async (data) => {
   [{
     "coin": "",
     "valid: true or false depending on if it is valid,
-    "possible_match": "This is a coin which is available in the content section and it is close to the one we are looking for. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. "
+    "possible_match": "This is a coin which is available in the content section and it is close to the one we are looking for.A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none". "
   }]
     
     `,
