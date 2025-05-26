@@ -232,7 +232,12 @@ export const validateCoins = async (data) => {
     const analysisMessages = [
       {
         role: "system",
-        content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a text block.`,
+        content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a content block.
+        ##IMPORTANT:
+        You are checking a coin against a block of text in the format: 
+           Coin: (Coin we are trying to check for)
+          Content: (Block of text we are trying to check if a coin is in.) If the coin is not in this content then it is not valid. ONLY COMPARE THE COIN AGAINST ITS CONTENT, NOT WITH EVERYTHING IN THE PROMPT.
+        `,
       },
       {
         role: "user",
@@ -240,6 +245,9 @@ export const validateCoins = async (data) => {
     ##Instructions
     1. Your task is to verify if a coin exists in a block of text (marked by the keyword content).
     2. If the coin exists the return true, If it does not then return false. Also Identify if the coin was wrongly identified.
+    3. In some cases the coin might be correct but missing the symbols, identify as true.
+    4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
+    5. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
     3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
     4. At times the match might be not close, try to infer which coin was wrongly picked.
     3. The content of the text is the most accurate record. 
@@ -247,7 +255,7 @@ export const validateCoins = async (data) => {
     ${data
       .map(
         (project) => `
-      Coin: ${project.coin_or_project},
+      Coin: ${project.coin_or_project?.replace(/_/g, " ")},
       Content: ${project.content}
     `
       )
@@ -258,7 +266,7 @@ export const validateCoins = async (data) => {
   [{
     "coin": "",
     "valid: true or false depending on if it is valid,
-    "possible_match": "This is a coin which is available in the text block but is not the one trying to match for. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicated here the text in the content section which resembles the coin we are checking for. "
+    "possible_match": "This is a coin which is available in the content section and it is close to the one we are looking for. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. "
   }]
     
     `,

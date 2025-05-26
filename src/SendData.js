@@ -307,8 +307,6 @@ export const UpdateCoinsWithValidatedDataTests = async (analysis, link) => {
   }
   const updatedLlmAnswer = await formatValidatedData(analysis, link);
 
-  console.log("Formatted obj: " + JSON.stringify(updatedLlmAnswer));
-
   try {
     const { data, error } = await supabase
       .from("tests")
@@ -319,7 +317,6 @@ export const UpdateCoinsWithValidatedDataTests = async (analysis, link) => {
     if (error) {
       console.log("Error: " + JSON.stringify(error));
     }
-    console.log("Json data: " + JSON.stringify(data[0]));
     console.log(" Successfully Validated: Item:  " + data[0].video_title);
     return { success: true, error: null };
   } catch (error) {
