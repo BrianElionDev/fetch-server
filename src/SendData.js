@@ -1,4 +1,4 @@
-import { supabase } from "../supabaseClient.js";
+import { supabase } from "./supabaseClient.js";
 import { checkIfShort } from "./CheckVideoType.js";
 import { matchCoins } from "./LoadCoinsData.js";
 import { formatValidatedData, getOffsetTimestamps } from "./utils.js";

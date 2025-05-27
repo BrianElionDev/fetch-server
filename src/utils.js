@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { LLM_PROVIDERS } from "./llm/config.js";
-import { supabase } from "../supabaseClient.js";
+import { supabase } from "./supabaseClient.js";
 import Fuse from "fuse.js";
 
 export function cleanCodeBlockIndicators(content) {
@@ -169,7 +169,7 @@ export function validateTimestamps(analysis, transcript) {
           (item) => item.toString()
         )
       ),
-    ].slice(0, 3);
+    ].slice(0, 4);
   }
   console.log("####### \n \n");
   console.log("Final validated data: " + JSON.stringify(analysisCopy));

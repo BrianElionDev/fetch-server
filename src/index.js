@@ -242,9 +242,7 @@ app.post("/api/analysis/test/single", async (req, res) => {
       analysis,
       transcript
     );
-    console.log(
-      "Test Analysis: " + JSON.stringify(analysisValidatedForTimestamps)
-    );
+    console.log("Coin Analysis: " + JSON.stringify(analysis));
 
     const { data: formatedAnalysis } = await CreateNewRecordTestTable({
       Video_url: Video_url,
