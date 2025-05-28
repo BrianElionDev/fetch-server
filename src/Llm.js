@@ -228,7 +228,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
 export const validateCoins = async (data) => {
   if (!data) return;
   try {
-    const llmProvider = LLMFactory.createProvider("openai");
+    const llmProvider = LLMFactory.createProvider("grok");
     const analysisMessages = [
       {
         role: "system",
@@ -246,6 +246,7 @@ export const validateCoins = async (data) => {
     1. Your task is to verify if a coin exists in a block of text (marked by the keyword content).
     2. If the coin exists the return true, If it does not then return false. Also Identify if the coin was wrongly identified.
     3. In some cases the coin might be correct but missing the symbols, identify as true.
+    3. In some cases the coin symbol might be provided use it to validate.
     4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
     5. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
     3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.

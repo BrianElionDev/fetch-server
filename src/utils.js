@@ -3,6 +3,13 @@ import { LLM_PROVIDERS } from "./llm/config.js";
 import { supabase } from "./supabaseClient.js";
 import Fuse from "fuse.js";
 
+/**
+ * Function to clean code block to avoid json parse error
+ *
+ * @export
+ * @param {*} content
+ * @returns {*}
+ */
 export function cleanCodeBlockIndicators(content) {
   if (!content) return content;
 
@@ -16,6 +23,14 @@ export function cleanCodeBlockIndicators(content) {
   return content;
 }
 
+/**
+ * Function to load a file.
+ *
+ * @export
+ * @async
+ * @param {*} filePath
+ * @returns {*}
+ */
 export async function loadData(filePath) {
   try {
     const data = await readFile(new URL(filePath, import.meta.url), "utf-8");
@@ -24,6 +39,15 @@ export async function loadData(filePath) {
     console.error("Error reading JSON file:", error);
   }
 }
+/**
+ * Calculates prompt cost
+ *
+ * @param {{ inputTokens: any; outputTokens: any; llmProvider: any; }} param0
+ * @param {*} param0.inputTokens
+ * @param {*} param0.outputTokens
+ * @param {*} param0.llmProvider
+ * @returns {number}
+ */
 export const calculatePromptCost = ({
   inputTokens,
   outputTokens,
@@ -35,6 +59,13 @@ export const calculatePromptCost = ({
   const outputCost = outputTokens * config.promptCost.completionCost;
   return inputCost + outputCost;
 };
+/**
+ * Format timestamp to "00:00:00"
+ *
+ * @export
+ * @param {*} ms
+ * @returns {string}
+ */
 export function formatTimestamp(ms) {
   const hours = Math.floor(ms / 3600)
     .toString()
@@ -50,6 +81,13 @@ export function formatTimestamp(ms) {
 
   return `${hours}:${minutes}:${seconds}`;
 }
+/**
+ * Get offsets of a timestamp
+ *
+ * @export
+ * @param {*} timeStamps
+ * @returns {{}}
+ */
 export function getOffsetTimestamps(timeStamps) {
   if (timeStamps == null) return [];
   let timestampsArray = [];
@@ -67,6 +105,15 @@ export function getOffsetTimestamps(timeStamps) {
   }
   return [...new Set([...timestampsArray])];
 }
+/**
+ * Add valid and possible match fields to data
+ *
+ * @export
+ * @async
+ * @param {*} data
+ * @param {*} link
+ * @returns {unknown}
+ */
 export async function formatValidatedData(data, link) {
   try {
     if (!Array.isArray(data)) {
@@ -124,6 +171,14 @@ export function waitSeconds(seconds) {
     }, seconds * 1000);
   });
 }
+/**
+ * Check timestamps with what is on the transcript
+ *
+ * @export
+ * @param {*} analysis
+ * @param {*} transcript
+ * @returns {*}
+ */
 export function validateTimestamps(analysis, transcript) {
   const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})/g;
   const lines = transcript.trim().split("\n");
@@ -169,16 +224,29 @@ export function validateTimestamps(analysis, transcript) {
           (item) => item.toString()
         )
       ),
-    ].slice(0, 4);
+    ].slice(0, 5);
   }
   console.log("####### \n \n");
   console.log("Final validated data: " + JSON.stringify(analysisCopy));
   return analysisCopy;
 }
+/**
+ * Find common timestamps in two array
+ *
+ * @param {*} list1
+ * @param {*} list2
+ * @returns {*}
+ */
 function findCommonTimestamps(list1, list2) {
   const set2 = new Set(list2);
   return list1.filter((ts) => set2.has(ts));
 }
+/**
+ * Get negative timestamps
+ *
+ * @param {*} timeStamps
+ * @returns {{}}
+ */
 function getNegativeTimestamps(timeStamps) {
   if (timeStamps == null) return [];
   let timestampsArray = [];
@@ -195,4 +263,33 @@ function getNegativeTimestamps(timeStamps) {
     timestampsArray.push(timeStamp, negative2sOffsetTime);
   }
   return [...new Set([...timestampsArray])];
+}
+
+/**
+ * Find similar coins to one's from screenshot processing
+ *
+ * @export
+ * @param {*} data
+ * @returns {*}
+ */
+export function findSimilarCoins(data) {
+  let searchPattern = "";
+  let dataArray = [];
+  const fuseOptions = {
+    threshold: 0.5,
+    keys: ["content"],
+  };
+  for (const project of data.projects) {
+    searchPattern = project.coin_or_project.replace("_", " ");
+    const fuse = new Fuse(project.content.split(/[\s\n]+/), fuseOptions);
+    let matches = fuse.search(searchPattern);
+    console.log(`Checking for ####: ${searchPattern} \n`);
+    console.log(`Found: ${JSON.stringify(matches)} \n`);
+    let proj = {
+      coin_or_project: project.coin_or_project,
+      match: matches.map((item) => item.item),
+    };
+    dataArray.push(proj);
+  }
+  return dataArray;
 }
