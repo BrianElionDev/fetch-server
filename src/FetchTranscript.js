@@ -30,7 +30,7 @@ export const fetchTranscript = async (url) => {
     //Taciq
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
-    console.log("Taciq youtube transcript: " + fallbackTranscript);
+    //console.log("Taciq youtube transcript: " + fallbackTranscript);
     if (fallbackTranscript) {
       return { content: fallbackTranscript };
     }
@@ -41,7 +41,7 @@ export const fetchTranscript = async (url) => {
     );
     if (transcriptItems && transcriptItems.length >= 0) {
       const formattedTranscript = await formatTranscript(transcriptItems);
-      console.log("Trascript Formatted: " + formattedTranscript);
+      //console.log("Trascript Formatted: " + formattedTranscript);
       return { content: formattedTranscript };
     }
 

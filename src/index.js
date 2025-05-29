@@ -180,7 +180,7 @@ app.post("/api/analysis/single", async (req, res) => {
         model: Model || "grok",
       });
 
-    console.log("Corrected transcript: " + correctedTranscript);
+    //console.log("Corrected transcript: " + correctedTranscript);
     await CreateNewRecordKnowledgeTable({
       Video_url: Video_url,
       Channel_name: Channel_name,
@@ -242,8 +242,6 @@ app.post("/api/analysis/test/single", async (req, res) => {
       analysis,
       transcript
     );
-    console.log("Coin Analysis: " + JSON.stringify(analysis));
-
     const { data: formatedAnalysis } = await CreateNewRecordTestTable({
       Video_url: Video_url,
       Channel_name: Channel_name,

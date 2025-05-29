@@ -228,7 +228,7 @@ export const correctTranscriptErrors = async ({ transcript }) => {
 export const validateCoins = async (data) => {
   if (!data) return;
   try {
-    const llmProvider = LLMFactory.createProvider("grok");
+    const llmProvider = LLMFactory.createProvider("openai");
     const analysisMessages = [
       {
         role: "system",

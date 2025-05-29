@@ -115,6 +115,17 @@ export function getOffsetTimestamps(timeStamps) {
  * @returns {unknown}
  */
 export async function formatValidatedData(data, link) {
+  function chooseActionTODO(valid, possible_match, coin_or_project) {
+    if (valid) {
+      return "NO ACTION";
+    }
+    if (possible_match == "none") {
+      return "DELETE";
+    }
+    if (possible_match != "none") {
+      return "UPDATE";
+    }
+  }
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format - expected array");
@@ -148,6 +159,11 @@ export async function formatValidatedData(data, link) {
         ...project,
         valid: correspondingCoin?.valid ?? false,
         possible_match: correspondingCoin?.possible_match || "",
+        action: chooseActionTODO(
+          correspondingCoin?.valid ?? false,
+          correspondingCoin?.possible_match || "",
+          project.coin_or_project
+        ),
       });
     }
 
@@ -227,7 +243,7 @@ export function validateTimestamps(analysis, transcript) {
     ].slice(0, 5);
   }
   console.log("####### \n \n");
-  console.log("Final validated data: " + JSON.stringify(analysisCopy));
+  //console.log("Final validated data: " + JSON.stringify(analysisCopy));
   return analysisCopy;
 }
 /**

@@ -128,7 +128,7 @@ export const CreateNewRecordKnowledgeTable = async ({
   };
 
   //llm_answer = await matchCoins(llm_answer);
-  console.log("Formatted obj: " + JSON.stringify(llm_answer));
+  // console.log("Formatted obj: " + JSON.stringify(llm_answer));
   const cleanedData = {
     date: Publish_at || new Date().toISOString(),
     ["channel name"]: Channel_name || "",
@@ -212,7 +212,7 @@ export const CreateNewRecordTestTable = async ({
     ),
   };
   //llm_answer = await matchCoins(llm_answer);
-  console.log("Formatted obj: " + JSON.stringify(llm_answer));
+  //console.log("Formatted obj: " + JSON.stringify(llm_answer));
   const cleanedData = {
     date: Publish_at || new Date().toISOString(),
     ["channel name"]: Channel_name || "",

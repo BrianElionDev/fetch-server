@@ -38,7 +38,7 @@ export const makeAnalysisBatch = async ({ model }) => {
       model: model,
     });
     results.push({ analysis, summary, data: item });
-    console.log("Corrected Transcript:", correctedTranscript);
+    //console.log("Corrected Transcript:", correctedTranscript);
   }
   console.log("Analysis Complete");
   return results;

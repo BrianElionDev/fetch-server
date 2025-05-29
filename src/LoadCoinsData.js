@@ -215,7 +215,7 @@ const findCoinInCache = async (coinName, cache) => {
     return foundInCache;
   }
 
-  console.log("Searching for", coinName);
+  //console.log("Searching for", coinName);
   // If not found in cache, search CoinGecko
   const coinGeckoResult = await searchCoinGecko(coinName);
   if (coinGeckoResult) {
