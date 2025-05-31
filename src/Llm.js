@@ -3,6 +3,9 @@ import { configDotenv } from "dotenv";
 
 import { loadData } from "./LoadCoinsData.js";
 import axios from "axios";
+import Fuse from "fuse.js";
+import { supabase } from "./supabaseClient.js";
+import { formatValidatedData } from "./utils.js";
 configDotenv();
 const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
@@ -10,6 +13,63 @@ const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_SUMMARY:
     "You are an intelligent ai to do anlaysis of youtube video transcrript and give a summary. Return summary of the same format as specified. DO NOT ADD ANY NOTES OR OVERVIEW. RETURN THE SPECIFIED SUMMARY FORMAT ",
 };
+//Helper functions
+export async function getTranscriptContent(link) {
+  const { data: analysisData, error } = await supabase
+    .from("tests")
+    .select("*")
+    .eq("link", link)
+    .eq("model", "grok");
+
+  if (error) {
+    console.log("Error at getTranscriptContent: " + JSON.stringify(error));
+    return;
+  }
+  let analysis = analysisData[0].llm_answer;
+  let transcript = analysisData[0].transcript;
+  const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})/g;
+  const lines = transcript.trim().split("\n");
+  let analysisCopy = analysis;
+  let finalProjectsArray = [];
+  const dataArray = [];
+  lines
+    .map((line) => {
+      const match = line.match(regex);
+      if (match) {
+        dataArray.push({
+          timestamp: match[0].split(".")[0],
+          text: line.replace(match[0], "").trim(),
+        });
+      }
+      return null;
+    })
+    .filter((item) => item !== null);
+
+  const fuseOptions = {
+    threshold: 0.2,
+    minMatchCharLength: 4,
+    keys: ["timestamp", "text"],
+  };
+  for (let project of analysisCopy.projects) {
+    let transcript_content = [];
+    for (let i = 0; i < project.timestamps.length; i++) {
+      if (i >= 2) break;
+      const timestamp = project.timestamps[i];
+      const fuse = new Fuse(dataArray, fuseOptions);
+      const searchPattern = timestamp;
+      let matches = fuse.search(searchPattern);
+      matches = matches.map((match) => match.item.text).join(" ");
+      transcript_content.push(matches);
+    }
+    project = { ...project, transcript_content: transcript_content };
+    finalProjectsArray.push(project);
+    //console.log("Transcript content: " + transcript_content);
+    //console.log("####### \n");
+  }
+  analysisCopy.projects = finalProjectsArray;
+  return analysisCopy;
+}
+
 //Format promt
 async function formatAnalysisPrompt({ transcript }) {
   const coinEmbeddings = "Use coins from coinmarketcap";
@@ -225,8 +285,36 @@ export const correctTranscriptErrors = async ({ transcript }) => {
     return { transcript: null, usage: 0, default_content: null, error: error };
   }
 };
-export const validateCoins = async (data) => {
-  if (!data) return;
+export const validateCoins = async (link, screenshotContent) => {
+  if (!link || !screenshotContent) return;
+  try {
+    const transcriptContent = await getTranscriptContent(link);
+    const { analysis: analysisValidated } =
+      await validateCoinsAgainstTrascriptContent(
+        transcriptContent,
+        screenshotContent
+      );
+    console.log("After formatted anlysis: " + analysisValidated);
+
+    const formattedAnalysis = await formatValidatedData(
+      analysisValidated,
+      link || ""
+    );
+
+    return {
+      analysis: formattedAnalysis,
+    };
+  } catch (error) {
+    console.log("Error occured at validateCoins: " + JSON.stringify(error));
+    return { analysis: null, usage: 0, default_content: null, error: error };
+  }
+};
+export const validateCoinsAgainstTrascriptContent = async (
+  transcriptContent,
+  screenshotContent
+) => {
+  if (!transcriptContent || !screenshotContent) return;
+  screenshotContent = screenshotContent;
   try {
     const llmProvider = LLMFactory.createProvider("openai");
     const analysisMessages = [
@@ -234,17 +322,18 @@ export const validateCoins = async (data) => {
         role: "system",
         content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a content block.
         ##IMPORTANT:
-        You are checking a coin against a block of text in the format: 
-           Coin: (Coin we are trying to check for)
-          Content: (Block of text we are trying to check if a coin is in.) If the coin is not in this content then it is not valid. ONLY COMPARE THE COIN AGAINST ITS CONTENT, NOT WITH EVERYTHING IN THE PROMPT.
+        You are checking a the coin from the transcript against a coins from a screenshot: 
+           Coin: A coin you are trying to check for.
+           Transcript: (A chunk of the transcript where a coin is mentioned)
+          Screenshot: (Screenshot content contains text content from the screenshot ).
         `,
       },
       {
         role: "user",
         content: `
     ##Instructions
-    1. Your task is to verify if a coin exists in a block of text (marked by the keyword content).
-    2. If the coin exists the return true, If it does not then return false. Also Identify if the coin was wrongly identified.
+    1. Your task is to verify if a coin exists either in the the trancript content or in the screenshot content.
+    2. If the coin exists the on either the screenshot or the transcript content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
     3. In some cases the coin might be correct but missing the symbols, identify as true.
     3. In some cases the coin symbol might be provided use it to validate.
     4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
@@ -253,11 +342,14 @@ export const validateCoins = async (data) => {
     4. At times the match might be not close, try to infer which coin was wrongly picked.
     3. The content of the text is the most accurate record. 
     ##Task
-    ${data
+    ${transcriptContent.projects
       .map(
         (project) => `
       Coin: ${project.coin_or_project?.replace(/_/g, " ")},
-      Content: ${project.content}
+      Content: ${project.transcript_content}
+      Screenshot : ${screenshotContent.projects
+        .filter((proj) => proj.coin_or_project == project.coin_or_project)
+        .map((proj) => proj.content)}
     `
       )
       .join("\n")}
@@ -267,7 +359,8 @@ export const validateCoins = async (data) => {
   [{
     "coin": "",
     "valid: true or false depending on if it is valid,
-    "possible_match": "This is a coin which is available in the content section and it is close to the one we are looking for.A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none". "
+    "possible_match": "This is a coin which is available in either the screenshot content or the transcript content and it is close to the one we are looking for.Start by checking if it is in the screenshot content first, if it is then use the coin from the screenshot. If not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
+    "found_in": "This where the possible_match was found in. If it was in the screenshot content then indicate 'screenshot' if in the transcript content then indicate 'trascript' if it is not in either then indicate 'none'"
   }]
     
     `,
@@ -275,6 +368,7 @@ export const validateCoins = async (data) => {
     ];
     const response = await llmProvider.makeRequest(analysisMessages);
     const processedResponse = await llmProvider.processResponse(response);
+
     return {
       analysis: processedResponse.content,
       usage: processedResponse.usage,

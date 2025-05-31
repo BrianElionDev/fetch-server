@@ -299,18 +299,17 @@ export const UpdateCoinsWithValidatedData = async (analysis, link) => {
   }
 };
 export const UpdateCoinsWithValidatedDataTests = async (analysis, link) => {
-  analysis = JSON.parse(analysis);
-  if (!analysis || !Array.isArray(analysis) || link == "") {
+  if (!analysis || link == "") {
     throw new Error(
       "Expected an analysis and youtube link, but got something else."
     );
   }
-  const updatedLlmAnswer = await formatValidatedData(analysis, link);
+  //const updatedLlmAnswer = await formatValidatedData(analysis, link);
 
   try {
     const { data, error } = await supabase
       .from("tests")
-      .update({ llm_answer: updatedLlmAnswer })
+      .update({ llm_answer: analysis })
       .eq("link", link)
       .select();
 

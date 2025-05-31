@@ -117,6 +117,8 @@ export function getOffsetTimestamps(timeStamps) {
  * @returns {unknown}
  */
 export async function formatValidatedData(data, link) {
+  console.log("Recieved: link in formatValidatedData: " + link);
+  console.log("Recieved: " + data);
   function chooseActionTODO(valid, possible_match, coin_or_project) {
     if (valid) {
       return "NO ACTION";
@@ -129,8 +131,12 @@ export async function formatValidatedData(data, link) {
     }
   }
   try {
+    data = JSON.parse(data);
     if (!Array.isArray(data)) {
-      throw new Error("Invalid data format - expected array");
+      throw new Error("Invalid data format - expected array ");
+    }
+    if (!link) {
+      throw new Error("Project link is missing");
     }
 
     const { data: record, error } = await supabase
@@ -139,6 +145,7 @@ export async function formatValidatedData(data, link) {
       .eq("link", link);
 
     if (error) {
+      console.log(`Supabase query error: ${error.message}`);
       throw new Error(`Supabase query error: ${error.message}`);
     }
 
@@ -151,7 +158,6 @@ export async function formatValidatedData(data, link) {
     const projectsDB = record[0].llm_answer.projects;
     const finalData = { ...record[0].llm_answer };
     const finalProjectsArray = [];
-
     for (const project of projectsDB) {
       const correspondingCoin = data.find(
         (item) => item.coin === project.coin_or_project
@@ -166,14 +172,15 @@ export async function formatValidatedData(data, link) {
           correspondingCoin?.possible_match || "",
           project.coin_or_project
         ),
+        found_in: correspondingCoin?.found_in || "",
       });
     }
 
     finalData.projects = finalProjectsArray;
+    console.log("Completed: ");
     return finalData;
   } catch (error) {
-    console.error("Validation failed:", error);
-    throw error;
+    console.log("Validation failed:", error);
   }
 }
 /**

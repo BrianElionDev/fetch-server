@@ -10,6 +10,7 @@ import {
 } from "./SendData.js";
 import { validateCoins } from "./Llm.js";
 import { validateTimestamps } from "./utils.js";
+import { supabase } from "./supabaseClient.js";
 const app = express();
 
 app.use(express.json());
@@ -202,18 +203,16 @@ app.post("/api/analysis/single", async (req, res) => {
 app.post("/api/analysis/validate", async (req, res) => {
   try {
     const data = req.body;
-    console.log(`Recieved req: ` + JSON.stringify(data));
+    console.log(`Recieved req: ` + JSON.stringify(data?.link));
 
     if (data?.projects.length == 0 || !Array.isArray(data.projects)) {
       res.status(500).send("Error validating analysis. Projects are missing!");
       console.error("Error validating analysis. Projects are missing!");
       return;
     }
-    res.send("Processing in background. We will notify you once done!");
-    const { analysis, usage, default_content, error } = await validateCoins(
-      data.projects
-    );
-    console.log("Analysis: " + analysis);
+    res.send("Processing in background. We will notify you once done!: ");
+    const { analysis } = await validateCoins(data.link, data);
+    console.log("Analysis: " + JSON.stringify(analysis));
     await UpdateCoinsWithValidatedDataTests(analysis, data.link || "");
   } catch (error) {
     console.error("Error processing request:", error);
