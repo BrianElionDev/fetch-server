@@ -314,7 +314,7 @@ export const validateCoinsAgainstTrascriptContent = async (
   if (!transcriptContent || !screenshotContent) return;
   screenshotContent = screenshotContent;
   try {
-    const llmProvider = LLMFactory.createProvider("openai");
+    const llmProvider = LLMFactory.createProvider("grok");
     const analysisMessagesScreenshot = [
       {
         role: "system",
