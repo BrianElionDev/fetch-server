@@ -4882,5 +4882,543 @@ let finAlaysis = {
     total_rpoints: 325,
   },
 };
-UpdateCoinsWithValidatedDataTests();
-console.log(Array.isArray(tempData));
+
+//UpdateCoinsWithValidatedDataTests();
+//console.log(Array.isArray(tempData));
+
+const screenshotAnalysis = [
+  {
+    coin: "Bitcoin",
+    valid: true,
+    possible_match: "Bitcoin",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Dogecoin",
+    valid: true,
+    possible_match: "Dogecoin (DOGE)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Axie Infinity",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Ethereum",
+    valid: true,
+    possible_match: "Ethereum",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Solana",
+    valid: true,
+    possible_match: "Solana",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Chainlink",
+    valid: true,
+    possible_match: "ChainLink",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Coinbase",
+    valid: true,
+    possible_match: "Coinbase",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Avalanche",
+    valid: true,
+    possible_match: "Avalanche",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Polygon",
+    valid: true,
+    possible_match: "Polygon",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Injective",
+    valid: true,
+    possible_match: "Injective (INJ)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Celestia",
+    valid: true,
+    possible_match: "Celestia (TIA)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Internet Computer",
+    valid: true,
+    possible_match: "Internet Computer (ICP)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "LayerZero",
+    valid: true,
+    possible_match: "Layer Zero",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Beam",
+    valid: true,
+    possible_match: "Beam",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Immutable X",
+    valid: true,
+    possible_match: "ImmutableX (IMX)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Gala",
+    valid: true,
+    possible_match: "Gala (GALA)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Ronin",
+    valid: true,
+    possible_match: "Ronin (RON)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Pixels",
+    valid: true,
+    possible_match: "Pixels Online",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Cify",
+    valid: true,
+    possible_match: "Seedify (SFUND)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Prime",
+    valid: true,
+    possible_match: "PRIME",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Neotokyo",
+    valid: true,
+    possible_match: "Neo Tokyo",
+    found_in: "screenshot",
+  },
+  {
+    coin: "SuperVerse",
+    valid: true,
+    possible_match: "SuperVerse (SUPER)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Imposters",
+    valid: true,
+    possible_match: "Impostors",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Terse",
+    valid: true,
+    possible_match: "Treeverse",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Rever",
+    valid: true,
+    possible_match: "Treeverse",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Gonzilla",
+    valid: true,
+    possible_match: "Gunzilla",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Ready Games",
+    valid: true,
+    possible_match: "Ready Games",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Heroes of Mavia",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Shrapnel",
+    valid: true,
+    possible_match: "Shrapnel",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Big Time",
+    valid: true,
+    possible_match: "BIGTIME",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Trapnel",
+    valid: true,
+    possible_match: "Shrapnel",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Eluvium",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Cus",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Mavia",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Wagi",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Pepe",
+    valid: true,
+    possible_match: "Pepe (PEPE)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Bon",
+    valid: true,
+    possible_match: "Bonk (BONK)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "AIOZ",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Bittensor",
+    valid: true,
+    possible_match: "Bittensor (TAO)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "dYdX",
+    valid: true,
+    possible_match: "DyDx (DYDX)",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Pudgy Penguins",
+    valid: true,
+    possible_match: "Pudgy Penguins",
+    found_in: "screenshot",
+  },
+  {
+    coin: "Prisma",
+    valid: true,
+    possible_match: "Prisma",
+    found_in: "screenshot",
+  },
+  {
+    coin: "THORChain",
+    valid: true,
+    possible_match: "RUNE",
+    found_in: "screenshot",
+  },
+];
+const transcriptAnalysis = [
+  {
+    coin: "Bitcoin",
+    valid: true,
+    possible_match: "Bitcoin",
+    found_in: "trascript",
+  },
+  {
+    coin: "Dogecoin",
+    valid: true,
+    possible_match: "Dogecoin",
+    found_in: "trascript",
+  },
+  {
+    coin: "Axie Infinity",
+    valid: true,
+    possible_match: "axi Infinity",
+    found_in: "trascript",
+  },
+  {
+    coin: "Ethereum",
+    valid: true,
+    possible_match: "ethereum",
+    found_in: "trascript",
+  },
+  {
+    coin: "Solana",
+    valid: true,
+    possible_match: "Solana",
+    found_in: "trascript",
+  },
+  {
+    coin: "Chainlink",
+    valid: true,
+    possible_match: "chain link",
+    found_in: "trascript",
+  },
+  {
+    coin: "Coinbase",
+    valid: true,
+    possible_match: "coinbase",
+    found_in: "trascript",
+  },
+  {
+    coin: "Avalanche",
+    valid: true,
+    possible_match: "Avalanche",
+    found_in: "trascript",
+  },
+  {
+    coin: "Polygon",
+    valid: true,
+    possible_match: "polygon",
+    found_in: "trascript",
+  },
+  {
+    coin: "Injective",
+    valid: true,
+    possible_match: "injective",
+    found_in: "trascript",
+  },
+  {
+    coin: "Celestia",
+    valid: true,
+    possible_match: "Celestia",
+    found_in: "trascript",
+  },
+  {
+    coin: "Internet Computer",
+    valid: true,
+    possible_match: "internet computer",
+    found_in: "trascript",
+  },
+  {
+    coin: "LayerZero",
+    valid: true,
+    possible_match: "layer zero",
+    found_in: "trascript",
+  },
+  {
+    coin: "Beam",
+    valid: true,
+    possible_match: "beam",
+    found_in: "trascript",
+  },
+  {
+    coin: "Immutable X",
+    valid: true,
+    possible_match: "immutable X",
+    found_in: "trascript",
+  },
+  {
+    coin: "Gala",
+    valid: true,
+    possible_match: "Gala",
+    found_in: "trascript",
+  },
+  {
+    coin: "Ronin",
+    valid: true,
+    possible_match: "Ronin",
+    found_in: "trascript",
+  },
+  {
+    coin: "Pixels",
+    valid: true,
+    possible_match: "pixels online",
+    found_in: "trascript",
+  },
+  {
+    coin: "Cify",
+    valid: true,
+    possible_match: "cify",
+    found_in: "trascript",
+  },
+  {
+    coin: "Prime",
+    valid: true,
+    possible_match: "Prime",
+    found_in: "trascript",
+  },
+  {
+    coin: "Neotokyo",
+    valid: true,
+    possible_match: "neotokyo",
+    found_in: "trascript",
+  },
+  {
+    coin: "SuperVerse",
+    valid: true,
+    possible_match: "superverse",
+    found_in: "trascript",
+  },
+  {
+    coin: "Imposters",
+    valid: true,
+    possible_match: "imposters",
+    found_in: "trascript",
+  },
+  {
+    coin: "Terse",
+    valid: false,
+    possible_match: "imposters",
+    found_in: "trascript",
+  },
+  {
+    coin: "Rever",
+    valid: false,
+    possible_match: "forever",
+    found_in: "trascript",
+  },
+  {
+    coin: "Gonzilla",
+    valid: true,
+    possible_match: "gonzilla",
+    found_in: "trascript",
+  },
+  {
+    coin: "Ready Games",
+    valid: true,
+    possible_match: "ready games",
+    found_in: "trascript",
+  },
+  {
+    coin: "Heroes of Mavia",
+    valid: true,
+    possible_match: "Heroes of mavia",
+    found_in: "trascript",
+  },
+  {
+    coin: "Shrapnel",
+    valid: true,
+    possible_match: "shrapnel",
+    found_in: "trascript",
+  },
+  {
+    coin: "Big Time",
+    valid: true,
+    possible_match: "big time",
+    found_in: "trascript",
+  },
+  {
+    coin: "Trapnel",
+    valid: false,
+    possible_match: "shrapnel",
+    found_in: "trascript",
+  },
+  {
+    coin: "Eluvium",
+    valid: true,
+    possible_match: "eluvium",
+    found_in: "trascript",
+  },
+  {
+    coin: "Cus",
+    valid: true,
+    possible_match: "cus",
+    found_in: "trascript",
+  },
+  {
+    coin: "Mavia",
+    valid: true,
+    possible_match: "Heroes of mavia",
+    found_in: "trascript",
+  },
+  {
+    coin: "Wagi",
+    valid: true,
+    possible_match: "wagi",
+    found_in: "trascript",
+  },
+  {
+    coin: "Pepe",
+    valid: true,
+    possible_match: "Pepe",
+    found_in: "trascript",
+  },
+  {
+    coin: "Bon",
+    valid: true,
+    possible_match: "Bon",
+    found_in: "trascript",
+  },
+  {
+    coin: "AIOZ",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "Bittensor",
+    valid: false,
+    possible_match: "none",
+    found_in: "none",
+  },
+  {
+    coin: "dYdX",
+    valid: true,
+    possible_match: "dydx",
+    found_in: "trascript",
+  },
+  {
+    coin: "Pudgy Penguins",
+    valid: true,
+    possible_match: "pudgy Penguins",
+    found_in: "trascript",
+  },
+  {
+    coin: "Prisma",
+    valid: true,
+    possible_match: "Prisma",
+    found_in: "trascript",
+  },
+  {
+    coin: "THORChain",
+    valid: false,
+    possible_match: "Rune",
+    found_in: "trascript",
+  },
+];
+
+const mergedItems = screenshotAnalysis.map((screenshotItem) => {
+  if (screenshotItem.valid) {
+    return screenshotItem;
+  }
+  const transcriptItem = transcriptAnalysis.find(
+    (item) => item.coin === screenshotItem.coin
+  );
+
+  if (transcriptItem && transcriptItem.valid) {
+    return transcriptItem;
+  }
+  return screenshotItem;
+});
+
+console.log("Final merged output:", mergedItems);

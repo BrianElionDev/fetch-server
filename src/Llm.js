@@ -294,13 +294,11 @@ export const validateCoins = async (link, screenshotContent) => {
         transcriptContent,
         screenshotContent
       );
-    console.log("After formatted anlysis: " + analysisValidated);
 
     const formattedAnalysis = await formatValidatedData(
       analysisValidated,
       link || ""
     );
-
     return {
       analysis: formattedAnalysis,
     };
@@ -317,14 +315,13 @@ export const validateCoinsAgainstTrascriptContent = async (
   screenshotContent = screenshotContent;
   try {
     const llmProvider = LLMFactory.createProvider("openai");
-    const analysisMessages = [
+    const analysisMessagesScreenshot = [
       {
         role: "system",
         content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a content block.
         ##IMPORTANT:
         You are checking a the coin from the transcript against a coins from a screenshot: 
            Coin: A coin you are trying to check for.
-           Transcript: (A chunk of the transcript where a coin is mentioned)
           Screenshot: (Screenshot content contains text content from the screenshot ).
         `,
       },
@@ -346,7 +343,6 @@ export const validateCoinsAgainstTrascriptContent = async (
       .map(
         (project) => `
       Coin: ${project.coin_or_project?.replace(/_/g, " ")},
-      Content: ${project.transcript_content}
       Screenshot : ${screenshotContent.projects
         .filter((proj) => proj.coin_or_project == project.coin_or_project)
         .map((proj) => proj.content)}
@@ -360,23 +356,98 @@ export const validateCoinsAgainstTrascriptContent = async (
     "coin": "",
     "valid: true or false depending on if it is valid,
     "possible_match": "This is a coin which is available in either the screenshot content or the transcript content and it is close to the one we are looking for.Start by checking if it is in the screenshot content first, if it is then use the coin from the screenshot. If not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
-    "found_in": "This where the possible_match was found in. If it was in the screenshot content then indicate 'screenshot' if in the transcript content then indicate 'trascript' if it is not in either then indicate 'none'"
+    "found_in": "This where the possible_match was found in. If it was in the screenshot content then indicate 'screenshot', if it is not in either then indicate 'none'"
   }]
     
     `,
       },
     ];
-    const response = await llmProvider.makeRequest(analysisMessages);
-    const processedResponse = await llmProvider.processResponse(response);
+    const analysisMessagesTranscript = [
+      {
+        role: "system",
+        content: `You are an intelligent ai agent. You task is to validate if a crypto coin appears in a content block.
+        ##IMPORTANT:
+        You are checking a the coin from the transcript against a coins from a screenshot: 
+           Coin: A coin you are trying to check for.
+           Transcript: (A chunk of the transcript where a coin is mentioned)
+        `,
+      },
+      {
+        role: "user",
+        content: `
+    ##Instructions
+    1. Your task is to verify if a coin exists either in the the trancript content or in the screenshot content.
+    2. If the coin exists the on either the screenshot or the transcript content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
+    3. In some cases the coin might be correct but missing the symbols, identify as true.
+    3. In some cases the coin symbol might be provided use it to validate.
+    4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
+    5. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
+    3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
+    4. At times the match might be not close, try to infer which coin was wrongly picked.
+    3. The content of the text is the most accurate record. 
+    ##Task
+    ${transcriptContent.projects
+      .map(
+        (project) => `
+      Coin: ${project.coin_or_project?.replace(/_/g, " ")},
+      Content: ${project.transcript_content}
+    `
+      )
+      .join("\n")}
+
+  #Output format: The output format should be: 
+
+  [{
+    "coin": "",
+    "valid: true or false depending on if it is valid,
+    "possible_match": "This is a coin which is available in the transcript content and it is close to the one we are looking for.Use the content to verify if the coin available not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
+    "found_in": "This where the possible_match was found in. If in the transcript content then indicate 'trascript' if it is not in either then indicate 'none'"
+  }]
+    
+    `,
+      },
+    ];
+
+    const [screenshotResponse, transcriptResponse] = await Promise.all([
+      llmProvider.makeRequest(analysisMessagesScreenshot),
+      llmProvider.makeRequest(analysisMessagesTranscript),
+    ]);
+    let processedResponseScreenshot = await llmProvider.processResponse(
+      screenshotResponse
+    );
+    let processedResponseTranscript = await llmProvider.processResponse(
+      transcriptResponse
+    );
+    processedResponseScreenshot = await JSON.parse(
+      processedResponseScreenshot.content
+    );
+    processedResponseTranscript = await JSON.parse(
+      processedResponseTranscript.content
+    );
+    console.log("Processed screenshot: " + processedResponseScreenshot);
+
+    const mergedItems = processedResponseScreenshot.map((screenshotItem) => {
+      if (screenshotItem.valid) {
+        return screenshotItem;
+      }
+      const transcriptItem = processedResponseTranscript.find(
+        (item) => item.coin === screenshotItem.coin
+      );
+
+      if (transcriptItem && transcriptItem.valid) {
+        return transcriptItem;
+      }
+      return screenshotItem;
+    });
 
     return {
-      analysis: processedResponse.content,
-      usage: processedResponse.usage,
-      default_content: processedResponse.raw,
+      analysis: mergedItems,
+      usage: processedResponseTranscript.usage,
+      default_content: 0,
       error: null,
     };
   } catch (error) {
-    console.log("Error at llm prompt: " + error);
+    console.log("Error at validateCoinsAgainstTrascriptContent: " + error);
     return { analysis: null, usage: 0, default_content: null, error: error };
   }
 };

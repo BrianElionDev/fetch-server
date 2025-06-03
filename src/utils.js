@@ -131,7 +131,6 @@ export async function formatValidatedData(data, link) {
     }
   }
   try {
-    data = JSON.parse(data);
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format - expected array ");
     }
