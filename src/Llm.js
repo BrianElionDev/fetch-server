@@ -316,7 +316,7 @@ export const validateCoinsAgainstTrascriptContent = async (
   screenshotContent = screenshotContent;
   try {
     const llmProviderTranscript = LLMFactory.createProvider("grok");
-    const llmProviderScreenshot = LLMFactory.createProvider("deepseek");
+    const llmProviderScreenshot = LLMFactory.createProvider("grok");
     const analysisMessagesScreenshot = [
       {
         role: "system",
