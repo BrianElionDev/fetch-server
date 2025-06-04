@@ -51,22 +51,26 @@ export async function getTranscriptContent(link) {
     keys: ["timestamp", "text"],
   };
   for (let project of analysisCopy.projects) {
+    console.log("\n####Checking project: " + project.coin_or_project);
     let transcript_content = [];
-    for (let i = 0; i < project.timestamps.length; i++) {
-      if (i >= 2) break;
+    for (let i = 1; i < Math.min(project.timestamps.length, 6); i += 2) {
+      console.log("Checking index: " + i);
       const timestamp = project.timestamps[i];
       const fuse = new Fuse(dataArray, fuseOptions);
       const searchPattern = timestamp;
       let matches = fuse.search(searchPattern);
       matches = matches.map((match) => match.item.text).join(" ");
       transcript_content.push(matches);
+      if (transcript_content.length >= 3) break;
     }
-    project = { ...project, transcript_content: transcript_content };
-    finalProjectsArray.push(project);
-    //console.log("Transcript content: " + transcript_content);
-    //console.log("####### \n");
+
+    finalProjectsArray.push({
+      ...project,
+      transcript_content: transcript_content,
+    });
   }
   analysisCopy.projects = finalProjectsArray;
+  console.log("Final transcript content: " + JSON.stringify(analysisCopy));
   return analysisCopy;
 }
 
@@ -362,6 +366,8 @@ export const validateCoinsAgainstTrascriptContent = async (
     `,
       },
     ];
+    const crypto_coins_local = await loadData();
+
     const analysisMessagesTranscript = [
       {
         role: "system",
@@ -370,6 +376,7 @@ export const validateCoinsAgainstTrascriptContent = async (
         You are checking a the coin from the transcript against a coins from a screenshot: 
            Coin: A coin you are trying to check for.
            Transcript: (A chunk of the transcript where a coin is mentioned)
+           Local list: A list of coins from coingecko : 
         `,
       },
       {
@@ -380,12 +387,17 @@ export const validateCoinsAgainstTrascriptContent = async (
     2. If the coin exists the on either the screenshot or the transcript content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
     3. In some cases the coin might be correct but missing the symbols, identify as true.
     3. In some cases the coin symbol might be provided use it to validate.
+    5. You are to crosscheck coins you dont know from a local list of coins from coin gecko. 
     4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
     5. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
     3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
     4. At times the match might be not close, try to infer which coin was wrongly picked.
+    6. Analyse also the context the coin was mentioned, if it was not to refer to the coin then the coin is not valid.
     3. The content of the text is the most accurate record. 
     ##Task
+    ##Local list of coins:
+      ${JSON.stringify(crypto_coins_local)}
+    ###
     ${transcriptContent.projects
       .map(
         (project) => `
@@ -399,7 +411,7 @@ export const validateCoinsAgainstTrascriptContent = async (
 
   [{
     "coin": "",
-    "valid: true or false depending on if it is valid,
+    "valid: true or false depending on if it is valid, if the context of the coin mention does not refer to it then the coin is invalid.
     "possible_match": "This is a coin which is available in the transcript content and it is close to the one we are looking for.Use the content to verify if the coin available not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
     "found_in": "This where the possible_match was found in. If in the transcript content then indicate 'trascript' if it is not in either then indicate 'none'"
   }]

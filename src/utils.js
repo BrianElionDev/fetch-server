@@ -107,6 +107,16 @@ export function getOffsetTimestamps(timeStamps) {
   }
   return [...new Set([...timestampsArray])];
 }
+
+export function convertTimestampToSeconds(timeStamp) {
+  timeStamp = timeStamp.toString();
+  const split = timeStamp.split(":");
+  const hours = parseInt(split[0]);
+  const minutes = parseInt(split[1]);
+  const seconds = parseInt(split[2]);
+  let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  return parseInt(totalSeconds);
+}
 /**
  * Add valid and possible match fields to data
  *
