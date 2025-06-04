@@ -51,10 +51,8 @@ export async function getTranscriptContent(link) {
     keys: ["timestamp", "text"],
   };
   for (let project of analysisCopy.projects) {
-    console.log("\n####Checking project: " + project.coin_or_project);
     let transcript_content = [];
     for (let i = 1; i < Math.min(project.timestamps.length, 6); i += 2) {
-      console.log("Checking index: " + i);
       const timestamp = project.timestamps[i];
       const fuse = new Fuse(dataArray, fuseOptions);
       const searchPattern = timestamp;
@@ -70,7 +68,6 @@ export async function getTranscriptContent(link) {
     });
   }
   analysisCopy.projects = finalProjectsArray;
-  console.log("Final transcript content: " + JSON.stringify(analysisCopy));
   return analysisCopy;
 }
 
@@ -319,7 +316,7 @@ export const validateCoinsAgainstTrascriptContent = async (
   screenshotContent = screenshotContent;
   try {
     const llmProviderTranscript = LLMFactory.createProvider("grok");
-    const llmProviderScreenshot = LLMFactory.createProvider("openai");
+    const llmProviderScreenshot = LLMFactory.createProvider("deepseek");
     const analysisMessagesScreenshot = [
       {
         role: "system",
@@ -420,28 +417,42 @@ export const validateCoinsAgainstTrascriptContent = async (
     `,
       },
     ];
-    const screenshotResponse = await llmProviderScreenshot.makeRequest(
-      analysisMessagesScreenshot
-    );
 
-    await waitSeconds(10);
+    // Add retry logic with exponential backoff for OpenAI API calls
+    const makeRequestWithRetry = async (provider, messages, maxRetries = 3) => {
+      let retries = 0;
+      while (retries < maxRetries) {
+        try {
+          const response = await provider.makeRequest(messages);
+          return await provider.processResponse(response);
+        } catch (error) {
+          if (
+            error.message.includes("rate limit") &&
+            retries < maxRetries - 1
+          ) {
+            const delay = Math.pow(2, retries) * 1000; // Exponential backoff
+            console.log(`Rate limit hit, retrying in ${delay}ms...`);
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            retries++;
+          } else {
+            throw error;
+          }
+        }
+      }
+    };
 
-    const transcriptResponse = await llmProviderTranscript.makeRequest(
-      analysisMessagesTranscript
-    );
+    // Make API calls with retry logic
+    const [screenshotResponse, transcriptResponse] = await Promise.all([
+      makeRequestWithRetry(llmProviderScreenshot, analysisMessagesScreenshot),
+      makeRequestWithRetry(llmProviderTranscript, analysisMessagesTranscript),
+    ]);
 
-    let processedResponseScreenshot =
-      await llmProviderScreenshot.processResponse(screenshotResponse);
-    let processedResponseTranscript =
-      await llmProviderTranscript.processResponse(transcriptResponse);
-
-    processedResponseScreenshot = await JSON.parse(
-      processedResponseScreenshot.content
+    let processedResponseScreenshot = await JSON.parse(
+      screenshotResponse.content
     );
-    processedResponseTranscript = await JSON.parse(
-      processedResponseTranscript.content
+    let processedResponseTranscript = await JSON.parse(
+      transcriptResponse.content
     );
-    console.log("Screenshot: " + processedResponseScreenshot.content);
 
     const mergedItems = processedResponseScreenshot.map((screenshotItem) => {
       if (screenshotItem.valid) {
@@ -459,7 +470,7 @@ export const validateCoinsAgainstTrascriptContent = async (
 
     return {
       analysis: mergedItems,
-      usage: processedResponseTranscript.usage,
+      usage: transcriptResponse.usage,
       default_content: 0,
       error: null,
     };
