@@ -5,7 +5,7 @@ import { loadData } from "./LoadCoinsData.js";
 import axios from "axios";
 import Fuse from "fuse.js";
 import { supabase } from "./supabaseClient.js";
-import { formatValidatedData } from "./utils.js";
+import { formatValidatedData, waitSeconds } from "./utils.js";
 configDotenv();
 const PROMPT_CONFIG = {
   DEFAULT_SYSTEM_PROMPT_COIN_ANALYSIS:
@@ -318,7 +318,8 @@ export const validateCoinsAgainstTrascriptContent = async (
   if (!transcriptContent || !screenshotContent) return;
   screenshotContent = screenshotContent;
   try {
-    const llmProvider = LLMFactory.createProvider("grok");
+    const llmProviderTranscript = LLMFactory.createProvider("grok");
+    const llmProviderScreenshot = LLMFactory.createProvider("openai");
     const analysisMessagesScreenshot = [
       {
         role: "system",
@@ -333,15 +334,15 @@ export const validateCoinsAgainstTrascriptContent = async (
         role: "user",
         content: `
     ##Instructions
-    1. Your task is to verify if a coin exists either in the the trancript content or in the screenshot content.
-    2. If the coin exists the on either the screenshot or the transcript content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
+    1. Your task is to verify if a coin exists in the screenshot content. IMPORTANT IF THE TOKEN IS IN THE SCREENSHOT THEN NO NEED TO VERIFY IF THE CRYPTO TOKEN IS VALID.
+    2. If the coin exists the on the screenshot content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
     3. In some cases the coin might be correct but missing the symbols, identify as true.
-    3. In some cases the coin symbol might be provided use it to validate.
-    4. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
-    5. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
-    3. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
-    4. At times the match might be not close, try to infer which coin was wrongly picked.
-    3. The content of the text is the most accurate record. 
+    4. In some cases the coin symbol might be provided use it to validate.
+    5. The coin might be incomplete like "pixels" for "pixels online" if pixels online is in the content the recognize as valid.
+    6. For a valid match it does not need to match even the symbol, if the name is same then it is valid.
+    7. Identify closest match to the coin checking from the list. At times the coin checking may be wrong. The true data is  on the content.
+    8. At times the match might be not close, try to infer which coin was wrongly picked.
+    9. The content of the text from the screenshot is the most accurate record. 
     ##Task
     ${transcriptContent.projects
       .map(
@@ -358,16 +359,14 @@ export const validateCoinsAgainstTrascriptContent = async (
 
   [{
     "coin": "",
-    "valid: true or false depending on if it is valid,
-    "possible_match": "This is a coin which is available in either the screenshot content or the transcript content and it is close to the one we are looking for.Start by checking if it is in the screenshot content first, if it is then use the coin from the screenshot. If not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
-    "found_in": "This where the possible_match was found in. If it was in the screenshot content then indicate 'screenshot', if it is not in either then indicate 'none'"
-  }]
-    
+    "valid: true or false depending on if it is valid (IMPORTANT, IF THE COIN IS IN THE SCREENSHOT CONTENT THE IT IS VALID),
+    "possible_match": "This is a coin which is available in the screenshot content or it is close to the one we are looking for. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
+    "found_in": "This where the possible_match was found in. If it was in the screenshot content then indicate 'screenshot', if it is not in the transcript then indicate 'none'"
+  }] 
     `,
       },
     ];
     const crypto_coins_local = await loadData();
-
     const analysisMessagesTranscript = [
       {
         role: "system",
@@ -376,7 +375,7 @@ export const validateCoinsAgainstTrascriptContent = async (
         You are checking a the coin from the transcript against a coins from a screenshot: 
            Coin: A coin you are trying to check for.
            Transcript: (A chunk of the transcript where a coin is mentioned)
-           Local list: A list of coins from coingecko : 
+           Local list of crypto tokens
         `,
       },
       {
@@ -384,6 +383,7 @@ export const validateCoinsAgainstTrascriptContent = async (
         content: `
     ##Instructions
     1. Your task is to verify if a coin exists either in the the trancript content or in the screenshot content.
+    2. IMPORTANT For a coin to be valid it you have to know it or it is in the local list of coins.
     2. If the coin exists the on either the screenshot or the transcript content return true, If it does not then return false. Also Identify if the coin was wrongly identified.
     3. In some cases the coin might be correct but missing the symbols, identify as true.
     3. In some cases the coin symbol might be provided use it to validate.
@@ -395,8 +395,9 @@ export const validateCoinsAgainstTrascriptContent = async (
     6. Analyse also the context the coin was mentioned, if it was not to refer to the coin then the coin is not valid.
     3. The content of the text is the most accurate record. 
     ##Task
-    ##Local list of coins:
-      ${JSON.stringify(crypto_coins_local)}
+  
+    ###Local list
+        ${JSON.stringify(crypto_coins_local)}
     ###
     ${transcriptContent.projects
       .map(
@@ -419,24 +420,28 @@ export const validateCoinsAgainstTrascriptContent = async (
     `,
       },
     ];
+    const screenshotResponse = await llmProviderScreenshot.makeRequest(
+      analysisMessagesScreenshot
+    );
 
-    const [screenshotResponse, transcriptResponse] = await Promise.all([
-      llmProvider.makeRequest(analysisMessagesScreenshot),
-      llmProvider.makeRequest(analysisMessagesTranscript),
-    ]);
-    let processedResponseScreenshot = await llmProvider.processResponse(
-      screenshotResponse
+    await waitSeconds(10);
+
+    const transcriptResponse = await llmProviderTranscript.makeRequest(
+      analysisMessagesTranscript
     );
-    let processedResponseTranscript = await llmProvider.processResponse(
-      transcriptResponse
-    );
+
+    let processedResponseScreenshot =
+      await llmProviderScreenshot.processResponse(screenshotResponse);
+    let processedResponseTranscript =
+      await llmProviderTranscript.processResponse(transcriptResponse);
+
     processedResponseScreenshot = await JSON.parse(
       processedResponseScreenshot.content
     );
     processedResponseTranscript = await JSON.parse(
       processedResponseTranscript.content
     );
-    console.log("Processed screenshot: " + processedResponseScreenshot);
+    console.log("Screenshot: " + processedResponseScreenshot.content);
 
     const mergedItems = processedResponseScreenshot.map((screenshotItem) => {
       if (screenshotItem.valid) {
