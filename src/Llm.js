@@ -315,8 +315,7 @@ export const validateCoinsAgainstTrascriptContent = async (
   if (!transcriptContent || !screenshotContent) return;
   screenshotContent = screenshotContent;
   try {
-    const llmProviderTranscript = LLMFactory.createProvider("grok");
-    const llmProviderScreenshot = LLMFactory.createProvider("grok");
+    const llmProvider = LLMFactory.createProvider("openai");
     const analysisMessagesScreenshot = [
       {
         role: "system",
@@ -409,8 +408,8 @@ export const validateCoinsAgainstTrascriptContent = async (
 
   [{
     "coin": "",
-    "valid: true or false depending on if it is valid, if the context of the coin mention does not refer to it then the coin is invalid.
-    "possible_match": "This is a coin which is available in the transcript content and it is close to the one we are looking for.Use the content to verify if the coin available not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match the return "none".  "
+    "valid: true or false depending on if it is valid, You should know the crypto coin being validated or it is in the local list of coins for it to be valid. Category names are not valid coins ie ai, nft, altcoins...
+    "possible_match": "This is a coin which is available in the transcript content and it is close to the one we are looking for.Use the content to verify if the coin available not the use the coin from the transcript. A coin can be pronounced wrongly in the content, try to anticipate this errors. In some cases the coin to be matched may be mistakenly identified. If there coin is not valid then indicate here the text in the content section which is close to the coin we are checking for. IMPORTANT: No comment, Just name the possible match. If no close match or the coin is a category name then return "none".  "
     "found_in": "This where the possible_match was found in. If in the transcript content then indicate 'trascript' if it is not in either then indicate 'none'"
   }]
     
@@ -418,40 +417,20 @@ export const validateCoinsAgainstTrascriptContent = async (
       },
     ];
 
-    // Add retry logic with exponential backoff for OpenAI API calls
-    const makeRequestWithRetry = async (provider, messages, maxRetries = 3) => {
-      let retries = 0;
-      while (retries < maxRetries) {
-        try {
-          const response = await provider.makeRequest(messages);
-          return await provider.processResponse(response);
-        } catch (error) {
-          if (
-            error.message.includes("rate limit") &&
-            retries < maxRetries - 1
-          ) {
-            const delay = Math.pow(2, retries) * 1000; // Exponential backoff
-            console.log(`Rate limit hit, retrying in ${delay}ms...`);
-            await new Promise((resolve) => setTimeout(resolve, delay));
-            retries++;
-          } else {
-            throw error;
-          }
-        }
-      }
-    };
-
-    // Make API calls with retry logic
     const [screenshotResponse, transcriptResponse] = await Promise.all([
-      makeRequestWithRetry(llmProviderScreenshot, analysisMessagesScreenshot),
-      makeRequestWithRetry(llmProviderTranscript, analysisMessagesTranscript),
+      llmProvider.makeRequest(analysisMessagesScreenshot),
+      llmProvider.makeRequest(analysisMessagesTranscript)
     ]);
+  
 
-    let processedResponseScreenshot = await JSON.parse(
-      screenshotResponse.content
+    let processedResponseScreenshot = await llmProvider.processResponse(screenshotResponse);
+    let processedResponseTranscript = await llmProvider.processResponse(transcriptResponse);
+
+    processedResponseScreenshot = await JSON.parse(
+      processedResponseScreenshot.content
     );
-    let processedResponseTranscript = await JSON.parse(
-      transcriptResponse.content
+     processedResponseTranscript = await JSON.parse(
+      processedResponseTranscript.content
     );
 
     const mergedItems = processedResponseScreenshot.map((screenshotItem) => {
