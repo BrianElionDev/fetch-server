@@ -3,7 +3,7 @@ export class BaseLLMProvider {
     this.config = config;
   }
 
-   async  makeRequest(messages) {
+  async makeRequest(messages) {
     const options = {
       method: "POST",
       headers: this.config.headers,
@@ -17,7 +17,7 @@ export class BaseLLMProvider {
     try {
       const response = await fetch(this.config.endpoint, options);
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        throw new Error(`API Error: ${response.status}: `);
       }
       return await response.json();
     } catch (error) {
