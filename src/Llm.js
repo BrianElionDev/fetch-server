@@ -327,8 +327,8 @@ export const validateCoinsAgainstTrascriptContent = async (
 
 ##IMPORTANT:
 You are checking coins against screenshot content and a local list of crypto tokens:
-- Coin: A coin you are trying to check for
-- Screenshot: Text content extracted from screenshots
+- Coin: A coin/token you are trying to check for
+- Content: Text content extracted from screenshots
 - Local list of crypto tokens: Reference data for validation
 `,
       },
@@ -336,21 +336,23 @@ You are checking coins against screenshot content and a local list of crypto tok
         role: "user",
         content: `
 ##Instructions
-1. For each coin-screenshot pair, check if the specified coin name appears in its corresponding "Screenshot" section.
+1. For each coin-content pair, check if the specified coin/token name appears in its corresponding "Content" section.
 
 2. PRIMARY VALIDATION LOGIC:
-   - If the coin name is found in the screenshot content → VALID (return true)
-   - If the coin name is NOT found in the screenshot content → INVALID (return false)
-   - If the coin name is a crypto term and not a crypto token (e.g., NFT, BLOCKCHAIN, AI, ALTCOINS) → INVALID (return false)
+   - If the coin/token name is found in the Content → VALID (return true)
+   - If the coin/token name is NOT found in the Content → INVALID (return false)
+   - If the actual token is mentioned the identify it as valid and in the possible match indicate the coin/token name + token symbol.
+   - If the coin/token name is a crypto term and not a crypto token (e.g., NFT, BLOCKCHAIN, AI, ALTCOINS) → INVALID (return false)
 
 3. CLOSE MATCH IDENTIFICATION:
-   - When a coin is invalid (not found in screenshot), look for similar or related crypto terms in the screenshot content
-   - Identify the closest possible match from what's actually mentioned in the screenshot. 
-   - IMPORTANT It should be close to the coin we are checking.
+   - When a coin/token is invalid (not found in Content), look for a similar pronounced or written token in the content. If their is no similar pronounced or written token then possible match = "none"
+   - Identify the closest possible match from what's actually mentioned in the Content. 
    - Account for pronunciation errors, partial names, or similar-sounding coins
+   - IMPORTANT It should be close in pronunciation or transcription to the coin/token we are checking.
+
 
 4. ADDITIONAL VALIDATION RULES:
-   - The coin must be a legitimate cryptocurrency (check against local list or your knowledge)
+   - The coin/token must be a legitimate cryptocurrency (check against local list or your knowledge)
    - COIN CATEGORY NAMES ARE INVALID (e.g., NFT, AI COINS, ALT COINS)
    - Context matters: ensure the mention refers to the actual cryptocurrency, not unrelated usage
 
@@ -359,7 +361,7 @@ You are checking coins against screenshot content and a local list of crypto tok
    - Symbol matching is not required if the name matches
    - Account for common spelling variations
 
-6. The screenshot content is the authoritative source - what's actually shown in the screenshot determines validity.
+6. The Content is the authoritative source - what's actually shown in the Content determines validity.
 
 ##Task
 
@@ -369,92 +371,96 @@ ${JSON.stringify(crypto_coins_local)}
 ${transcriptContent.projects
   .map(
     (project) => `
-Coin: ${project.coin_or_project?.replace(/_/g, " ")},
-Screenshot: ${screenshotContent.projects
-      .filter((proj) => proj.coin_or_project == project.coin_or_project)
-      .map((proj) => proj.content)}
+      Coin: ${project.coin_or_project?.replace(/_/g, " ")},
+      Content: ${screenshotContent.projects
+        .filter(
+          (proj) =>
+            proj.coin_or_project?.replace(/_/g, " ") == project.coin_or_project
+        )
+        .map((proj) => proj.content)}
 `
   )
-  .join("\n")}
+  .join("\n \n")}
 
-##Output Format
-The output format should be an array of objects:
+      ##Output Format
+      The output format should be an array of objects:
 
-[{
-  "coin": "", // The coin name being validated
-  "valid": true or false, // TRUE if the coin name appears in its corresponding screenshot content, FALSE if not found
-  "possible_match": "", // If coin is invalid (not found in screenshot), identify the closest crypto-related term that IS actually mentioned in the screenshot content. If coin is valid or no close match exists, return "none"
-  "found_in": "screenshot", // Always "screenshot" since we're analyzing screenshot content, or "none" if no possible_match found
-  "reason": "" // If invalid, give a short note of why it is invalid
-}]
+      [{
+        "coin": "", // The coin/token name being validated
+        "valid": true or false, // TRUE if the coin/token name appears in its corresponding Content, FALSE if not found
+        "possible_match": "", // If coin/token is invalid (not found in Content), identify the closest crypto-related term that IS actually mentioned in the screenshot content. If coin/token is valid or no close match exists, return "none"
+        "found_in": "screenshot", // Always "screenshot" since we're analyzing Content, or "none" if no possible_match found
+        "reason": "" // If invalid, give a short note of why it is invalid
+      }]
 `,
       },
     ];
     const analysisMessagesTranscript = [
       {
         role: "system",
-        content: `You are an intelligent AI agent. Your task is to validate if a crypto coin appears in content blocks.
+        content: `You are an intelligent AI agent. Your task is to validate if a crypto coin/token appears in content blocks.
 
-##IMPORTANT:
-You are checking coins from the transcript against a local list of crypto tokens:
-- Coin: A coin you are trying to check for
-- Content: A chunk of the transcript where a coin is mentioned
-- Local list of crypto tokens: Reference data for validation
-`,
+      ##IMPORTANT:
+      You are checking coins from the transcript against a local list of crypto tokens:
+      - Coin: A coin/token you are trying to check for
+      - Content: A chunk of the transcript where a coin/token is mentioned
+      - Local list of crypto tokens: Reference data for validation
+      `,
       },
       {
         role: "user",
         content: `
-##Instructions
-1. For each coin-content pair, check if the specified coin name appears in its corresponding "Content" section (transcript extract).
+      ##Instructions
+      1. For each coin-content pair, check if the specified coin/token name appears in its corresponding "Content" section (transcript extract).
 
-2. PRIMARY VALIDATION LOGIC:
-   - If the coin name is found in the content section → VALID (return true)
-   - If the coin name is NOT found in the content section → INVALID (return false)
-   - If the coin name is a crypto term and not a crypto token ie NFT, BLOCKCHAIN, AI, ALTCOINS... → INVALID (return false)
+      2. PRIMARY VALIDATION LOGIC:
+        - If the coin/token name is found in the content section → VALID (return true)
+        - If the coin/token name is NOT found in the content section → INVALID (return false)
+        - If the coin/token token is mentioned the identify it as valid and in the possible match indicate the coin/token name + token symbol.
+        - If the coin/token name is a crypto term and not a crypto token ie NFT, BLOCKCHAIN, AI, ALTCOINS... → INVALID (return false)
 
-3. CLOSE MATCH IDENTIFICATION:
-   - When a coin is invalid (not found in content), look for similar or related crypto terms in the content
-   - Identify the closest possible match from what's actually mentioned in the content
-   - IMPORTANT It should be close to the coin we are checking.
-   - Account for pronunciation errors, partial names, or similar-sounding coins
+      3. CLOSE MATCH IDENTIFICATION:
+        - When a coin/token is invalid (not found in content), look for similar or related crypto terms in the content
+        - Identify the closest possible match from what's actually mentioned in the content
+        - IMPORTANT It should be close to the coin/token we are checking.
+        - Account for pronunciation errors, partial names, or similar-sounding coins
 
-4. ADDITIONAL VALIDATION RULES:
-   - The coin must be a legitimate cryptocurrency (check against local list or your knowledge)
-   - COIN CATEGORY NAMES ARE INVALID (e.g., NFT, AI COINS, ALT COINS)
-   - Context matters: ensure the mention refers to the actual cryptocurrency, not unrelated usage
+      4. ADDITIONAL VALIDATION RULES:
+        - The coin/token must be a legitimate cryptocurrency (check against local list or your knowledge)
+        - COIN CATEGORY NAMES ARE INVALID (e.g., NFT, AI COINS, ALT COINS)
+        - Context matters: ensure the mention refers to the actual cryptocurrency, not unrelated usage
 
-5. MATCHING FLEXIBILITY:
-   - Partial matches are valid (e.g., "pixels" for "Pixels Online")
-   - Symbol matching is not required if the name matches
-   - Account for common pronunciation/spelling variations
+      5. MATCHING FLEXIBILITY:
+        - Partial matches are valid (e.g., "pixels" for "Pixels Online")
+        - Symbol matching is not required if the name matches
+        - Account for common pronunciation/spelling variations
 
-6. The content section is the authoritative source - what's actually said in the transcript determines validity.
+      6. The content section is the authoritative source - what's actually said in the transcript determines validity.
 
-##Task
+      ##Task
 
-###Local List
-${JSON.stringify(crypto_coins_local)}
+      ###Local List
+      ${JSON.stringify(crypto_coins_local)}
 
-${transcriptContent.projects
-  .map(
-    (project) => `
-Coin: ${project.coin_or_project?.replace(/_/g, " ")},
-Content: ${project.transcript_content}
-`
-  )
-  .join("\n")}
+      ${transcriptContent.projects
+        .map(
+          (project) => `
+      Coin: ${project.coin_or_project?.replace(/_/g, " ")},
+      Content: "${project.transcript_content}"
+      `
+        )
+        .join("\n")}
 
-##Output Format
-The output format should be an array of objects:
+      ##Output Format
+      The output format should be an array of objects:
 
-[{
-  "coin": "", // The coin name being validated
-  "valid": true or false, // TRUE if the coin name appears in its corresponding content section, FALSE if not found
-  "possible_match": "", // If coin is invalid (not found in content), identify the closest crypto-related term that IS actually mentioned in the content section. If coin is valid or no close match exists, return "none"
-  "found_in": "transcript" // Always "transcript" since we're analyzing transcript content, or "none" if no possible_match found
-  "reason": ""If invalid give a short note of why it is invalid.
-}]
+      [{
+        "coin": "", // The coin/token name being validated
+        "valid": true or false, // TRUE if the coin/token name appears in its corresponding content section, FALSE if not found
+        "possible_match": "", // If coin/token is invalid (not found in content), identify the closest crypto-related term that IS actually mentioned in the content section. If coin/token is valid or no close match exists, return "none"
+        "found_in": "transcript" // Always "transcript" since we're analyzing transcript content, or "none" if no possible_match found
+        "reason": ""If invalid give a short note of why it is invalid.
+      }]
 `,
       },
     ];
@@ -478,6 +484,10 @@ The output format should be an array of objects:
     );
     processedResponseTranscript = await JSON.parse(
       processedResponseTranscript.content
+    );
+    console.log(
+      "Processed screenshot content: " +
+        JSON.stringify(processedResponseScreenshot)
     );
     const mergedItems = processedResponseScreenshot.map((screenshotItem) => {
       if (screenshotItem.valid) {

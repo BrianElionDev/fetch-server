@@ -22,7 +22,23 @@ export function cleanCodeBlockIndicators(content) {
 
   return content;
 }
-
+export function escapeNewlinesInObject(obj) {
+  if (typeof obj === "string") {
+    return obj.replace(/\n/g, "\\n");
+  } else if (Array.isArray(obj)) {
+    return obj.map(escapeNewlinesInObject);
+  } else if (typeof obj === "object" && obj !== null) {
+    const escapedObj = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        escapedObj[key] = escapeNewlinesInObject(obj[key]);
+      }
+    }
+    return escapedObj;
+  } else {
+    return obj;
+  }
+}
 /**
  * Function to load a file.
  *

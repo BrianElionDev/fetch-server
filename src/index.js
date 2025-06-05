@@ -9,7 +9,7 @@ import {
   UpdateCoinsWithValidatedDataTests,
 } from "./SendData.js";
 import { validateCoins } from "./Llm.js";
-import { validateTimestamps } from "./utils.js";
+import { escapeNewlinesInObject, validateTimestamps } from "./utils.js";
 import { supabase } from "./supabaseClient.js";
 const app = express();
 
@@ -202,7 +202,7 @@ app.post("/api/analysis/single", async (req, res) => {
 
 app.post("/api/analysis/validate", async (req, res) => {
   try {
-    const data = req.body;
+    let data = req.body;
     console.log(`Recieved req: ` + JSON.stringify(data));
 
     if (data?.projects.length == 0 || !Array.isArray(data.projects)) {
@@ -211,6 +211,7 @@ app.post("/api/analysis/validate", async (req, res) => {
       return;
     }
     res.send("Processing in background. We will notify you once done!: ");
+    data = escapeNewlinesInObject(data);
     const { analysis } = await validateCoins(data.link, data);
     console.log("Analysis: " + JSON.stringify(analysis));
     await UpdateCoinsWithValidatedDataTests(analysis, data.link || "");
