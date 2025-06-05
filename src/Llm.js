@@ -345,7 +345,8 @@ You are checking coins against screenshot content and a local list of crypto tok
 
 3. CLOSE MATCH IDENTIFICATION:
    - When a coin is invalid (not found in screenshot), look for similar or related crypto terms in the screenshot content
-   - Identify the closest possible match from what's actually mentioned in the screenshot
+   - Identify the closest possible match from what's actually mentioned in the screenshot. 
+   - IMPORTANT It should be close to the coin we are checking.
    - Account for pronunciation errors, partial names, or similar-sounding coins
 
 4. ADDITIONAL VALIDATION RULES:
@@ -415,6 +416,7 @@ You are checking coins from the transcript against a local list of crypto tokens
 3. CLOSE MATCH IDENTIFICATION:
    - When a coin is invalid (not found in content), look for similar or related crypto terms in the content
    - Identify the closest possible match from what's actually mentioned in the content
+   - IMPORTANT It should be close to the coin we are checking.
    - Account for pronunciation errors, partial names, or similar-sounding coins
 
 4. ADDITIONAL VALIDATION RULES:
