@@ -290,6 +290,9 @@ export const validateCoins = async (link, screenshotContent) => {
   if (!link || !screenshotContent) return;
   try {
     const transcriptContent = await getTranscriptContent(link);
+    
+    console.log("Completed: " + JSON.stringify(transcriptContent));
+
     const { analysis: analysisValidated } =
       await validateCoinsAgainstTrascriptContent(
         transcriptContent,

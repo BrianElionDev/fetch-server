@@ -186,7 +186,6 @@ export async function formatValidatedData(data, link) {
     }
 
     finalData.projects = finalProjectsArray;
-    console.log("Completed: " + JSON.stringify(finalData));
     return finalData;
   } catch (error) {
     console.log("Validation failed:", error);
