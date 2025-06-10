@@ -254,10 +254,7 @@ app.post("/api/analysis/test/single", async (req, res) => {
       Model: Model || "grok",
     });
 
-    console.log(
-      "Data sending for screenshot analysis: " +
-        JSON.stringify(formatedAnalysis, null, 2)
-    );
+    console.log("Data sending for screenshot analysis: " + formatedAnalysis);
     //Send data for screenshot anlysis
     axios
       .post("https://crypto-ner-production.up.railway.app/take_screenshots", {

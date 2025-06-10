@@ -400,9 +400,9 @@ You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related 
 [BEGIN CORRECTED TRANSCRIPT]
 [Original transcript with ONLY crypto corrections]
 [COINS: 
-ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER (It has to be valid, use the possible match list when checking final coins.)
- 1. ID: coin identifier from the local list. if not in the list then have the name as the identifier) - COIN  [Timestamps this coin was mentioned]
- 2. ID: coin identifier from the local list. if not in the list then have the name as the identifier) - COIN2  [Timestamps this coin was mentioned]
+ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER
+ 1. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned]
+ 2. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN2  [Timestamps this coin was mentioned]
 ]
 [END CORRECTED TRANSCRIPT]
 
