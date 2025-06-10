@@ -253,19 +253,12 @@ export function validateTimestamps(analysis, transcript) {
   for (const project of analysisCopy.projects) {
     const fuse = new Fuse(dataArray, fuseOptions);
     const searchPattern = project.coin_or_project;
-    console.log(`Checking for: ${searchPattern}`);
     let matches = fuse.search(searchPattern);
     const matchesTimestamps = matches.map((match) => match.item.timestamp);
     const consistentMatches = findCommonTimestamps(
       getNegativeTimestamps(project.Timestamps),
       matchesTimestamps
     );
-    console.log("Consistent matches: " + consistentMatches);
-    console.log(
-      "Timestamps: " +
-        [...consistentMatches, ...matchesTimestamps, ...project.Timestamps]
-    );
-    console.log("####### \n");
 
     project.Timestamps = [
       ...new Set(

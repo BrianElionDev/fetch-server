@@ -1,5 +1,5 @@
 import { YoutubeTranscript } from "youtube-transcript";
-import { formatTimestamp, waitSeconds } from "./utils.js";
+import { formatTimestamp, waitSeconds } from "../utils.js";
 import puppeteer from "puppeteer";
 
 async function formatTranscript(rawTranscript) {
@@ -96,7 +96,7 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
     await browser.close();
   }
 }
-async function FetchTranscriptFallbackTaciq(youtubeUrl) {
+export async function FetchTranscriptFallbackTaciq(youtubeUrl) {
   const browser = await puppeteer.launch({
     headless: true,
     args: [

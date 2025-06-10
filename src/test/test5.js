@@ -1,693 +1,82 @@
-const screenshotContent = {
-  projects: [
-    {
-      coin_or_project: "Altura",
-      content:
-        "Altura (ALU), SIDUS (SIDUS), Games for a Living (GFAL)\nAltura (ALU), SIDUS (SIDUS), Games for a Living (GFAL)",
-      usage: 0.0052,
-    },
-    {
-      coin_or_project: "SuperVerse",
-      content:
-        "FLOKI (FLOKI), Immutable (IMX), Beam (BEAM), Gala (GALA), ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS), Notcoin (NOT), The Sandbox (SAND)\nSuperVerse (SUPER)\nSuperVerse (SUPER), SuperFarm\nDestra Network (DSYNC)\nSuperVerse (SUPER)\nFlux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL), IQ (IQ)\nFlux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL), IQ (IQ)\nSuperVerse (SUPER)",
-      usage: 0.0211,
-    },
-    {
-      coin_or_project: "Peanut_the_Squirrel",
-      content:
-        "Peanut the Squirrel (PNUT)\nNeuralAI (NEURAL)\nPeanut the Squirrel (PNUT)",
-      usage: 0.0075,
-    },
-    {
-      coin_or_project: "Theta_Network",
-      content:
-        "Dai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS), Artificial Superintelligence Alliance (FET)\nDai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS), Artificial Superintelligence Alliance (FET)",
-      usage: 0.006,
-    },
-    {
-      coin_or_project: "Destra_Network",
-      content:
-        "Destra Network (DSYNC)\nDestra Network (DSYNC), Flux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL)\nSuperVerse (SUPER), SuperFarm\nDestra Network (DSYNC), Flux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL)",
-      usage: 0.011,
-    },
-    {
-      coin_or_project: "FTX",
-      content:
-        "Bitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA)\nSolana (SOL)",
-      usage: 0.0053,
-    },
-    {
-      coin_or_project: "Toncoin",
-      content:
-        "Zentry (ZENT), BORA (BORA), Adventure Gold (AGLD), Catizen (CATI), Portal (PORTAL), Oasys (OAS), Vulcan Forged (PYR), Treasure (MAGIC), Wilder World (WILD), CUDOS (CUDOS), Nakamoto Games (NAKA), Mines of Dalarnia (DAR)\nZentry (ZENT), BORA (BORA), Adventure Gold (AGLD), Catizen (CATI), Portal (PORTAL), Oasys (OAS), Vulcan Forged (PYR), Treasure (MAGIC), Wilder World (WILD), CUDOS (CUDOS), Nakamoto Games (NAKA), Mines of Dalarnia (DAR)\nHeroes of Mavia (MAVIA), SIDUS (SIDUS), League of Kingdoms Arena (LOKA), Star Atlas DAO (POLIS)\nHeroes of Mavia (MAVIA), SIDUS (SIDUS), League of Kingdoms Arena (LOKA), Star Atlas DAO (POLIS)",
-      usage: 0.0114,
-    },
-    {
-      coin_or_project: "Solana",
-      content:
-        "Bitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA)\nBitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL)\nPNUT, SXCH, SAI, ELON, Bitcoin (BTC), HFC/SOL, GONESLER/SOL, TITAN/SOL, PEPNUT/SOL, FIRED/SOL, Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE)\nBitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA)\nBitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA)\nPNUT, SXCH, SAI, ELON, Bitcoin (BTC), HFC (SOL), CONESLER (SOL), TITAN (SOL), PEPNUT (SOL), FIRED (SOL), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE)\nBitcoin (BTC)\nBitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON)\nBitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON)\nSolana (SOL)",
-      usage: 0.0277,
-    },
-    {
-      coin_or_project: "Render",
-      content:
-        "Render (RENDER), Dai (DAI), UNI, CRO, XLM, ICP, TAO, WIF, ETC\nDai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS), Artificial Superintelligence Alliance (FET)",
-      usage: 0.0056,
-    },
-    {
-      coin_or_project: "Myria",
-      content:
-        "Myria (MYRIA), Games for a Living (GFAL), XPLA (XPLA)\nMyria (MYRIA), XPLA (XPLA), Games for a Living (GFAL)",
-      usage: 0.0052,
-    },
-    {
-      coin_or_project: "Axie_Infinity",
-      content: "Solana (SOL)\nPAAL",
-      usage: 0.0049,
-    },
-    {
-      coin_or_project: "Cardano",
-      content:
-        "Cardano (ADA)\nCardano (ADA)\nCardano (ADA)\nCardano (ADA)\nCardano (ADA)\nTether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON), Avalanche (AVAX)\nTether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON), Avalanche (AVAX)\nCardano (ADA)",
-      usage: 0.0208,
-    },
-    {
-      coin_or_project: "NEAR_Protocol",
-      content:
-        "Pepe (PEPE), Bitcoin Cash (BCH), Chainlink (LINK), Polkadot (DOT), UNUS SED LEO (LEO), NEAR Protocol (NEAR), Aptos (APT), Litecoin (LTC), Dai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM)\nTether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), USDC (USDC), Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON), Avalanche (AVAX)\nNeuralAI (NEURAL)",
-      usage: 0.0084,
-    },
-    {
-      coin_or_project: "Artificial_Superintelligence_Alliance",
-      content:
-        "Artificial Superintelligence Alliance (FET), DAI, UNI, CRO, XLM, ICP, TAO, WIF, RENDER, ETC\nArtificial Superintelligence Alliance (FET), DAI, UNI, CRO, XLM, ICP, TAO, WIF, RENDER, ETC",
-      usage: 0.0054,
-    },
-    {
-      coin_or_project: "Xterio",
-      content:
-        "XBorg (XBG), Games for a Living (GFAL), Altura (ALU)\nXBorg (XBG), Games for a Living (GFAL), Altura (ALU)",
-      usage: 0.0052,
-    },
-    {
-      coin_or_project: "Beam",
-      content:
-        "Ethereum (ETH), $WIF, $PNUT, $MO, $SOL, $ETH, Bitcoin\nImmutable (IMX), FLoki (FLOKI), BEAM, GALA, ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS), NOT, SAND, MANA\nEthereum (ETH), SWIF, $NUT, $MO, $SOL, $ETH, Bitcoin\nDai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS), Artificial Superintelligence Alliance (FET)\nDai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS), Artificial Superintelligence Alliance (FET)\nImmutable (IMX), Beam (BEAM), ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS)\nBitcoin (BTC), Ethereum (ETH)",
-      usage: 0.0192,
-    },
-    {
-      coin_or_project: "Illuvium",
-      content:
-        "KARRAT (KARRAT), BTC (BTC), USD (USD)\nKARRAT (KARRAT), BTC (BTC)",
-      usage: 0.005,
-    },
-    {
-      coin_or_project: "KARRAT",
-      content:
-        "KARRAT (KARRAT)\nDestra Network (DSYNC), Flux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL)\nCoinMarketCap\nPAAL AI (PAAL)\nKARRAT (KARRAT), SUPER (SUPER)\nCoinMarketCap\nDestra Network (DSYNC), Flux (FLUX), Qubic (QUBIC), Zignaly (ZIG), Kadena (KDA), Delysium (AGI), Nosana (NOS), Chromia (CHR), Spectral (SPEC), Arcblock (ABT), PAAL AI (PAAL)\nPAAL AI (PAAL)",
-      usage: 0.0208,
-    },
-    {
-      coin_or_project: "Ronin",
-      content:
-        "Ronin (RON), Decentraland (MANA), SuperVerse (SUPER)\nBitcoin\nBitcoin (BTC)\nBitcoin (BTC)\nRonin (RON), Decentraland (MANA), SuperVerse (SUPER)\nFLOKI (FLOKI), Immutable (IMX), Beam (BEAM), Gala (GALA), ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS), Notcoin (NOT), The Sandbox (SAND), Decentraland (MANA), SuperVerse (SUPER)\nBitcoin\nRonin (RON), Decentraland (MANA), SuperVerse (SUPER)\nCEX, DEX",
-      usage: 0.0225,
-    },
-    {
-      coin_or_project: "Chainlink",
-      content:
-        "Chainlink (LINK), Polkadot (DOT), USDC, ADA, TRX, SHIB, TON, AVAX, SUI, PEPE\nChainlink (LINK), Polkadot (DOT), USDC, ADA, TRX, SHIB, TON, AVAX, SUI, PEPE\nChainlink (LINK), Polkadot (DOT), USDC (USDC), ADA (ADA), TRX (TRX), SHIB (SHIB), TON (TON), AVAX (AVAX), SUI (SUI), PEPE (PEPE)",
-      usage: 0.0083,
-    },
-    {
-      coin_or_project: "Echelon_Prime",
-      content:
-        "Decentraland (MANA), Echelon Prime (PRIME), Pixels (PIXEL), SKALE (SKL)\nSuperVerse (SUPER), PEPE (PEPE)\nEchelon Prime (PRIME), Golem (GLM), Delysium (AGI)\nEchelon Prime (PRIME), Golem (GLM), Delysium (AGI)\nDecentraland (MANA), Echelon Prime (PRIME), Pixels (PIXEL), SKALE (SKL)\nDecentraland (MANA), Echelon Prime (PRIME), Pixels (PIXEL), SKALE (SKL)",
-      usage: 0.0155,
-    },
-    {
-      coin_or_project: "Shib",
-      content:
-        "Cardano (ADA), TRON (TRX), Shiba Inu (SHIB), Toncoin (TON), Avalanche (AVAX), Sui (SUI), Pepe (PEPE), Chainlink (LINK), Bitcoin Cash (BCH), Polkadot (DOT), UNUS SED LEO (LEO), NEAR Protocol (NEAR)\nMANTRA (OM), Ondo (ONDO), Quant (QNT), Pendle (PENDLE), PAX Gold (PAXG), Lumishare, Sologenic, StrikeX\nMANTRA (OM), Ondo (ONDO), Quant (QNT), Pendle (PENDLE), PAX Gold (PAXG), Lumishare, Sologenic (SOLO), StrikeX\nVeChain (VET), Celestia (TIA), Cosmos (ATOM), Fantom (FTM), Optimism (OP), Bitget Token (BGB), Sei (SEI), THORChain (RUNE), Peanut the Squirrel (PNUT), The Graph (GRT), Popcat (SOL) (POPCAT), Brett (Based) (BRETT)",
-      usage: 0.0115,
-    },
-    {
-      coin_or_project: "PaLM_AI",
-      content:
-        "PaLM AI (PALM), Zero1 Labs (DEAI)\nPAAL AI (PAAL), Autonolas (OLAS), Zignaly (ZIG)\nPAAL AI (PAAL)\nPAAL\nPAAL AI (PAAL), ZigZag (ZIG), Autonolas (OLAS)\nPaLM AI (PALM), Zero1 Labs (DEAI)\nSolana (SOL)\nPAAL AI (PAAL)",
-      usage: 0.0201,
-    },
-    {
-      coin_or_project: "Seedify.fund",
-      content:
-        "Seedify.fund (SFUND), Nakamoto Games (NAKA), Mines of Dalarnia (DAR), CUDOS (CUDOS), OAS, PYR, MAGIC\nSeedify.fund (SFUND), Nakamoto Games (NAKA), Mines of Dalarnia (DAR)",
-      usage: 0.0053,
-    },
-    {
-      coin_or_project: "Bitcoin",
-      content:
-        "Solana (SOL), BNB (BNB), Dogecoin (DOGE)\nBitcoin (BTC), (BTC)\nETH, USDT, SOL, DOG\nPNUT, SXCH, SAI, ELON, Bitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP), HFC, GONESLER, TITAN, PEPNUT, FIRED\nBitcoin (BTC)\nBTC\nBTC\nPNUT, SXCH, SAI, ELON, BTC (BTC), HFC, GONESLER, TITAN, PEPNUT, FIRED, Bitcoin (BTC), Ethereum (ETH), Tether (USDT), Solana (SOL), BNB (BNB), Dogecoin (DOGE), XRP (XRP)",
-      usage: 0.0206,
-    },
-    {
-      coin_or_project: "Immutable",
-      content:
-        "Immutable (IMX), ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS), FLOKI, BEAM, GALA, NOT, SAND, MANA\nImmutable (IMX), Beam (BEAM), ApeCoin (APE), MultiversX (EGLD), Axie Infinity (AXS)",
-      usage: 0.0054,
-    },
-    {
-      coin_or_project: "altcoins",
-      content:
-        "Bitcoin (BTC)\nXRP, USDC, ADA, SHIB\nXRP, USDC, ADA, SHIB\nBTC\nBitcoin (BTC)\nBitcoin (BTC)\nBitcoin (BTC)\nBTC, ALTS",
-      usage: 0.0194,
-    },
-    {
-      coin_or_project: "NFT",
-      content:
-        "Altura (ALU), SIDUS (SIDUS), Games for a Living (GFAL)\nMANTRA (OM), Ondo (ONDO), Quant (QNT), Pendle (PENDLE), PAX Gold (PAXG), Lumishare, Sologenic, StrikeX\nAPE (APE), NOT (NOT), AXS (AXS), EGLD (EGLD), GALA (GALA), IMX (IMX), FLOKI (FLOKI), BEAM (BEAM), Immutable (IMX), Gala (GALA), Beam (BEAM), Floki (FLOKI)\nGames for a Living (GFAL), Altura (ALU), SIDUS (SIDUS)\nAPE, NOT, AXS, EGLD, GALA, IMX, FLOKI, BEAM, Immutable (IMX), Beam (BEAM), Gala (GALA), FLOKI (FLOKI)\nMANTRA (OM), Ondo (ONDO), Quant (QNT), Pendle (PENDLE), PAX Gold (PAXG), Lumishare, Sologenic, StrikeX\nAltura (ALU), SIDUS (SIDUS), Games for a Living (GFAL)",
-      usage: 0.019,
-    },
-    {
-      coin_or_project: "Bittensor",
-      content:
-        "NEAR Protocol (NEAR), Aptos (APT), Litecoin (LTC), Dai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC)\nLitecoin (LTC), Dai (DAI), Uniswap (UNI), Cronos (CRO), Stellar (XLM), Internet Computer (ICP), Bittensor (TAO), dogwifhat (WIF), Render (RENDER), Ethereum Classic (ETC), Kaspa (KAS)",
-      usage: 0.0059,
-    },
-    {
-      coin_or_project: "Kusama",
-      content:
-        "Heroes of Mavia (MAVIA), SIDUS (SIDUS), League of Kingdoms Arena (LOKA), Star Atlas DAO (POLIS)\nHeroes of Mavia (MAVIA), SIDUS (SIDUS), League of Kingdoms Arena (LOKA), Star Atlas DAO (POLIS)",
-      usage: 0.0054,
-    },
-  ],
-  link: "https://www.youtube.com/watch?v=JgjGJTrL3hY",
-};
+/* import { loadData } from "../LoadCoinsData.js";
+import { transcript, commonEnglishWords } from "./test2.js";
+let arrayCoinSymbolSet = new Set([]);
+let transcriptSet = new Set([]);
+let stopwordsSet = new Set([]);
 
-const transcriptContent = {
-  projects: [
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["DeFi", "Layer 1"],
-      found_in: "screenshot",
-      marketcap: "large",
-      timestamps: [
-        "00:00:11",
-        "00:00:12",
-        "00:07:20",
-        "00:07:21",
-        "00:09:59",
-        "00:10:00",
-        "00:09:19",
-        "00:09:20",
-        "00:10:47",
-        "00:10:48",
-      ],
-      total_count: 3,
-      possible_match: "none",
-      coin_or_project: "Bitcoin",
-    },
-    {
-      valid: false,
-      action: "UPDATE",
-      rpoints: 8,
-      category: ["Altcoins"],
-      found_in: "screenshot",
-      marketcap: "medium",
-      timestamps: [
-        "00:00:31",
-        "00:00:32",
-        "00:07:30",
-        "00:07:31",
-        "00:06:14",
-        "00:06:15",
-        "00:08:20",
-        "00:08:21",
-        "00:22:14",
-        "00:22:15",
-      ],
-      total_count: 3,
-      possible_match: "ALTS",
-      coin_or_project: "altcoins",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 7,
-      category: ["Meme coins"],
-      found_in: "transcript",
-      marketcap: "micro",
-      timestamps: [
-        "00:00:52",
-        "00:00:53",
-        "00:01:11",
-        "00:01:12",
-        "00:05:07",
-        "00:05:08",
-      ],
-      total_count: 3,
-      possible_match: "Peanut the Squirrel (pnut)",
-      coin_or_project: "Peanut the Squirrel",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 6,
-      category: ["Layer 1"],
-      found_in: "screenshot",
-      marketcap: "large",
-      timestamps: [
-        "00:31:37",
-        "00:31:38",
-        "00:31:30",
-        "00:31:31",
-        "00:31:20",
-        "00:31:21",
-        "00:31:40",
-        "00:31:41",
-        "00:02:38",
-        "00:02:39",
-      ],
-      total_count: 3,
-      possible_match: "none",
-      coin_or_project: "Cardano",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["Layer 1"],
-      found_in: "screenshot",
-      marketcap: "large",
-      timestamps: [
-        "00:29:30",
-        "00:29:31",
-        "00:12:49",
-        "00:12:50",
-        "00:20:27",
-        "00:20:28",
-        "00:20:32",
-        "00:20:33",
-        "00:28:14",
-        "00:28:15",
-      ],
-      total_count: 3,
-      possible_match: "none",
-      coin_or_project: "Solana",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 8,
-      category: ["Layer 1"],
-      found_in: "none",
-      marketcap: "large",
-      timestamps: ["00:00:52", "00:00:53", "00:11:58", "00:11:59"],
-      total_count: 2,
-      possible_match: "none",
-      coin_or_project: "NEAR Protocol",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["AI"],
-      found_in: "transcript",
-      marketcap: "small",
-      timestamps: [
-        "00:01:47",
-        "00:01:48",
-        "00:36:45",
-        "00:36:46",
-        "00:38:45",
-        "00:38:46",
-      ],
-      total_count: 3,
-      possible_match: "Destra Network (dsync)",
-      coin_or_project: "Destra Network",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 7,
-      category: ["Gaming"],
-      found_in: "none",
-      marketcap: "medium",
-      timestamps: ["00:01:53", "00:01:54"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Axie Infinity",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 8,
-      category: ["AI"],
-      found_in: "none",
-      marketcap: "small",
-      timestamps: [
-        "00:40:30",
-        "00:40:31",
-        "00:01:53",
-        "00:01:54",
-        "00:37:32",
-        "00:37:33",
-        "00:39:35",
-        "00:39:36",
-      ],
-      total_count: 3,
-      possible_match: "none",
-      coin_or_project: "PaLM AI",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "small",
-      timestamps: [
-        "00:35:32",
-        "00:35:33",
-        "00:01:47",
-        "00:01:48",
-        "00:36:47",
-        "00:36:48",
-        "00:44:00",
-        "00:44:01",
-      ],
-      total_count: 3,
-      possible_match: "none",
-      coin_or_project: "SuperVerse",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["AI", "Gaming"],
-      found_in: "transcript",
-      marketcap: "small",
-      timestamps: [
-        "00:39:29",
-        "00:39:30",
-        "00:41:12",
-        "00:41:13",
-        "00:41:14",
-        "00:41:15",
-      ],
-      total_count: 2,
-      possible_match: "Echelon Prime (prime)",
-      coin_or_project: "Echelon Prime",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["AI"],
-      found_in: "screenshot",
-      marketcap: "medium",
-      timestamps: ["00:32:55", "00:32:56"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Bittensor",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["AI"],
-      found_in: "transcript",
-      marketcap: "medium",
-      timestamps: ["00:32:59", "00:33:00"],
-      total_count: 1,
-      possible_match: "Artificial Superintelligence Alliance (fet)",
-      coin_or_project: "Artificial Superintelligence Alliance",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["AI"],
-      found_in: "screenshot",
-      marketcap: "medium",
-      timestamps: ["00:33:04", "00:33:05"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Render",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["AI"],
-      found_in: "transcript",
-      marketcap: "medium",
-      timestamps: ["00:33:14", "00:33:15"],
-      total_count: 1,
-      possible_match: "Theta Network (theta)",
-      coin_or_project: "Theta Network",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "medium",
-      timestamps: ["00:35:19", "00:35:20"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Immutable",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "small",
-      timestamps: [
-        "00:35:19",
-        "00:35:20",
-        "00:33:19",
-        "00:33:20",
-        "00:10:33",
-        "00:10:34",
-        "00:02:07",
-        "00:02:08",
-        "00:16:52",
-        "00:16:53",
-      ],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Beam",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "small",
-      timestamps: [
-        "00:35:38",
-        "00:35:39",
-        "00:04:17",
-        "00:04:18",
-        "00:04:31",
-        "00:04:32",
-        "00:06:46",
-        "00:06:47",
-        "00:35:40",
-        "00:35:41",
-      ],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Ronin",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "small",
-      timestamps: ["00:41:19", "00:41:20"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Seedify.fund",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 7,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "micro",
-      timestamps: ["00:41:30", "00:41:31"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Myria",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 8,
-      category: ["Layer 1"],
-      found_in: "none",
-      marketcap: "medium",
-      timestamps: ["00:41:36", "00:41:37"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Kusama",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 8,
-      category: ["Layer 1"],
-      found_in: "none",
-      marketcap: "large",
-      timestamps: [
-        "00:00:49",
-        "00:00:50",
-        "00:41:27",
-        "00:41:28",
-        "00:41:44",
-        "00:41:45",
-      ],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Toncoin",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 7,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "micro",
-      timestamps: ["00:41:54", "00:41:55"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Altura",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 7,
-      category: ["Gaming"],
-      found_in: "none",
-      marketcap: "micro",
-      timestamps: ["00:42:01", "00:42:02"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Xterio",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 8,
-      category: ["NFT"],
-      found_in: "none",
-      marketcap: "n/a",
-      timestamps: [
-        "00:33:59",
-        "00:34:00",
-        "00:41:56",
-        "00:41:57",
-        "00:27:03",
-        "00:27:04",
-        "00:41:58",
-      ],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "NFT",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 8,
-      category: ["Gaming"],
-      found_in: "screenshot",
-      marketcap: "small",
-      timestamps: [
-        "00:38:48",
-        "00:38:49",
-        "00:41:08",
-        "00:41:09",
-        "00:38:24",
-        "00:38:25",
-        "00:42:36",
-        "00:42:37",
-      ],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "KARRAT",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 7,
-      category: ["Gaming"],
-      found_in: "none",
-      marketcap: "small",
-      timestamps: ["00:42:44", "00:42:45"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Illuvium",
-    },
-    {
-      valid: true,
-      action: "NO ACTION",
-      rpoints: 9,
-      category: ["DeFi"],
-      found_in: "screenshot",
-      marketcap: "large",
-      timestamps: ["00:32:24", "00:32:25", "00:32:26"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "Chainlink",
-    },
-    {
-      valid: false,
-      action: "DELETE",
-      rpoints: 4,
-      category: ["Exchange"],
-      found_in: "none",
-      marketcap: "n/a",
-      timestamps: ["00:12:49", "00:12:50"],
-      total_count: 1,
-      possible_match: "none",
-      coin_or_project: "FTX",
-    },
-    {
-      valid: false,
-      action: "UPDATE",
-      rpoints: 7,
-      category: ["Meme coins"],
-      found_in: "screenshot",
-      marketcap: "large",
-      timestamps: ["00:29:50", "00:29:51", "00:27:12", "00:27:13"],
-      total_count: 1,
-      possible_match: "Shiba Inu (SHIB)",
-      coin_or_project: "Shib",
-    },
-  ],
-  total_count: 50,
-  total_rpoints: 250,
-};
+//Coin data
+let coinData = await loadData();
+coinData = coinData[0].map((coin) => `${coin.i}_${coin.n}`);
+coinData.forEach((coin_key) => {
+  const coinSymbol = coin_key.split("_");
+  for (const token of coinSymbol) {
+    arrayCoinSymbolSet.add(token.toLowerCase());
+  }
+});
 
-const final = transcriptContent.projects
-  .map(
-    (project) => `
-      Coin: ${project.coin_or_project},
-      Screenshot: ${project.coin_or_project},
-      Content: ${screenshotContent.projects
-        .filter((proj) => proj.coin_or_project == project.coin_or_project)
-        .map((proj) => proj.content)}
-`
-  )
-  .join("\n \n");
-console.log(final);
+//Transcript:
+let transcriptArray = transcript.split(" ");
+transcriptArray.forEach((text) => {
+  const coinSymbol = text.split("_");
+  for (const token of coinSymbol) {
+    transcriptSet.add(token.toLowerCase());
+  }
+});
+
+//Filter:
+commonEnglishWords.forEach((text) => {
+  stopwordsSet.add(text.toLowerCase());
+});
+
+//SET OPERATIONS
+let possibleMatchSet = transcriptSet.intersection(arrayCoinSymbolSet);
+let filteredMatchSet = possibleMatchSet.difference(stopwordsSet);
+console.log("Logger: " + JSON.stringify([...filteredMatchSet]));
+ */
+
+/* import { loadData } from "../LoadCoinsData.js";
+import { transcript, commonEnglishWords } from "./test2.js";
+
+const stopwordsSet = new Set(
+  commonEnglishWords.map((word) => word.toLowerCase())
+);
+
+async function processCryptoMatching() {
+  const coinData = (await loadData())[0];
+  const coinPhrasesSet = new Set();
+
+  for (const coin of coinData) {
+    const cleanSymbol = coin.i.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (cleanSymbol) coinPhrasesSet.add(cleanSymbol);
+    const cleanName = coin.n.toLowerCase().replace(/[^a-z0-9\s]/g, "");
+    if (cleanName) coinPhrasesSet.add(cleanName);
+  }
+
+  const transcriptClean = transcript.toLowerCase().replace(/[^a-z0-9\s]/g, "");
+  const tokens = transcriptClean
+    .split(/\s+/)
+    .filter((token) => token.length > 0);
+  const matches = new Set();
+  const maxN = 5;
+
+  for (let n = 1; n <= maxN; n++) {
+    for (let i = 0; i <= tokens.length - n; i++) {
+      const ngram = tokens.slice(i, i + n);
+      const spaced = ngram.join(" ");
+      const spaceless = ngram.join("");
+
+      if (n === 1 && stopwordsSet.has(spaced)) continue;
+
+      if (coinPhrasesSet.has(spaced) || coinPhrasesSet.has(spaceless)) {
+        matches.add(spaced);
+      }
+    }
+  }
+
+  console.log("Matched Phrases: ", JSON.stringify([...matches]));
+} */
+
+//processCryptoMatching();
+import { correctTranscriptErrors, processCryptoMatching } from "../Llm.js";
+import { transcript } from "./test2.js";
+correctTranscriptErrors({ transcript: transcript });

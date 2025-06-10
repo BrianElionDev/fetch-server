@@ -1,4 +1,4 @@
-import { fetchTranscript } from "./FetchTranscript.js";
+import { fetchTranscript } from "./scrape/FetchTranscript.js";
 import { readFile } from "fs/promises";
 import { correctTranscriptErrors, makeLlmPrompt } from "./Llm.js";
 let jsonData;

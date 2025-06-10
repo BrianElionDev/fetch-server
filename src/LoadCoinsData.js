@@ -20,7 +20,7 @@ export async function loadData() {
 }
 
 // Load coin mapping cache
-const loadCoinMappingCache = async () => {
+export const loadCoinMappingCache = async () => {
   const cachePath = path.join(process.cwd(), "src", "coin-mapping-cache.json");
   const cacheData = await fs.readFile(cachePath, "utf-8");
   return JSON.parse(cacheData);

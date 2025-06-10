@@ -89,7 +89,7 @@ At the bottom of each transcript there is a section for "Coins", this is the lis
 #INSTRUCTIONS
 1. The transcript ${transcript}
 3. At the end of the transcript there is a seCtion for "Coins", use this list of coins to do the analysis, also each of the coins in this section must be in the final output.
-3. At the end of the transcript the section coins has coin names and timestamps extract the timestamps and use them in the final output. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output. Timestamp should be in the format 00:00:00.
+3. At the end of the transcript the section coins has coin id, coin names and timestamps extract the timestamps and use them in the final output. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output. Timestamp should be in the format 00:00:00.
 4. Count the mentions of each coin.(Exclude the counting the coins in "Coins" section at the bottom of each transcript, as this will lead to double counting).
 5. Analyze the sentiment (positive, neutral, or negative) and assign Rpoints (1-10 scale, where 10 is best).
 7. Classify the coin by market capitalization (large, medium, small, micro).
@@ -101,7 +101,7 @@ Note:coin_or_project is the coin full name
 
 #OUTPUT FORMAT
 
-{"projects":[{"coin_or_project":"Chainlink","Marketcap":"large","Rpoints":10,"Total count":1,"category":["Gaming","Meme coins","Layer 2"],"Timestamps":[]},{"coin_or_project":"Bitcoin","Marketcap":"large","Rpoints":9,"Total count":3,"category":["DeFi","Layer 1"],"Timestamps":[]}],"total_count":16,"total_Rpoints":57}
+{"projects":[{"coin_or_project":"Bitcoin","Marketcap":"large","Rpoints":10,"Total count":1,"category":["Gaming","Meme coins","Layer 2"],"Timestamps":[]},{"coin_or_project":"Avalanche","Marketcap":"large","Rpoints":9,"Total count":3,"category":["DeFi","Layer 1"],"Timestamps":[]}],"total_count":16,"total_Rpoints":57}
 **Notes**
 
 * Only include the coins mentioned at the bottom of each transcript.
@@ -202,11 +202,154 @@ async function formatSummaryResponse(response) {
   cleanedPrompt = cleanedPrompt.replace(/[•●]\s/g, "- ");
   return cleanedPrompt;
 }
+
+//Helper functions
+export async function processCryptoMatching(transcript) {
+  const coinData = await loadData();
+  let commonEnglishWords = [
+    "the",
+    "of",
+    "and",
+    "a",
+    "to",
+    "in",
+    "is",
+    "you",
+    "that",
+    "it",
+    "he",
+    "was",
+    "for",
+    "on",
+    "are",
+    "as",
+    "with",
+    "his",
+    "they",
+    "I",
+    "at",
+    "be",
+    "this",
+    "have",
+    "from",
+    "or",
+    "one",
+    "had",
+    "by",
+    "word",
+    "but",
+    "not",
+    "what",
+    "all",
+    "were",
+    "we",
+    "when",
+    "your",
+    "can",
+    "said",
+    "there",
+    "use",
+    "an",
+    "each",
+    "which",
+    "she",
+    "do",
+    "how",
+    "their",
+    "if",
+    "will",
+    "up",
+    "other",
+    "about",
+    "out",
+    "many",
+    "then",
+    "them",
+    "these",
+    "so",
+    "some",
+    "her",
+    "would",
+    "make",
+    "like",
+    "him",
+    "into",
+    "time",
+    "has",
+    "look",
+    "two",
+    "more",
+    "write",
+    "go",
+    "see",
+    "number",
+    "no",
+    "way",
+    "could",
+    "people",
+    "my",
+    "than",
+    "first",
+    "water",
+    "been",
+    "call",
+    "who",
+    "oil",
+    "its",
+    "now",
+    "find",
+    "long",
+    "down",
+    "day",
+    "did",
+    "get",
+    "come",
+    "made",
+    "may",
+    "part",
+  ];
+  const coinPhrasesSet = new Set();
+  const stopwordsSet = new Set(
+    commonEnglishWords.map((word) => word.toLowerCase())
+  );
+  for (const coin of coinData) {
+    const cleanSymbol = coin.i.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (cleanSymbol) coinPhrasesSet.add(cleanSymbol);
+    const cleanName = coin.n.toLowerCase().replace(/[^a-z0-9\s]/g, "");
+    if (cleanName) coinPhrasesSet.add(cleanName);
+  }
+
+  const transcriptClean = transcript.toLowerCase().replace(/[^a-z0-9\s]/g, "");
+  const tokens = transcriptClean
+    .split(/\s+/)
+    .filter((token) => token.length > 0);
+  const matches = new Set();
+  const maxN = 5;
+
+  for (let n = 1; n <= maxN; n++) {
+    for (let i = 0; i <= tokens.length - n; i++) {
+      const ngram = tokens.slice(i, i + n);
+      const spaced = ngram.join(" ");
+      const spaceless = ngram.join("");
+
+      if (n === 1 && stopwordsSet.has(spaced)) continue;
+
+      if (coinPhrasesSet.has(spaced) || coinPhrasesSet.has(spaceless)) {
+        matches.add(spaced);
+      }
+    }
+  }
+
+  console.log("Matched Phrases: ", JSON.stringify([...matches]));
+  return [...matches];
+}
+
 export const correctTranscriptErrors = async ({ transcript }) => {
   if (!transcript) return;
   try {
     //Important step - GET entiere list of coins from CryptoNer
-    const entities = await getEntitiesNer({ transcript: transcript });
+    //const entities = await getEntitiesNer({ transcript: transcript });
+    const entities = await processCryptoMatching(transcript);
     //
     const llmProvider = LLMFactory.createProvider("grok");
     const crypto_coins_local = await loadData();
@@ -214,66 +357,72 @@ export const correctTranscriptErrors = async ({ transcript }) => {
       {
         role: "system",
         content: `
-    # ROLE: Crypto Transcript Editor
-    You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related errors while preserving all other content exactly.
+# ROLE: Crypto Transcript Editor
+You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related errors while preserving all other content exactly.
 
-    ## CORE RULES (STRICTLY FOLLOW)
-    1. PRESERVE FORMAT: Maintain original spacing, timestamps, and speaker labels
-    2. NO MEANING CHANGES: Never alter non-crypto terms/phrases
-    3. MINIMAL CHANGES: Only edit crypto-related errors
-    4. OUTPUT FORMAT: 
-       - [Corrected Transcript]
-    ## CRYPTO IDENTIFICATION PROTOCOL
-    1. Here is a preliminary analysis of coins mentioned ${JSON.stringify(
-      entities
-    )}
-    2. Analyze the context of the crypto coins in the list, to check if they were mentioned in the transcript
-    3. IMPORTANT, the liSt of coins is not an exhasustive list. Try to find all the coins mentioned in the transcript, and add them to the list of coins at the end of the transcript.
-    4. DO NOT IDENTIDY BROAD CATEGORIES (e.g., "crypto","meme coin", "RWA coins",  "blockchain", "NFTs") as coins.
-    5. After identifying crypto coins, indicate the precise timestamps it was mentioned. NOTE: Provide a maximum of 3 timestamps for each coin. If timestamp has format 00:00:00.000, it contains micro seconds. Exclude microseconds in you final output (No rounding off). Timestamp should be in the format 00:00:00.
-    ## CRYPTO CORRECTION PROTOCOL
-    ### Identify Candidates
-    - Find ALL crypto mentions using:
-      1. Your knowledge of crypto coins 
-      2. Possible crypto coins from the transcript 
-      2. Common symbols (BTC, ETH)
-      3. Common misspellings (e.g., "bit coin" → "Bitcoin")
-      4. Common abbreviations (e.g., "ETH" → "Ethereum")
-      5. Common phrases (e.g., "chain link" → "Chainlink")
-      5. Common symbols (e.g., "eth" → "ethereum")
-      6. Common slang (e.g., "doge" → "Dogecoin")
-      7. Split words ("chain link" → "Chainlink", " "doge coin" → "Dogecoin", "bit coin" → "Bitcoin") 
-      8. Do not have duplicates in your list of coins ie ethereum and ETH, BTC and Bitcoin...  
-      9. Do not have symbols instead use the coin name ie no MATIC use polygon, ETH use Ethereum...
-      9. Cross-reference with provided list: ${JSON.stringify(
-        crypto_coins_local
-      )}
-
-    
-    ## OUTPUT TEMPLATE (USE EXACTLY)
-    [BEGIN CORRECTED TRANSCRIPT]
-    [Original transcript with ONLY crypto corrections]
-    [COINS: 
-    ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER 
-     1. COINS 1 [Timestamps this coin was mentioned]
-     2. COINS 2 [Timestamps this coin was mentioned]
+## CORE RULES (STRICTLY FOLLOW)
+1. PRESERVE FORMAT: Maintain original spacing, timestamps, and speaker labels
+2. NO MEANING CHANGES: Never alter non-crypto terms/phrases
+3. MINIMAL CHANGES: Only edit crypto-related errors
+4. OUTPUT FORMAT: 
+   - [Corrected Transcript]
+## CRYPTO IDENTIFICATION PROTOCOL
+1. Here is a possible crypto tokens match list${entities
+          .map((entity, index) => `[${index}: ${entity}]`)
+          .join("\n")}
+2. Analyze the context of the crypto coins in the list to check if they were mentioned in the transcript
+3. IMPORTANT, the list of coins is not an exhaustive list. Try to find all the coins mentioned in the transcript and add them to the list of coins at the end of the transcript.
+4. DO NOT IDENTIFY BROAD CATEGORIES (e.g., "crypto", "meme coin", "RWA coins", "blockchain", "NFTs") as coins.
+5. After identifying crypto coins, indicate the precise timestamps they were mentioned. NOTE: Provide a maximum of 3 timestamps for each coin. If a timestamp has the format 00:00:00.000, it contains microseconds. Exclude microseconds in your final output (No rounding off). Timestamp should be in the format 00:00:00.
+## CRYPTO CORRECTION PROTOCOL
+### Identify Candidates
+- Find ALL crypto mentions using:
+  1. Your knowledge of crypto coins 
+  2. Possible crypto coins from the transcript 
+  3. Common symbols (BTC, ETH)
+  4. Common misspellings (e.g., "bit coin" → "Bitcoin")
+  5. Common abbreviations (e.g., "ETH" → "Ethereum")
+  6. Common phrases (e.g., "chain link" → "Chainlink")
+  7. Common symbols (e.g., "eth" → "Ethereum")
+  8. Common slang (e.g., "doge" → "Dogecoin")
+  9. Split words ("chain link" → "Chainlink", "doge coin" → "Dogecoin", "bit coin" → "Bitcoin") 
+  10. Do not have duplicates in your list of coins i.e., Ethereum and ETH, BTC and Bitcoin...  
+  11. Do not have symbols; instead, use the coin name i.e., no MATIC use Polygon, ETH use Ethereum...
+  12. Cross-reference with provided list: [${crypto_coins_local
+    .map(
+      (item) =>
+        `  "ID": "${item.i}", "Name": "${item.n}", "Symbol": "${item.s}"`
+    )
+    .join(",\n")}
     ]
-    [END CORRECTED TRANSCRIPT]
+## OUTPUT TEMPLATE (USE EXACTLY)
 
-    # TRANSCRIPT TO CORRECT
-     ${transcript}
+[BEGIN CORRECTED TRANSCRIPT]
+[Original transcript with ONLY crypto corrections]
+[COINS: 
+ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER (It has to be valid, use the possible match list when checking final coins.)
+ 1. ID: coin identifier from the local list. if not in the list then have the name as the identifier) - COIN  [Timestamps this coin was mentioned]
+ 2. ID: coin identifier from the local list. if not in the list then have the name as the identifier) - COIN2  [Timestamps this coin was mentioned]
+]
+[END CORRECTED TRANSCRIPT]
+
+# TRANSCRIPT TO CORRECT
+ ${transcript}
 `,
       },
       {
         role: "user",
         content: `
-                # TRANSCRIPT TO CORRECT
-                  ${transcript}`.trim(),
+            # TRANSCRIPT TO CORRECT
+              ${transcript}`.trim(),
       },
     ];
+
     const response = await llmProvider.makeRequest(analysisMessages);
     const processedResponse = await llmProvider.processResponse(response);
-
+    console.log(
+      "Response from corrected transcript: " + processedResponse.content
+    );
     return {
       transcript: processedResponse.content,
       usage: processedResponse.usage,
@@ -341,13 +490,16 @@ You are checking coins against screenshot content and a local list of crypto tok
 2. PRIMARY VALIDATION LOGIC:
    - If the coin/token name is found in the Content → VALID (return true)
    - If the coin/token name is NOT found in the Content → INVALID (return false)
+   - The coin/token should be a specific token and not a category.
    - If the actual token is mentioned the identify it as valid and in the possible match indicate the coin/token name + token symbol.
    - If the coin/token name is a crypto term and not a crypto token (e.g., NFT, BLOCKCHAIN, AI, ALTCOINS) → INVALID (return false)
 
 3. CLOSE MATCH IDENTIFICATION:
    - When a coin/token is invalid (not found in Content), look for a similar pronounced or written token in the content. If their is no similar pronounced or written token then possible match = "none"
-   - Identify the closest possible match from what's actually mentioned in the Content. 
+   - Identify the closest possible match from what's actually mentioned in the Content.
+   - If the coin/token name is a crypto term and not a crypto token ie NFT, BLOCKCHAIN, AI, ALTCOINS... possible_match →  'none'
    - Account for pronunciation errors, partial names, or similar-sounding coins
+   - The possible match should be a specific token and not a category.
    - IMPORTANT It should be close in pronunciation or transcription to the coin/token we are checking.
 
 
@@ -416,6 +568,7 @@ ${transcriptContent.projects
       2. PRIMARY VALIDATION LOGIC:
         - If the coin/token name is found in the content section → VALID (return true)
         - If the coin/token name is NOT found in the content section → INVALID (return false)
+        - The coin/token should be a specific token and not a category.
         - If the coin/token token is mentioned the identify it as valid and in the possible match indicate the coin/token name + token symbol.
         - If the coin/token name is a crypto term and not a crypto token ie NFT, BLOCKCHAIN, AI, ALTCOINS... → INVALID (return false)
 
@@ -423,6 +576,8 @@ ${transcriptContent.projects
         - When a coin/token is invalid (not found in content), look for similar or related crypto terms in the content
         - Identify the closest possible match from what's actually mentioned in the content
         - IMPORTANT It should be close to the coin/token we are checking.
+        - The possible match should be a specific token and not a category.
+        - If the coin/token name is a crypto term and not a crypto token ie NFT, BLOCKCHAIN, AI, ALTCOINS... possible_match →  'none'
         - Account for pronunciation errors, partial names, or similar-sounding coins
 
       4. ADDITIONAL VALIDATION RULES:

@@ -1,3 +1,5 @@
+/* import { LLMFactory } from "../llm/factory.js";
+
 const llmProvider = LLMFactory.createProvider("openai");
 const analysisMessagesScreenshot = [
   {
@@ -113,3 +115,7 @@ processedResponseScreenshot = await JSON.parse(
 processedResponseTranscript = await JSON.parse(
   processedResponseTranscript.content
 );
+ */
+export const expensiveFunc = async () => {
+  console.log("Running expensive function!");
+};
