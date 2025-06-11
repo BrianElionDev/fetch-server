@@ -25,52 +25,45 @@ export async function getTranscriptContent(link) {
     console.log("Error at getTranscriptContent: " + JSON.stringify(error));
     return;
   }
+
   let analysis = analysisData[0].llm_answer;
   let transcript = analysisData[0].transcript;
-  const regex = /(\d{2}:\d{2}:\d{2}\.\d{3})/g;
+
   const lines = transcript.trim().split("\n");
-  let analysisCopy = analysis;
-  let finalProjectsArray = [];
-  const dataArray = [];
-  lines
-    .map((line) => {
-      const match = line.match(regex);
-      if (match) {
-        dataArray.push({
-          timestamp: match[0].split(".")[0],
-          text: line.replace(match[0], "").trim(),
-        });
-      }
-      return null;
-    })
-    .filter((item) => item !== null);
+  const dataArray = lines.map((line) => {
+    const parts = line.split(" ");
+    const timestamp = parts[0].split(".")[0];
+    const text = parts.slice(1).join(" ");
+    return { timestamp, text };
+  });
 
   const fuseOptions = {
-    threshold: 0.2,
-    minMatchCharLength: 4,
-    keys: ["timestamp", "text"],
+    threshold: 0.5,
+    keys: ["text"],
   };
-  for (let project of analysisCopy.projects) {
-    let transcript_content = [];
-    for (let i = 1; i < Math.min(project.timestamps.length, 6); i += 2) {
-      const timestamp = project.timestamps[i];
-      const fuse = new Fuse(dataArray, fuseOptions);
-      const searchPattern = timestamp;
-      let matches = fuse.search(searchPattern);
-      matches = matches.map((match) => match.item.text).join(" ");
-      transcript_content.push(matches);
-      if (transcript_content.length >= 3) break;
-    }
 
+  let finalProjectsArray = [];
+
+  for (let project of analysis.projects) {
+    const fuse = new Fuse(dataArray, fuseOptions);
+    const matches = fuse.search(project.coin_or_project);
+    console.log("\n \nChecking for: " + project.coin_or_project);
+    const matchedContent = matches
+      .map((match) => match.item.text)
+      .slice(0, 25)
+      .join(";");
+    console.log("Matched: " + JSON.stringify(matchedContent, null, 2));
     finalProjectsArray.push({
       ...project,
-      transcript_content: transcript_content,
+      transcript_content: matchedContent,
     });
   }
-  analysisCopy.projects = finalProjectsArray;
-  return analysisCopy;
-}
 
+  return {
+    ...analysis,
+    projects: finalProjectsArray,
+  };
+}
 //Format promt
 async function formatAnalysisPrompt({ transcript }) {
   const coinEmbeddings = "Use coins from coinmarketcap";
@@ -401,8 +394,8 @@ You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related 
 [Original transcript with ONLY crypto corrections]
 [COINS: 
 ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER
- 1. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned(timstamp should be accurate to where the coin was mentioned. Also the timestamp should not be duplicated for a single project)]
- 2. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN2  [Timestamps this coin was mentioned]
+ 1. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned(timstamp should be accurate to where the coin was mentioned. Also the timestamp should not be duplicated for a single project)] :- [Reason for choosing project]
+ 2. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned(timstamp should be accurate to where the coin was mentioned. Also the timestamp should not be duplicated for a single project)] :- [Reason for choosing project]
 ]
 [END CORRECTED TRANSCRIPT]
 
@@ -440,7 +433,7 @@ export const validateCoins = async (link, screenshotContent) => {
   try {
     const transcriptContent = await getTranscriptContent(link);
 
-    console.log("Completed: " + JSON.stringify(transcriptContent));
+    console.log("Transcript content: " + JSON.stringify(transcriptContent));
 
     const { analysis: analysisValidated } =
       await validateCoinsAgainstTrascriptContent(

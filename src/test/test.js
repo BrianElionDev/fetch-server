@@ -1,3 +1,4 @@
+import { getTranscriptContent } from "../Llm.js";
 import { convertTimestampToSeconds, validateTimestamps } from "../utils.js";
 import { transcript } from "./test2.js";
 
@@ -501,4 +502,5 @@ const typicalData = {
   total_rpoints: 229,
 };
 
-validateTimestamps(typicalData, transcript);
+getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
+//validateTimestamps(typicalData, transcript);
