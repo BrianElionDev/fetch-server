@@ -401,7 +401,7 @@ You are an expert cryptocurrency transcript editor. Correct ONLY crypto-related 
 [Original transcript with ONLY crypto corrections]
 [COINS: 
 ALL THE COINS MENTIONED IN THE TRANSCRIPT LISTED IN THE ORDER
- 1. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned]
+ 1. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN  [Timestamps this coin was mentioned(timstamp should be accurate to where the coin was mentioned. Also the timestamp should not be duplicated for a single project)]
  2. ID: coin identifier from the local list(ID: NAME: SYMBOL: ). if not in the list(ID: NAME: SYMBOL: ). then have the name as the identifier) - COIN2  [Timestamps this coin was mentioned]
 ]
 [END CORRECTED TRANSCRIPT]

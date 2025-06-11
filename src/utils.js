@@ -247,7 +247,7 @@ export function validateTimestamps(analysis, transcript) {
     .filter((item) => item !== null);
 
   const fuseOptions = {
-    threshold: 0.3,
+    threshold: 0.5,
     keys: ["timestamp", "text"],
   };
   for (const project of analysisCopy.projects) {
@@ -260,6 +260,11 @@ export function validateTimestamps(analysis, transcript) {
       matchesTimestamps
     );
 
+    /*   console.log(
+      `Checking: ${project.coin_or_project} Matched timestamps: ${matches.map(
+        (match) => match.item.text
+      )} \n`
+    ); */
     project.Timestamps = [
       ...new Set(
         [...consistentMatches, ...matchesTimestamps, ...project.Timestamps].map(
