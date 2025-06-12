@@ -29,30 +29,22 @@ export async function getTranscriptContent(link) {
   let analysis = analysisData[0].llm_answer;
   let transcript = analysisData[0].transcript;
 
-  const lines = transcript.trim().split("\n");
-  const dataArray = lines.map((line) => {
-    const parts = line.split(" ");
-    const timestamp = parts[0].split(".")[0];
-    const text = parts.slice(1).join(" ");
-    return { timestamp, text };
-  });
-
   const fuseOptions = {
-    threshold: 0.5,
+    threshold: 0.6,
     keys: ["text"],
   };
 
   let finalProjectsArray = [];
 
   for (let project of analysis.projects) {
-    const fuse = new Fuse(dataArray, fuseOptions);
-    const matches = fuse.search(project.coin_or_project);
+    const fuse = new Fuse(transcript.split(" "), fuseOptions);
+    const matches = fuse.search(project.coin_or_project.split(" ")[0]);
     console.log("\n \nChecking for: " + project.coin_or_project);
     const matchedContent = matches
-      .map((match) => match.item.text)
-      .slice(0, 25)
+      .map((match) => match.item)
+      .slice(0, 40)
       .join(";");
-    console.log("Matched: " + JSON.stringify(matchedContent, null, 2));
+    console.log("Matched: " + matchedContent);
     finalProjectsArray.push({
       ...project,
       transcript_content: matchedContent,

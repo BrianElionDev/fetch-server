@@ -2975,14 +2975,52 @@ export const commonEnglishWords = [
 ];
 import { configure } from "@trigger.dev/sdk/v3";
 import { getTranscript } from "../trigger/get_transcript.js";
+import { supabase } from "../supabaseClient.js";
 configure({
   secretKey: "tr_dev_XBmrvqkfaskbVHHhftxD",
 });
 
-async function triggerTask() {
-  getTranscript.trigger({
-    youtubeUrl: "https://www.youtube.com/watch?v=openhM5Gurs",
-  });
+export async function getTranscriptContent(link) {
+  const { data: analysisData, error } = await supabase
+    .from("tests")
+    .select("*")
+    .eq("link", link)
+    .eq("model", "grok");
+
+  if (error) {
+    console.log("Error at getTranscriptContent: " + JSON.stringify(error));
+    return;
+  }
+
+  let analysis = analysisData[0].llm_answer;
+  let transcript = analysisData[0].transcript;
+
+  const fuseOptions = {
+    threshold: 0.6,
+    keys: ["text"],
+  };
+
+  let finalProjectsArray = [];
+
+  for (let project of analysis.projects) {
+    const fuse = new Fuse(transcript.split(" "), fuseOptions);
+    const matches = fuse.search(project.coin_or_project.split(" ")[0]);
+    console.log("\n \nChecking for: " + project.coin_or_project);
+    const matchedContent = matches
+      .map((match) => match.item)
+      .slice(0, 40)
+      .join(";");
+    console.log("Matched: " + matchedContent);
+    finalProjectsArray.push({
+      ...project,
+      transcript_content: matchedContent,
+    });
+  }
+
+  return {
+    ...analysis,
+    projects: finalProjectsArray,
+  };
 }
 
-await triggerTask();
+getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");

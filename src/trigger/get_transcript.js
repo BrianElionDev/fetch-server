@@ -1,5 +1,4 @@
-import { task } from "@trigger.dev/sdk/v3";
-import { fetchTranscript } from "../scrape/FetchTranscript.js";
+import { logger, task } from "@trigger.dev/sdk/v3";
 
 export const getTranscript = task({
   id: "get-transcript",
@@ -13,6 +12,5 @@ export const getTranscript = task({
   },
   run: async (payload) => {
     console.log(payload);
-    fetchTranscript("This is Ash!");
   },
 });

@@ -9,7 +9,11 @@ import {
   UpdateCoinsWithValidatedDataTests,
 } from "./SendData.js";
 import { validateCoins } from "./Llm.js";
-import { escapeNewlinesInObject, validateTimestamps } from "./utils.js";
+import {
+  escapeNewlinesInObject,
+  validateTimestamps,
+  waitSeconds,
+} from "./utils.js";
 import { supabase } from "./supabaseClient.js";
 const app = express();
 
@@ -210,11 +214,35 @@ app.post("/api/analysis/validate", async (req, res) => {
       console.error("Error validating analysis. Projects are missing!");
       return;
     }
-    res.send("Processing in background. We will notify you once done!: ");
-    data = escapeNewlinesInObject(data);
-    const { analysis } = await validateCoins(data.link, data);
-    console.log("Analysis: " + JSON.stringify(analysis));
-    await UpdateCoinsWithValidatedDataTests(analysis, data.link || "");
+
+    // Send immediate response to client
+    res.send("Processing in background. We will notify you once done!");
+
+    // Process in background with rate limiting
+    const processWithRetry = async (attempt = 1, maxAttempts = 3) => {
+      try {
+        data = escapeNewlinesInObject(data);
+        const { analysis } = await validateCoins(data.link, data);
+        console.log("Analysis: " + JSON.stringify(analysis));
+        await UpdateCoinsWithValidatedDataTests(analysis, data.link || "");
+      } catch (error) {
+        if (error.response?.status === 429 && attempt < maxAttempts) {
+          // Rate limit hit - wait with exponential backoff
+          const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+          console.log(
+            `Rate limit hit, retrying in ${delay}ms (attempt ${attempt}/${maxAttempts})`
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          return processWithRetry(attempt + 1, maxAttempts);
+        }
+        throw error;
+      }
+    };
+
+    // Start processing in background
+    processWithRetry().catch((error) => {
+      console.error("Error processing request:", error);
+    });
   } catch (error) {
     console.error("Error processing request:", error);
   }
@@ -228,25 +256,37 @@ app.post("/api/analysis/test/single", async (req, res) => {
       publishedAt: Publish_at,
       title: Video_title,
     } = await getYoutubeVideoMetadata(Video_url);
-    console.log(`Recieved req: ${Channel_name} ${Video_url} ${Video_title}`);
+
+    console.log(`Received req: ${Channel_name} ${Video_url} ${Video_title}`);
     res.send(
-      "Recieved request. Processing in the background. We will notify you once done."
+      "Received request. Processing in the background. We will notify you once done."
     );
-    const { transcript, analysis, summary, usage, correctedTranscript } =
-      await makeAnalysis({
-        url: Video_url,
-        model: Model || "grok",
-      });
+
+    let run1 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
+    await waitSeconds(30);
+    let run2 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
+
+    console.log(
+      "\n \nAnalysis run 1: " + JSON.stringify(run1.analysis, null, 2)
+    );
+    console.log(
+      "\n\n Analysis run 2: " + JSON.stringify(run2.analysis, null, 2)
+    );
+    const { analysis, transcript, summary, usage, correctedTranscript } =
+      run1.analysis.projects.length > run2?.analysis.projects.length
+        ? run1
+        : run2;
+
     const analysisValidatedForTimestamps = validateTimestamps(
       analysis,
       transcript
     );
-    const { data: formatedAnalysis } = await CreateNewRecordTestTable({
-      Video_url: Video_url,
-      Channel_name: Channel_name,
-      Publish_at: Publish_at,
-      Video_title: Video_title,
-      Video_transcipt: transcript,
+    const { data: formattedAnalysis } = await CreateNewRecordTestTable({
+      Video_url,
+      Channel_name,
+      Publish_at,
+      Video_title,
+      Video_transcript: transcript,
       Video_corrected_Transcript: correctedTranscript,
       Llm_answer: analysisValidatedForTimestamps,
       Usage: usage,
@@ -254,12 +294,13 @@ app.post("/api/analysis/test/single", async (req, res) => {
       Model: Model || "grok",
     });
 
-    console.log("Data sending for screenshot analysis: " + formatedAnalysis);
-    //Send data for screenshot anlysis
+    console.log("Data sending for screenshot analysis: " + formattedAnalysis);
+
+    // Send data for screenshot analysis
     axios
       .post("https://crypto-ner-production.up.railway.app/take_screenshots", {
         youtube_url: Video_url || "",
-        projects_json: JSON.stringify(formatedAnalysis) || {},
+        projects_json: JSON.stringify(formattedAnalysis) || {},
       })
       .catch((error) => {
         console.log("Error at processing request: " + error);
@@ -268,6 +309,7 @@ app.post("/api/analysis/test/single", async (req, res) => {
     console.error("Error processing request:", error);
   }
 });
+
 app.post("/api/analysis/test/batch", async (req, res) => {
   const { model } = req.body;
 
