@@ -263,19 +263,19 @@ app.post("/api/analysis/test/single", async (req, res) => {
     );
 
     let run1 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
-    await waitSeconds(30);
-    let run2 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
+    //await waitSeconds(30);
+    //let run2 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
 
-    console.log(
+    /*   console.log(
       "\n \nAnalysis run 1: " + JSON.stringify(run1.analysis, null, 2)
-    );
-    console.log(
-      "\n\n Analysis run 2: " + JSON.stringify(run2.analysis, null, 2)
-    );
-    const { analysis, transcript, summary, usage, correctedTranscript } =
+    ); */
+
+    /*   const { analysis, transcript, summary, usage, correctedTranscript } =
       run1.analysis.projects.length > run2?.analysis.projects.length
         ? run1
         : run2;
+    */
+    const { analysis, transcript, summary, usage, correctedTranscript } = run1;
 
     const analysisValidatedForTimestamps = validateTimestamps(
       analysis,

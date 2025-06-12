@@ -277,6 +277,30 @@ export function validateTimestamps(analysis, transcript) {
   //console.log("Final validated data: " + JSON.stringify(analysisCopy));
   return analysisCopy;
 }
+export function findAndAddCoinData(analysis) {
+  let analysisCopy = analysis;
+  const dataArray = [];
+  const fuseOptions = {
+    threshold: 0.4,
+    keys: ["id", "symbol", "text"],
+  };
+  for (const project of analysisCopy.projects) {
+    const fuse = new Fuse(dataArray, fuseOptions);
+    const searchPattern = project.coin_or_project;
+    let matches = fuse.search(searchPattern);
+
+    project.Timestamps = [
+      ...new Set(
+        [...consistentMatches, ...matchesTimestamps, ...project.Timestamps].map(
+          (item) => item.toString()
+        )
+      ),
+    ].slice(0, 5);
+  }
+  console.log("####### \n \n");
+  //console.log("Final validated data: " + JSON.stringify(analysisCopy));
+  return analysisCopy;
+}
 /**
  * Find common timestamps in two array
  *

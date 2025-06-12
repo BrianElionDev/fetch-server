@@ -408,15 +408,15 @@ export const matchCoins = async (data) => {
           };
         }
 
-        const categories = await transformCategory(project.category, coin.id);
+        /*  const categories = await transformCategory(project.category, coin.id);
         console.log(
           `Final categories for ${project.coin_or_project}:`,
           categories
-        );
+        ); */
 
         return {
           rpoints: project.rpoints,
-          category: categories.slice(0, 3),
+          category: project.categories,
           marketcap: project.marketcap,
           Timestamps: project.Timestamps,
           total_count: project.total_count,

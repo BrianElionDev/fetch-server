@@ -211,7 +211,7 @@ export const CreateNewRecordTestTable = async ({
       Llm_answer?.total_Rpoints || Llm_answer?.total_rpoints || 0
     ),
   };
-  //llm_answer = await matchCoins(llm_answer);
+  llm_answer = await matchCoins(llm_answer);
   //console.log("Formatted obj: " + JSON.stringify(llm_answer));
   const cleanedData = {
     date: Publish_at || new Date().toISOString(),

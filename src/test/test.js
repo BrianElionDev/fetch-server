@@ -1,4 +1,5 @@
 import { getTranscriptContent } from "../Llm.js";
+import { matchCoins } from "../LoadCoinsData.js";
 import { convertTimestampToSeconds, validateTimestamps } from "../utils.js";
 import { transcript } from "./test2.js";
 
@@ -502,5 +503,7 @@ const typicalData = {
   total_rpoints: 229,
 };
 
-getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
+//getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
 //validateTimestamps(typicalData, transcript);
+//const data = await matchCoins(typicalData);
+//console.log("Matched data: " + data);
