@@ -403,6 +403,7 @@ export const matchCoins = async (data) => {
             })),
             Timestamps: project.Timestamps,
             marketcap: project.marketcap,
+            coin_or_project: project.coin_or_project,
             total_count: project.total_count,
             coin: null,
           };
@@ -420,6 +421,7 @@ export const matchCoins = async (data) => {
           marketcap: project.marketcap,
           Timestamps: project.Timestamps,
           total_count: project.total_count,
+          coin_or_project: project.coin_or_project,
           coin: {
             name: coin.name,
             id: coin.id,
