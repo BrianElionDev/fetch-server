@@ -37,17 +37,28 @@ export async function getTranscriptContent(link) {
   let finalProjectsArray = [];
 
   for (let project of analysis.projects) {
+    let matchedArray = [];
     const fuse = new Fuse(transcript.split(" "), fuseOptions);
     const matches = fuse.search(project.coin_or_project.split(" ")[0]);
-    console.log("\n \nChecking for: " + project.coin_or_project);
+    //console.log("\n \nChecking for: " + project.coin_or_project);
+    if (project.coin) {
+      let matchesFromSymbol = fuse.search(project.coin.symbol);
+      //console.log("Checking symbol: " + project.coin.symbol);
+      matchesFromSymbol = matchesFromSymbol
+        .map((match) => match.item)
+        .slice(0, 40)
+        .join(",");
+      //console.log("Matched from symbol: " + matchesFromSymbol + "####");
+      matchedArray.push(matchesFromSymbol);
+    }
     const matchedContent = matches
       .map((match) => match.item)
       .slice(0, 40)
-      .join(";");
-    console.log("Matched: " + matchedContent);
+      .join(",");
+    matchedArray.push(matchedContent);
     finalProjectsArray.push({
       ...project,
-      transcript_content: matchedContent,
+      transcript_content: matchedArray.join(" ").replace(/\r\n/g, " "),
     });
   }
 

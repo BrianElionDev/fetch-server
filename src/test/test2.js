@@ -2976,11 +2976,12 @@ export const commonEnglishWords = [
 import { configure } from "@trigger.dev/sdk/v3";
 import { getTranscript } from "../trigger/get_transcript.js";
 import { supabase } from "../supabaseClient.js";
+import { fetchTranscript } from "../scrape/FetchTranscript.js";
 configure({
   secretKey: "tr_dev_XBmrvqkfaskbVHHhftxD",
 });
 
-export async function getTranscriptContent(link) {
+/* async function getTranscriptContent(link) {
   const { data: analysisData, error } = await supabase
     .from("tests")
     .select("*")
@@ -3024,3 +3025,10 @@ export async function getTranscriptContent(link) {
 }
 
 getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
+ */
+
+const transcriptF = await fetchTranscript(
+  "https://www.youtube.com/watch?v=6rdsSTZkG_k"
+);
+
+console.log("Transcript: " + transcriptF);

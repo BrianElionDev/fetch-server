@@ -262,21 +262,42 @@ app.post("/api/analysis/test/single", async (req, res) => {
       "Received request. Processing in the background. We will notify you once done."
     );
 
+    let choosenRun;
     let run1 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
-    //await waitSeconds(30);
-    //let run2 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
+    await waitSeconds(60);
+    let run2 = await makeAnalysis({ url: Video_url, model: Model || "grok" });
 
-    /*   console.log(
+    if (run1.analysis && run2.analysis) {
+      console.log(
+        `Choosing run from the innercase: Run1: ${run1.analysis.projects.length} Run2: ${run2.analysis.projects.length} `
+      );
+      if (run1.analysis.projects.length != run2.analysis.projects.length) {
+        choosenRun =
+          run1.analysis.projects.length >= run2.analysis.projects.length
+            ? run1.analysis
+            : run2.analysis;
+      } else {
+        console.log(`Choosing run from both run 1 and run 2 are equal} `);
+        choosenRun = run1.analysis || run2.analysis;
+      }
+    } else {
+      console.log("Choosing run from the outers: ");
+      choosenRun = run1.analysis || run2.analysis;
+    }
+
+    const { analysis, transcript, summary, usage, correctedTranscript } =
+      choosenRun;
+
+    console.log(
       "\n \nAnalysis run 1: " + JSON.stringify(run1.analysis, null, 2)
-    ); */
-
-    /*   const { analysis, transcript, summary, usage, correctedTranscript } =
-      run1.analysis.projects.length > run2?.analysis.projects.length
-        ? run1
-        : run2;
-    */
-    const { analysis, transcript, summary, usage, correctedTranscript } = run1;
-
+    );
+    console.log(
+      "\n \nAnalysis run 2: " + JSON.stringify(run2.analysis, null, 2)
+    );
+    console.log(
+      "\n Choosen run: " + JSON.stringify(choosenRun.analysis, null, 2)
+    );
+    return;
     const analysisValidatedForTimestamps = validateTimestamps(
       analysis,
       transcript

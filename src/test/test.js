@@ -505,5 +505,6 @@ const typicalData = {
 
 //getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
 //validateTimestamps(typicalData, transcript);
+
 //const data = await matchCoins(typicalData);
-//console.log("Matched data: " + data);
+//console.log("Matched data: " + JSON.stringify(data, null, 2));
