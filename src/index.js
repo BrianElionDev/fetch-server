@@ -15,6 +15,7 @@ import {
   waitSeconds,
 } from "./utils.js";
 import { supabase } from "./supabaseClient.js";
+import { fetchTranscript } from "./scrape/FetchTranscript.js";
 const app = express();
 
 app.use(express.json());
@@ -60,6 +61,26 @@ app.get("/api/youtube", async (req, res) => {
     }
     throw error;
   }
+});
+app.post("/api/youtube/transcript", async (req, res) => {
+  const { youtube_url } = req.body;
+  let transcript;
+  try {
+    transcript = await fetchTranscript(youtube_url);
+    function cleanResponse() {
+      // Split the response into lines
+      const lines = transcript?.content?.split("\n");
+      const filteredLines = lines.filter(
+        (line) => !line.includes("# tactiq.io")
+      );
+      transcript = filteredLines.join("\n");
+    }
+    cleanResponse();
+  } catch (error) {
+    console.log("An error with fetchTranscript: " + error);
+    res.send({ sucess: false, transcript: transcript });
+  }
+  res.send({ sucess: true, transcript: transcript });
 });
 const getYoutubeVideoMetadata = async (youtubeUrl) => {
   if (!youtubeUrl) {

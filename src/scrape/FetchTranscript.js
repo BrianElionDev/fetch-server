@@ -30,9 +30,9 @@ export const fetchTranscript = async (url) => {
     //Taciq
     const { transcript: fallbackTranscript } =
       await FetchTranscriptFallbackTaciq(url);
-    //console.log("Taciq youtube transcript: " + fallbackTranscript);
+    // console.log("Taciq youtube transcript: " + fallbackTranscript);
     if (fallbackTranscript) {
-      return { content: fallbackTranscript };
+      return { content: `${fallbackTranscript}` };
     }
     //Youtube Transcript
     const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
@@ -98,7 +98,7 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
 }
 export async function FetchTranscriptFallbackTaciq(youtubeUrl) {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
