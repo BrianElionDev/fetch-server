@@ -98,7 +98,7 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
 }
 export async function FetchTranscriptFallbackTaciq(youtubeUrl) {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
