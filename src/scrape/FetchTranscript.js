@@ -25,27 +25,29 @@ async function formatTranscript(rawTranscript) {
   }
 }
 
-export const fetchTranscript = async (url) => {
+export const fetchTranscript = async (url, browser) => {
   try {
-    //Taciq
+    /* try {
+      //Youtube Transcript
+      const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
+      if (transcriptItems && transcriptItems.length > 0) {
+        const formattedTranscript = await formatTranscript(transcriptItems);
+        return { content: formattedTranscript };
+      }
+    } catch (error) {
+      console.warn("Error getting transcript with plugin: " + error);
+    } */
+
+    //Fallback Taciq
     const { transcript: fallbackTranscript } =
-      await FetchTranscriptFallbackTaciq(url);
-    // console.log("Taciq youtube transcript: " + fallbackTranscript);
+      await FetchTranscriptFallbackTaciq(url, browser);
+    const lines = fallbackTranscript?.split("\n");
+    const filteredLines = lines.filter((line) => !line.includes("# tactiq.io"));
     if (fallbackTranscript) {
-      return { content: `${fallbackTranscript}` };
-    }
-    //Youtube Transcript
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(url).catch(
-      (error) =>
-        console.log("An error occured with youtube transcript: " + error)
-    );
-    if (transcriptItems && transcriptItems.length >= 0) {
-      const formattedTranscript = await formatTranscript(transcriptItems);
-      //console.log("Trascript Formatted: " + formattedTranscript);
-      return { content: formattedTranscript };
+      return { content: `${filteredLines.join("\n")}` };
     }
 
-    //Kome ai
+    //Fallback Kome ai
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
     );
@@ -56,18 +58,8 @@ export const fetchTranscript = async (url) => {
   }
 };
 
-async function FetchTranscriptFallbackKome(youtubeUrl) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-    ],
-    protocolTimeout: 240000,
-  });
+async function FetchTranscriptFallbackKome(youtubeUrl, browser) {
   const page = await browser.newPage();
-
   await page.goto("https://kome.ai/tools/youtube-transcript-generator");
   const client = await page.target().createCDPSession();
   await client.send("Browser.grantPermissions", {
@@ -93,21 +85,11 @@ async function FetchTranscriptFallbackKome(youtubeUrl) {
     console.error("Error during automation: ", error);
     return { transcript: null };
   } finally {
-    await browser.close();
+    await page.close();
   }
 }
-export async function FetchTranscriptFallbackTaciq(youtubeUrl) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-    ],
-    protocolTimeout: 240000,
-  });
+export async function FetchTranscriptFallbackTaciq(youtubeUrl, browser) {
   const page = await browser.newPage();
-
   await page.goto(
     `https://tactiq.io/tools/run/youtube_transcript?yt=${encodeURIComponent(
       youtubeUrl
@@ -133,6 +115,6 @@ export async function FetchTranscriptFallbackTaciq(youtubeUrl) {
     console.error("Error during automation: ", error);
     return { transcript: null };
   } finally {
-    await browser.close();
+    await page.close();
   }
 }

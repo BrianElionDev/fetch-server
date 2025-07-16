@@ -1,5 +1,6 @@
 import { getTranscriptContent } from "../Llm.js";
 import { matchCoins } from "../LoadCoinsData.js";
+import { fetchTranscript } from "../scrape/FetchTranscript.js";
 import { convertTimestampToSeconds, validateTimestamps } from "../utils.js";
 import { transcript } from "./test2.js";
 
@@ -508,3 +509,7 @@ const typicalData = {
 
 //const data = await matchCoins(typicalData);
 //console.log("Matched data: " + JSON.stringify(data, null, 2));
+const transcriptN = await fetchTranscript(
+  "https://www.youtube.com/watch?v=JgjGJTrL3hY"
+);
+console.log("TR: " + JSON.stringify(transcriptN));

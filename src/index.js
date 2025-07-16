@@ -16,13 +16,12 @@ import {
 } from "./utils.js";
 import { supabase } from "./supabaseClient.js";
 import { fetchTranscript } from "./scrape/FetchTranscript.js";
+import puppeteer from "puppeteer";
 const app = express();
 
 app.use(express.json());
 
-const MAKE_WEBHOOK_SEND_SUBSCRIPTION =
-  "https://hook.us2.make.com/9f3n2wwmuy37d7qezcgymil5d6int37b";
-
+let puppeteerInstance;
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 app.get("/api/youtube", async (req, res) => {
@@ -67,16 +66,7 @@ app.post("/api/youtube/transcript", async (req, res) => {
   console.log("Recieved request: " + JSON.stringify(req.body) + "\n\n");
   let transcript;
   try {
-    transcript = await fetchTranscript(youtube_url);
-    function cleanResponse() {
-      // Split the response into lines
-      const lines = transcript?.content?.split("\n");
-      const filteredLines = lines.filter(
-        (line) => !line.includes("# tactiq.io")
-      );
-      transcript = filteredLines.join("\n");
-    }
-    cleanResponse();
+    transcript = await fetchTranscript(youtube_url, puppeteerInstance);
   } catch (error) {
     console.log("An error with fetchTranscript: " + error);
     res.send({ sucess: false, transcript: transcript });
@@ -366,5 +356,25 @@ app.post("/api/analysis/test/batch", async (req, res) => {
   res.json(results);
 });
 
-app.listen(3000, () => console.log("Server running on 3000."));
+export const createPuppeteerBrowser = async () => {
+  return await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+    ],
+    protocolTimeout: 240000,
+  });
+};
+
+app.listen(3000, async () => {
+  console.log("Server running on 3000.");
+  try {
+    puppeteerInstance = await createPuppeteerBrowser();
+    console.log("Created Browser Instance!");
+  } catch (error) {
+    console.log("Error creating brower instance: " + error);
+  }
+});
 export default app;
