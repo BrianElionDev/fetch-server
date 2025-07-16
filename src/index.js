@@ -64,6 +64,7 @@ app.get("/api/youtube", async (req, res) => {
 });
 app.post("/api/youtube/transcript", async (req, res) => {
   const { youtube_url } = req.body;
+  console.log("Recieved request: " + JSON.stringify(req.body) + "\n\n");
   let transcript;
   try {
     transcript = await fetchTranscript(youtube_url);
