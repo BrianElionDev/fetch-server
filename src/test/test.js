@@ -1,8 +1,6 @@
-import { getTranscriptContent } from "../Llm.js";
-import { matchCoins } from "../LoadCoinsData.js";
+import axios from "axios";
+import { getSubtitles } from "youtube-captions-scraper";
 import { fetchTranscript } from "../scrape/FetchTranscript.js";
-import { convertTimestampToSeconds, validateTimestamps } from "../utils.js";
-import { transcript } from "./test2.js";
 
 const typicalData = {
   projects: [
@@ -504,12 +502,46 @@ const typicalData = {
   total_rpoints: 229,
 };
 
-//getTranscriptContent("https://www.youtube.com/watch?v=JgjGJTrL3hY");
-//validateTimestamps(typicalData, transcript);
-
-//const data = await matchCoins(typicalData);
-//console.log("Matched data: " + JSON.stringify(data, null, 2));
 const transcriptN = await fetchTranscript(
   "https://www.youtube.com/watch?v=JgjGJTrL3hY"
 );
-console.log("TR: " + JSON.stringify(transcriptN));
+
+console.log("TR: \n" + transcriptN.content);
+
+// ES6 / TypeScript
+
+/* async function fetchVideoTranscript() {
+  try {
+    const videoPageResponse = await axios.get(
+      "https://tactiq.io/tools/run/youtube_transcript?yt=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DJgjGJTrL3hY"
+    );
+
+    // Check if the content is fully loaded
+    let content = videoPageResponse.data;
+    const maxAttempts = 10; // Maximum number of attempts
+    const interval = 6000; // Interval between attempts in milliseconds
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      // Check if the content is fully loaded (you may need to adjust this condition)
+      if (content.includes("expected content or marker")) {
+        console.log("Response: " + content);
+        return;
+      }
+
+      // Wait for the specified interval before checking again
+      await new Promise((resolve) => setTimeout(resolve, interval));
+
+      // Re-fetch the content
+      const newResponse = await axios.get(
+        "https://tactiq.io/tools/run/youtube_transcript?yt=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DJgjGJTrL3hY"
+      );
+      content = newResponse.data;
+    }
+
+    console.log("Content not fully loaded after maximum attempts.");
+  } catch (error) {
+    console.error("Error fetching video transcript:", error);
+  }
+}
+
+fetchVideoTranscript(); */

@@ -23,9 +23,14 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fuse.js": "^7.1.0",
+    "https-proxy-agent": "^7.0.6",
     "node-fetch": "^3.3.2",
     "puppeteer": "^24.8.2",
-    "youtube-transcript": "^1.2.1"
+    "socks-proxy-agent": "^8.0.5",
+    "youtube-captions-scraper": "^2.0.3",
+    "youtube-transcript": "^1.2.1",
+    "youtube-transcript-api": "^3.0.6",
+    "youtubei.js": "^14.0.0"
   },
   "devDependencies": {
     "@trigger.dev/build": "^3.3.17"

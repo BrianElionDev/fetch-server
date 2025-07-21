@@ -1,4 +1,4 @@
-import { YoutubeTranscript } from "youtube-transcript";
+import { YoutubeTranscript } from "./dist/youtube-transcript.esm.js";
 import { formatTimestamp, waitSeconds } from "../utils.js";
 import puppeteer from "puppeteer";
 
@@ -27,7 +27,7 @@ async function formatTranscript(rawTranscript) {
 
 export const fetchTranscript = async (url, browser) => {
   try {
-    /* try {
+    try {
       //Youtube Transcript
       const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
       if (transcriptItems && transcriptItems.length > 0) {
@@ -36,17 +36,22 @@ export const fetchTranscript = async (url, browser) => {
       }
     } catch (error) {
       console.warn("Error getting transcript with plugin: " + error);
-    } */
-
-    //Fallback Taciq
-    const { transcript: fallbackTranscript } =
-      await FetchTranscriptFallbackTaciq(url, browser);
-    const lines = fallbackTranscript?.split("\n");
-    const filteredLines = lines.filter((line) => !line.includes("# tactiq.io"));
-    if (fallbackTranscript) {
-      return { content: `${filteredLines.join("\n")}` };
     }
 
+    try {
+      //Fallback Taciq
+      const { transcript: fallbackTranscript } =
+        await FetchTranscriptFallbackTaciq(url, browser);
+      const lines = fallbackTranscript?.split("\n");
+      const filteredLines = lines.filter(
+        (line) => !line.includes("# tactiq.io")
+      );
+      if (fallbackTranscript) {
+        return { content: `${filteredLines.join("\n")}` };
+      }
+    } catch (error) {
+      console.warn("An error occured with Taciq automation: " + error);
+    }
     //Fallback Kome ai
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
       url
