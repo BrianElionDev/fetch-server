@@ -54,7 +54,8 @@ export const fetchTranscript = async (url, browser) => {
     }
     //Fallback Kome ai
     const { transcript: komeTranscript } = await FetchTranscriptFallbackKome(
-      url
+      url,
+      browser
     );
     return { content: komeTranscript };
   } catch (error) {
